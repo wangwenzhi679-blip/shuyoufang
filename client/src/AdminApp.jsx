@@ -1,3 +1,4 @@
+import AdminStartup from './AdminStartup.jsx';
 import AdminUserAction from './AdminUserAction.jsx';
 import { API_ROOT } from './api-base.mjs';
 import AdminDialog, { AdminDialogClose } from './AdminDialog.jsx';
@@ -344,12 +345,7 @@ export default function AdminApp() {
   function openContent(source, id, returnCourse) {
     setModal({ type: 'contentDetail', source, item: { id }, returnCourse });
   }
-  if (checking)
-    return (
-      <div className="admin-login">
-        <p role="status">正在检查管理权限…</p>
-      </div>
-    );
+  if (checking) return <AdminStartup />;
   if (!user)
     return (
       <AdminInkLogin

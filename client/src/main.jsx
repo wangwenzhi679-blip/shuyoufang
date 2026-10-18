@@ -1,3 +1,4 @@
+import AdminStartup from './AdminStartup.jsx';
 import { requestJson, requestJson as request } from './api-client.mjs';
 import { API_ROOT } from './api-base.mjs';
 import PaperDialog from './PaperDialog.jsx';
@@ -5025,7 +5026,7 @@ const AdminApp = React.lazy(() => import('./AdminApp.jsx'));
 const isAdminPage = /^\/admin(?:\/|$)/.test(window.location.pathname);
 createRoot(document.getElementById('root')).render(
   isAdminPage ? (
-    <React.Suspense fallback={<div>正在打开管理端…</div>}>
+    <React.Suspense fallback={<AdminStartup />}>
       <AdminApp />
     </React.Suspense>
   ) : (

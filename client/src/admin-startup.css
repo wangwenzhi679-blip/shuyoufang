@@ -1,0 +1,46 @@
+.admin-startup {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #f7f6f0;
+}
+
+.admin-startup__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #66765f, transparent);
+  animation:
+    admin-startup-appear 160ms 240ms both,
+    admin-startup-travel 1600ms 240ms linear infinite;
+}
+
+/* 快速加载不闪提示；等待较长时再提供轻量反馈。 */
+@keyframes admin-startup-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+@keyframes admin-startup-travel {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(420%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-startup__line {
+    left: 40%;
+    width: 20%;
+    opacity: 0.45;
+    animation: none;
+  }
+}
