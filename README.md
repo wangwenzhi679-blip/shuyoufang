@@ -87,7 +87,15 @@ cd "E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app\client"
 1. 安装 Node.js、npm 和 MySQL。前端使用 Vite 8，Node.js 需满足其版本要求（20.19+ 或 22.12+），建议使用受支持的 LTS 版本。
 2. 在新的 MySQL 环境中执行 `database/schema.sql`，创建 `math_path` 数据库和基础表。后端启动时会检查并补充部分功能表结构，因此数据库账号需要相应建表、改表权限。
 3. 在 `server/` 和 `client/` 目录中分别运行 `npm install`。
-4. 创建 `server/.env`，填写数据库连接和 JWT 密钥。当前项目没有随附 `.env.example`，可以参考以下格式，替换占位内容：
+4. 将 `server/.env.example` 复制为 `server/.env`，再填写本机数据库连接与随机生成的 JWT 密钥。模板中的值仅为占位内容，不能直接作为实际配置。已有环境请保留原 `.env`，不要覆盖。
+
+首次安装时，在项目根目录的 PowerShell 中执行：
+
+```powershell
+Copy-Item server/.env.example server/.env
+```
+
+配置字段如下：
 
 ```dotenv
 MYSQL_HOST=127.0.0.1
