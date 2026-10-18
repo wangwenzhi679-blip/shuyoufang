@@ -1,0 +1,398 @@
+.admin-app .admin-content-detail {
+  width: min(760px, calc(100vw - 40px)) !important;
+  max-width: 760px !important;
+}
+.admin-app .admin-dialog[tabindex='-1']:focus {
+  outline: none;
+}
+.admin-app .admin-detail-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+}
+.admin-app .admin-detail-heading small {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.admin-app .admin-detail-heading h2 {
+  margin: 8px 0 0 !important;
+}
+.admin-app .admin-detail-name {
+  font: 600 22px/1.6 var(--atelier-serif);
+  margin: 0 0 18px;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-content-detail .admin-info {
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 10px 18px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.admin-app .admin-info dd {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.admin-app .admin-detail-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-detail-section {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.admin-app .admin-detail-section h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 17px !important;
+  margin: 0 0 16px;
+}
+.admin-app .admin-detail-section h3 small {
+  font: 400 11px/1.6 var(--admin-ui);
+  color: var(--muted);
+}
+.admin-app .admin-chapter-directory {
+  padding-left: 24px;
+  margin: 0;
+}
+.admin-app .admin-chapter-directory li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.admin-app .admin-chapter-directory li strong {
+  font-weight: 500;
+}
+.admin-app .admin-chapter-directory li span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.admin-app .admin-chapter-directory li p {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-material-directory {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.admin-app .admin-material-directory li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.admin-app .admin-material-directory li > div {
+  min-width: 0;
+}
+.admin-app .admin-material-directory strong {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-material-directory small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+  margin-top: 5px;
+}
+.admin-app .admin-material-directory button {
+  flex: none;
+}
+.admin-app .admin-detail-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 15px;
+}
+.admin-app .admin-detail-pagination small {
+  font: 400 11px/1.6 var(--admin-ui);
+  color: var(--muted);
+}
+.admin-app .admin-detail-pagination > div {
+  display: flex;
+  gap: 8px;
+}
+.admin-app .admin-text-excerpt {
+  max-height: 300px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 17px;
+  font: 400 13px/1.9 var(--admin-ui);
+  color: var(--ink-soft);
+}
+.admin-app .admin-user-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0;
+}
+.admin-app .admin-user-shortcuts button {
+  text-align: left;
+  padding: 11px;
+  font-size: 12px;
+}
+.admin-app .admin-owner-scope {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--admin-sage);
+  background: var(--wash);
+  font-size: 12px;
+}
+.admin-app .admin-job-diagnostic {
+  margin: 20px 0;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+}
+.admin-app .admin-job-diagnostic h3 {
+  font-size: 16px !important;
+  margin: 0 0 12px;
+}
+.admin-app .admin-job-diagnostic p,
+.admin-app .admin-discard-confirm p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.admin-app .admin-job-diagnostic small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.admin-app .admin-content-detail footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media (max-width: 600px) {
+  .admin-app .admin-content-detail {
+    width: calc(100vw - 28px) !important;
+  }
+  .admin-app .admin-content-detail .admin-info {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 9px 12px;
+  }
+  .admin-app .admin-detail-name {
+    font-size: 19px;
+  }
+  .admin-app .admin-material-directory li {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .admin-app .admin-detail-pagination {
+    flex-wrap: wrap;
+  }
+  .admin-app .admin-owner-scope {
+    flex-wrap: wrap;
+  }
+}
+
+.admin-app .admin-chapter-directory details {
+  margin-top: 6px;
+}
+.admin-app .admin-chapter-directory summary {
+  width: fit-content;
+  color: var(--admin-sage);
+  cursor: pointer;
+  font-size: 11px;
+}
+.admin-app .admin-chapter-directory summary:focus-visible {
+  outline: 2px solid var(--admin-sage);
+  outline-offset: 3px;
+}
+
+.admin-storage-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+/* Keep sparse admin pages aligned to the top; backup metadata uses its own rows. */
+.admin-app .admin-main {
+  margin: 0 auto !important;
+  align-self: start;
+}
+.admin-app .admin-backups-panel {
+  max-width: 960px;
+}
+.admin-app .admin-backup-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 24px;
+  align-items: start;
+  padding: 22px 0 !important;
+}
+.admin-app .admin-backup-row > strong {
+  grid-column: 1;
+  width: auto;
+  max-width: none;
+  white-space: nowrap;
+  font: 500 16px/1.6 var(--atelier-serif);
+}
+.admin-app .admin-backup-row > small,
+.admin-app .admin-backup-row > p {
+  grid-column: 1;
+  margin: 0 !important;
+  line-height: 1.8;
+}
+.admin-app .admin-backup-row > div:last-child {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  max-width: 260px;
+  justify-content: flex-end;
+  align-self: center;
+}
+.admin-app .admin-backup-row .admin-muted button {
+  margin-left: 10px;
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .admin-app .admin-backup-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+  .admin-app .admin-backup-row > div:last-child {
+    grid-column: 1;
+    grid-row: auto;
+    max-width: none;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+}
+
+/* Consistent form feedback and backup history controls. */
+.admin-app .admin-form-count {
+  display: block;
+  text-align: right;
+  margin: -7px 0 12px;
+  font: 400 10px/1.5 var(--admin-ui);
+  color: var(--muted);
+}
+.admin-app .admin-backup-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+.admin-app .admin-backup-heading h2 {
+  margin: 0 0 8px !important;
+}
+.admin-app .admin-backup-heading p {
+  margin: 0;
+}
+.admin-app .admin-backup-heading > .admin-primary {
+  flex: none;
+}
+.admin-app .admin-backup-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 17px 0;
+  margin-top: 20px;
+  border-block: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-app .admin-backup-toolbar > div,
+.admin-app .admin-backup-pagination > div {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.admin-app .admin-backup-toolbar select {
+  min-height: 35px;
+  padding: 6px 12px;
+}
+.admin-app .admin-backup-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.admin-app .admin-backup-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 19px;
+  font: 400 12px/1.6 var(--admin-ui);
+  color: var(--muted);
+}
+.admin-app .admin-backup-target {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--wash);
+  font-size: 12px;
+}
+.admin-app .admin-backup-progress {
+  padding: 12px;
+  background: var(--wash);
+  border-radius: 6px;
+  font-size: 12px !important;
+}
+.admin-app .admin-backup-row-error {
+  color: var(--accent) !important;
+  font-size: 12px !important;
+}
+@media (max-width: 600px) {
+  .admin-app .admin-backup-heading {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .admin-app .admin-backup-toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .admin-app .admin-backup-toolbar > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .admin-app .admin-backup-pagination {
+    flex-wrap: wrap;
+  }
+}
+
+.admin-cancel-confirm {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+.admin-cancel-confirm input {
+  width: 100%;
+  min-height: 42px;
+  box-sizing: border-box;
+}

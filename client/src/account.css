@@ -1,0 +1,1139 @@
+.sidebar-bottom .account-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.sidebar-bottom .account-identity {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  color: var(--ink) !important;
+  font-size: var(--user-ui-size, 14px) !important;
+}
+.account-identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.account-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--ink);
+  font: 600 16px/1 sans-serif;
+}
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sidebar-bottom .account-gear {
+  display: grid !important;
+  place-items: center;
+  flex: none;
+  width: 32px !important;
+  height: 32px;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--muted) !important;
+  border-radius: 8px;
+}
+.account-gear:hover {
+  background: var(--wash) !important;
+  color: var(--ink) !important;
+}
+.account-backdrop .account-panel {
+  width: min(470px, calc(100vw - 32px)) !important;
+  max-height: 85dvh;
+  display: flex;
+  flex-direction: column;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  outline: none;
+  overflow: hidden;
+}
+.account-backdrop .account-settings {
+  width: min(540px, calc(100vw - 32px)) !important;
+}
+.account-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.account-panel .account-header h2 {
+  font-size: 21px !important;
+  line-height: 1.3;
+  margin: 0 !important;
+  color: var(--ink) !important;
+}
+.account-header p {
+  margin: 7px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.account-panel button {
+  font-size: var(--user-ui-size, 14px) !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+.account-panel button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.account-close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--muted);
+}
+.account-body {
+  padding: 22px 24px;
+  overflow: auto;
+  min-height: 0;
+  font-size: var(--user-ui-size, 14px);
+}
+.account-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: var(--user-ui-size, 14px) !important;
+  color: var(--ink) !important;
+}
+.account-body input:not([type='checkbox']),
+.account-body select {
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  font-size: var(--user-ui-size, 14px) !important;
+  padding: 10px 12px !important;
+  height: 40px !important;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.account-body input[readonly] {
+  color: var(--muted) !important;
+  background: var(--wash) !important;
+}
+.account-body small {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  display: block;
+}
+.account-avatar-edit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.account-avatar-edit .account-avatar {
+  width: 64px;
+  height: 64px;
+  font-size: 24px;
+}
+.account-panel .account-upload {
+  display: inline-block;
+  color: var(--accent) !important;
+  margin: 0 12px 8px 0 !important;
+  cursor: pointer;
+  font-size: 13px !important;
+}
+.account-upload input[hidden] {
+  display: none !important;
+}
+.account-avatar-edit button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+}
+.account-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 15px 0;
+}
+.account-detail-row strong {
+  font-weight: 500;
+}
+.account-detail-row p {
+  font-size: 13px !important;
+  color: var(--muted) !important;
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+.account-detail-row button,
+.account-code-row button {
+  flex: none;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+}
+.account-settings-layout {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  min-height: 240px;
+  overflow: auto;
+}
+.account-settings-layout nav {
+  padding: 16px 8px;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.account-settings-layout nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  text-align: left;
+  color: var(--muted);
+}
+.account-settings-layout nav button.selected {
+  background: var(--wash);
+  color: var(--ink);
+}
+.account-body .account-setting-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.account-setting-row strong {
+  font-weight: 500;
+}
+.account-setting-row small {
+  margin-top: 5px;
+}
+.account-setting-row select {
+  max-width: 190px;
+}
+.account-setting-row input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  flex: none;
+}
+.account-font-preview {
+  padding: 16px;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-top: 24px;
+}
+.account-font-preview p {
+  margin: 12px 0 0;
+  line-height: 1.6;
+  color: var(--ink) !important;
+}
+.account-session-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.account-session-actions button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+}
+.account-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  flex: none;
+}
+.account-footer button {
+  min-width: 88px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.account-footer button.primary {
+  background: var(--ink) !important;
+  color: var(--surface) !important;
+  border-color: var(--ink) !important;
+}
+.account-error,
+.account-notice {
+  font-size: 13px !important;
+  margin: 0 !important;
+  padding: 10px 24px;
+  overflow-wrap: anywhere;
+}
+.account-error {
+  color: #b4533c;
+  background: #fff3ef;
+}
+.account-notice {
+  color: var(--accent);
+  background: var(--wash);
+}
+.account-code-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.account-code-row label {
+  flex: 1;
+  min-width: 0;
+}
+.account-code-row button {
+  margin-bottom: 18px;
+  height: 40px;
+}
+html[data-interface-size]
+  .learning-layout
+  :is(button, input, select, textarea, .workspace-top-title, .nav-section) {
+  font-size: var(--user-ui-size) !important;
+}
+html[data-interface-size]
+  :is(
+    .imported-introduction,
+    .imported-question,
+    .assistant-answer,
+    .message-user p,
+    .rich-note .tiptap,
+    .rich-note-editor .tiptap,
+    .note-editor .tiptap
+  ) {
+  font-size: var(--user-reading-size) !important;
+}
+html[data-interface-size] .tiptap p {
+  font-size: inherit !important;
+}
+html[data-user-theme='dark'],
+html[data-user-theme='dark'] body {
+  --paper: #181918;
+  --surface: #232523;
+  --ink: #eeeae2;
+  --muted: #aaa89f;
+  --line: #3d403b;
+  --accent: #d8b993;
+  --wash: #1e201e;
+  color-scheme: dark;
+}
+html[data-user-theme='dark']
+  :is(
+    .learning-layout,
+    .workspace,
+    .sidebar,
+    .record-modal,
+    .account-panel,
+    .name-editor-modal,
+    .course-card,
+    .course-panel,
+    .chapter-content,
+    .chapter-nav,
+    .overview-card,
+    .home-card,
+    .plan-card,
+    .review-card,
+    .assistant-composer,
+    .work-composer,
+    .workspace-search-entry,
+    input,
+    textarea,
+    select,
+    .tiptap,
+    .rich-note-editor
+  ) {
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+html[data-user-theme='dark'] .learning-layout :is(h1, h2, h3, h4, strong, p, label, button) {
+  color: var(--ink) !important;
+}
+html[data-user-theme='dark'] .learning-layout :is(small, .eyebrow, .muted) {
+  color: var(--muted) !important;
+}
+html[data-user-theme='dark'] .learning-layout :is(article, section, details) {
+  background-color: var(--surface) !important;
+  border-color: var(--line) !important;
+}
+html[data-user-theme='dark']
+  .learning-layout
+  :is(.nav-active, .selected, .active, .message-user, .prompt-chips button) {
+  background: var(--wash) !important;
+}
+html[data-user-theme='dark'] .account-error {
+  background: #422b26;
+  color: #ffc5b6;
+}
+html[data-user-theme='dark'] :is(.create-course, .primary) {
+  background: var(--accent) !important;
+  color: #181918 !important;
+}
+html[data-user-theme='dark'] .sidebar nav button {
+  color: var(--muted) !important;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-user-theme='system'],
+  html[data-user-theme='system'] body {
+    --paper: #181918;
+    --surface: #232523;
+    --ink: #eeeae2;
+    --muted: #aaa89f;
+    --line: #3d403b;
+    --accent: #d8b993;
+    --wash: #1e201e;
+    color-scheme: dark;
+  }
+}
+@media (max-width: 480px) {
+  .account-settings-layout {
+    grid-template-columns: 1fr;
+  }
+  .account-settings-layout nav {
+    flex-direction: row;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .account-body,
+  .account-header {
+    padding: 18px;
+  }
+  .account-footer {
+    padding: 14px 18px;
+  }
+  .account-session-actions {
+    flex-wrap: wrap;
+  }
+  .account-setting-row select {
+    max-width: 150px;
+  }
+}
+
+html[data-interface-size] .learning-note.rich-note .tiptap {
+  font-size: var(--user-reading-size) !important;
+}
+html[data-interface-size] .learning-note.rich-note .tiptap p {
+  font-size: inherit !important;
+}
+.record-modal.account-panel input:not([type='checkbox']):not([type='radio']),
+.record-modal.account-panel select {
+  font-size: var(--user-ui-size, 14px) !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+}
+html[data-user-theme='dark'] .record-modal :is(h2, h3, strong, label, p) {
+  color: var(--ink) !important;
+}
+html[data-user-theme='dark'] .record-modal :is(input, select, textarea) {
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+/* Compact settings dialog */
+.account-settings .account-header {
+  padding: 18px 20px 14px;
+  align-items: center;
+}
+.account-settings .account-header h2 {
+  font: 600 18px/1.3 var(--editorial-body) !important;
+  letter-spacing: 0;
+}
+.account-settings .account-header p {
+  font-size: 11px;
+  margin-top: 5px;
+}
+.account-settings .account-close {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border-radius: 7px;
+  color: var(--muted);
+}
+.account-settings .account-close:hover {
+  background: var(--wash);
+}
+.account-settings .account-body {
+  padding: 18px 20px;
+}
+.account-settings .account-body .account-setting-row {
+  gap: 14px;
+  margin-bottom: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.account-settings .account-body .account-setting-row:first-child {
+  padding-top: 0;
+}
+.account-settings .account-setting-row strong {
+  font-size: calc(var(--user-ui-size, 14px) - 1px);
+  font-weight: 500;
+}
+.account-settings .account-setting-row small {
+  font-size: 11px;
+  margin-top: 4px;
+  line-height: 1.45;
+}
+.record-modal.account-settings .account-body select {
+  height: 34px !important;
+  padding: 6px 10px !important;
+  width: 132px;
+  max-width: 132px;
+  border-radius: 7px !important;
+  font-size: calc(var(--user-ui-size, 14px) - 1px) !important;
+  text-overflow: ellipsis;
+}
+.account-settings nav button {
+  font-size: calc(var(--user-ui-size, 14px) - 1px) !important;
+}
+.account-settings .account-font-preview {
+  padding: 12px 14px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 8px;
+}
+.account-settings .account-font-preview small {
+  font-size: 10px;
+}
+.account-settings .account-font-preview p {
+  margin-top: 7px;
+  line-height: 1.5;
+}
+.account-settings .account-session-actions {
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 0;
+}
+.account-settings .account-session-actions button {
+  font-size: 12px !important;
+  gap: 6px;
+}
+.account-settings .account-session-actions button:hover {
+  color: var(--ink);
+}
+.account-settings .account-footer {
+  padding: 12px 20px;
+  gap: 8px;
+  background: var(--surface);
+}
+.account-settings .account-footer button {
+  min-width: 76px;
+  height: 34px;
+  border-radius: 7px;
+  font-size: 13px !important;
+}
+@media (max-width: 480px) {
+  .account-settings-layout nav {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+  .account-settings-layout nav button {
+    justify-content: center;
+    flex: 1;
+  }
+  .account-settings .account-body {
+    padding: 16px 18px;
+  }
+  .record-modal.account-settings .account-body select {
+    width: 124px;
+    max-width: 124px;
+  }
+}
+/* Settings: compact tabs and a single content column. */
+.account-backdrop .account-settings {
+  width: min(460px, calc(100vw - 32px)) !important;
+  border-radius: 14px !important;
+}
+.account-settings .account-header {
+  padding: 19px 22px 12px;
+  border-bottom: 0;
+}
+.account-settings .account-header h2 {
+  font-size: 19px !important;
+}
+.account-settings .account-header p {
+  display: none;
+}
+.account-settings .account-settings-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+.account-settings .account-settings-layout nav {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  margin: 0 22px;
+  padding: 4px;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  flex: none;
+}
+.account-settings .account-settings-layout nav button {
+  flex: 1;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 13px !important;
+  line-height: 1.25;
+}
+.account-settings .account-settings-layout nav button svg {
+  width: 14px;
+  height: 14px;
+}
+.account-settings .account-settings-layout nav button.selected {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px #0000000a !important;
+}
+.account-settings .account-body {
+  padding: 10px 22px 18px;
+}
+.account-settings .account-body .account-setting-row {
+  padding: 13px 0;
+  border-bottom: 0;
+  margin: 0;
+  gap: 14px;
+}
+.account-settings .account-body .account-setting-row:first-child {
+  padding-top: 13px;
+}
+.account-settings .account-setting-row strong {
+  font-weight: 500;
+  font-size: 13px;
+}
+.account-settings .account-setting-row small {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.record-modal.account-settings .account-body select {
+  height: 33px !important;
+  width: 150px;
+  max-width: 150px;
+  background: var(--wash) !important;
+  border-color: transparent !important;
+  border-radius: 7px !important;
+  padding: 6px 9px !important;
+  font-size: 13px !important;
+}
+.record-modal.account-settings .account-body select:hover {
+  border-color: var(--line) !important;
+}
+.account-settings .account-font-preview {
+  margin-top: 8px;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: var(--wash);
+}
+.account-settings .account-font-preview small {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.account-settings .account-font-preview p {
+  margin-top: 8px;
+}
+.account-settings .account-session-actions {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  gap: 10px;
+  justify-content: space-between;
+}
+.account-settings .account-session-actions button {
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 12px !important;
+  gap: 7px;
+}
+.account-settings .account-session-actions button:hover {
+  background: var(--wash);
+}
+.account-settings .account-footer {
+  padding: 12px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.account-settings .account-footer button {
+  width: 76px;
+  min-width: 76px;
+  height: 33px;
+  font-size: 12px !important;
+  border-radius: 7px;
+}
+@media (max-width: 420px) {
+  .account-settings .account-header {
+    padding: 17px 18px 12px;
+  }
+  .account-settings .account-settings-layout nav {
+    margin: 0 18px;
+  }
+  .account-settings .account-body {
+    padding: 8px 18px 16px;
+  }
+  .record-modal.account-settings .account-body select {
+    width: 132px;
+    max-width: 132px;
+  }
+  .account-settings .account-footer {
+    padding: 12px 18px;
+  }
+}
+/* Keep the settings frame stable across tabs and font preferences. */
+.account-backdrop .account-settings {
+  height: 460px;
+  max-height: 85dvh;
+  flex-shrink: 0;
+}
+.account-settings .account-settings-layout {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.account-settings .account-settings-layout nav {
+  flex: none;
+}
+.account-settings .account-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  font-size: 13px;
+}
+.account-settings .account-body label,
+.account-settings .account-body button,
+.account-settings .account-body input {
+  font-size: 13px !important;
+}
+.account-settings .account-setting-row strong {
+  font-size: 13px;
+}
+.account-settings > .account-session-actions {
+  flex: none;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.account-settings > .account-session-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px !important;
+}
+.account-settings > .account-session-actions button:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+.account-settings > .account-session-actions button:last-child {
+  margin-left: auto;
+}
+.account-settings > .account-footer {
+  border-top: 0;
+  padding-top: 4px;
+}
+@media (max-width: 420px) {
+  .account-settings > .account-session-actions {
+    padding: 12px 18px;
+  }
+}
+/* Refine the fixed settings frame. */
+.account-backdrop .account-settings {
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 18px 56px #0000001c !important;
+}
+.account-settings .account-header {
+  padding-bottom: 15px;
+}
+.account-settings .account-settings-layout nav {
+  border: 0;
+  padding: 3px;
+  gap: 3px;
+}
+.account-settings .account-settings-layout nav button {
+  transition:
+    background 0.15s,
+    color 0.15s;
+  font-weight: 500 !important;
+}
+.account-settings .account-settings-layout nav button:hover {
+  color: var(--ink);
+}
+.account-settings .account-settings-layout nav button.selected {
+  box-shadow: 0 1px 4px #00000010 !important;
+}
+.account-settings .account-body {
+  padding-top: 9px;
+  padding-bottom: 16px;
+}
+.account-settings .account-body .account-setting-row {
+  padding: 14px 0;
+  align-items: center;
+}
+.account-settings .account-setting-row strong {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.account-settings .account-setting-row small {
+  max-width: 195px;
+  line-height: 1.5;
+}
+.record-modal.account-settings .account-body select {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.record-modal.account-settings .account-body select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.account-settings .account-font-preview {
+  border: 1px solid var(--line);
+  background: var(--wash);
+  margin-top: 10px;
+}
+.account-settings .account-body input[type='checkbox'] {
+  appearance: none;
+  width: 32px;
+  height: 18px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--line);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.account-settings .account-body input[type='checkbox']::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 2px #00000020;
+  transition: transform 0.15s;
+}
+.account-settings .account-body input[type='checkbox']:checked {
+  background: var(--accent);
+}
+.account-settings .account-body input[type='checkbox']:checked::after {
+  transform: translateX(14px);
+}
+.account-settings > .account-session-actions {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: var(--wash);
+}
+.account-settings > .account-session-actions button {
+  border-color: transparent;
+  background: transparent;
+  height: 32px;
+  padding: 0 9px;
+  font-size: 12px !important;
+}
+.account-settings > .account-session-actions button:hover {
+  background: var(--surface);
+  border-color: var(--line);
+}
+.account-settings > .account-footer {
+  padding-top: 12px;
+  padding-bottom: 14px;
+  border-top: 1px solid var(--line);
+}
+.account-settings .account-footer button {
+  height: 34px;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+}
+.account-settings .account-footer button:not(.primary):hover {
+  background: var(--wash);
+}
+.account-settings :is(button, input):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.account-settings .account-body::-webkit-scrollbar {
+  width: 5px;
+}
+.account-settings .account-body::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 8px;
+}
+.account-settings .account-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-settings * {
+    transition: none !important;
+  }
+} /* Paper-note dialog finish: shared with the illustration dialogs. */
+.account-backdrop .account-panel {
+  --surface: #fdfbf6;
+  --wash: #f1f0e8;
+  --ink: #292e28;
+  --muted: #85867b;
+  --line: #deddd3;
+  --accent: #49675c;
+  border-radius: 8px !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 18px 60px #292b2429 !important;
+  background: linear-gradient(125deg, #ffffff45, transparent 55%), var(--surface) !important;
+  font-family: var(--atelier-serif, serif);
+}
+.account-panel .account-header {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  margin: 0 22px;
+  padding: 20px 0 16px;
+}
+.account-panel .account-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.account-panel .account-header > div::after {
+  content: '研习';
+  writing-mode: vertical-rl;
+  border: 1px solid #ad493d;
+  border-radius: 2px;
+  padding: 3px 1px;
+  color: #ad493d;
+  font: 10px/1.1 serif;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+.account-panel .account-header h2 {
+  font: 600 21px/1.4 var(--atelier-serif, serif) !important;
+  letter-spacing: 0.08em;
+}
+.account-settings .account-settings-layout nav {
+  margin: 0 22px;
+  padding: 7px 0 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+.account-settings .account-settings-layout nav button {
+  position: relative;
+  background: transparent !important;
+  border-radius: 0;
+  padding: 12px 6px;
+  color: var(--muted);
+  box-shadow: none !important;
+  font-family: inherit;
+}
+.account-settings .account-settings-layout nav button.selected {
+  color: var(--ink);
+}
+.account-settings .account-settings-layout nav button.selected::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 26%;
+  right: 26%;
+  height: 2px;
+  background: #ae493b;
+}
+.account-settings .account-settings-layout nav button svg {
+  display: none;
+}
+.account-settings .account-body {
+  padding-top: 12px;
+}
+.account-settings .account-body .account-setting-row {
+  padding: 15px 0;
+}
+.account-settings .account-setting-row strong {
+  font-family: inherit;
+  font-size: 14px;
+}
+.account-settings .account-image-entry {
+  border-top: 1px solid var(--line);
+  margin-top: 5px !important;
+  padding-top: 20px !important;
+}
+.account-settings .account-image-entry strong::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 13px;
+  background: #ad493d;
+  margin-right: 8px;
+  vertical-align: -1px;
+}
+.account-settings .account-image-entry > button {
+  font-family: inherit;
+  border: 1px solid #91a096;
+  border-radius: 4px;
+  background: transparent;
+  color: #49675c;
+  padding: 7px 11px;
+}
+.record-modal.account-settings .account-body select {
+  border-radius: 4px !important;
+  font-family: inherit;
+  background: transparent !important;
+}
+.account-settings .account-body input[type='checkbox']:checked {
+  background: #49675c;
+}
+.account-settings > .account-session-actions {
+  background: transparent;
+  padding: 10px 22px;
+  border-top: 1px solid var(--line);
+}
+.account-settings > .account-session-actions button {
+  border-radius: 4px;
+  font-family: inherit;
+}
+.account-settings > .account-session-actions button:last-child {
+  color: #a74436;
+}
+.account-panel .account-footer {
+  background: transparent;
+  border-color: var(--line);
+}
+.account-panel .account-footer button {
+  border-radius: 4px;
+  font-family: inherit;
+}
+.account-panel .account-footer button.primary {
+  background: #49675c !important;
+  border-color: #49675c !important;
+  color: #fffdf7 !important;
+}
+.account-settings .account-font-preview {
+  border-radius: 4px;
+  background: linear-gradient(135deg, #e4e9dd80, transparent), var(--wash);
+}
+html[data-user-theme='dark'] .account-backdrop .account-panel {
+  --surface: #232523;
+  --wash: #1e201e;
+  --ink: #eeeae2;
+  --muted: #aaa89f;
+  --line: #3d403b;
+  --accent: #9dbbaa;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-user-theme='system'] .account-backdrop .account-panel {
+    --surface: #232523;
+    --wash: #1e201e;
+    --ink: #eeeae2;
+    --muted: #aaa89f;
+    --line: #3d403b;
+    --accent: #9dbbaa;
+  }
+}
+/* Isolate the compact dialog controls from page-wide form styles. */
+.account-backdrop .account-settings .account-image-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0 !important;
+}
+.account-backdrop .account-settings .account-image-entry > span {
+  min-width: 0;
+}
+.account-backdrop .account-settings .account-image-entry > button {
+  flex: none;
+  margin: 0 !important;
+  height: 34px !important;
+  padding: 0 11px !important;
+  font-size: 12px !important;
+}
+.account-backdrop .account-settings > .account-footer {
+  padding: 10px 22px !important;
+  gap: 8px !important;
+  align-items: center;
+}
+.account-backdrop .account-settings > .account-footer > button {
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  padding: 0 14px !important;
+  border-radius: 4px !important;
+}
+.account-backdrop .account-settings > .account-session-actions {
+  padding: 8px 22px !important;
+}
+.account-backdrop .account-settings .account-body .account-setting-row {
+  padding: 11px 0;
+}
+.account-backdrop .account-settings .account-body {
+  scrollbar-gutter: auto;
+}
+.account-backdrop .account-settings .account-body {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

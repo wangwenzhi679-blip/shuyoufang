@@ -1,0 +1,17 @@
+server/.env
+server/node_modules/
+client/node_modules/
+client/dist/
+.npm-cache/
+
+# Generated dependencies, assets and local runtime data
+node_modules/
+.npm-cache-client/
+.npm-cache-server/
+client/dist-check/
+startup-logs/
+server/storage/
+*.log
+
+server/.puppeteer-cache/
+docs/qa/

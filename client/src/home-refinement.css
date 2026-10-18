@@ -1,0 +1,689 @@
+/* 学习首页的视觉收尾，保持登录页与管理端样式独立。 */
+.student-top-layout .home-reference {
+  --home-control: color-mix(in srgb, var(--home-sage) 10%, var(--surface));
+}
+.student-top-layout .home-reference .reference-grid {
+  gap: 22px;
+}
+.student-top-layout .home-reference .overview-card > header h2,
+.student-top-layout .home-reference .reference-today .plan-header h1,
+.student-top-layout .home-reference :is(.reference-more, .reference-history) .record-heading {
+  font-size: 23px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.035em;
+}
+.student-top-layout
+  .home-reference
+  :is(.overview-card, .reference-today, .reference-more, .reference-history) {
+  border-radius: 10px !important;
+  box-shadow: 0 3px 14px #30392c04 !important;
+}
+.student-top-layout .home-reference .reference-course-top > div {
+  min-width: 0;
+}
+.student-top-layout .home-reference .reference-course-top .course-kicker {
+  display: block;
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.student-top-layout .home-reference .reference-course-top h2 {
+  font-size: clamp(22px, 1.65vw, 28px) !important;
+  font-weight: 500 !important;
+  line-height: 1.55 !important;
+  overflow-wrap: anywhere;
+}
+.student-top-layout .home-reference .reference-course-top .create-course {
+  align-self: flex-end;
+}
+.student-top-layout .home-reference .reference-metrics button {
+  padding-block: 3px;
+}
+.student-top-layout .home-reference .reference-metrics button:focus-visible,
+.student-top-layout
+  .home-reference
+  :is(.reference-activity > button, .record-table button):focus-visible {
+  outline: 2px solid var(--home-sage);
+  outline-offset: 3px;
+}
+.student-top-layout .home-reference .reference-metrics strong {
+  font-variant-numeric: tabular-nums;
+}
+.student-top-layout .home-reference .reference-today .plan-task-content > div > small {
+  font-size: 13px !important;
+}
+.student-top-layout .home-reference .reference-today .plan-task-actions .plan-link {
+  border-radius: 5px !important;
+  min-height: 38px;
+  transition: background 0.18s ease;
+}
+.student-top-layout .home-reference .reference-today .plan-task-actions .plan-link:hover {
+  background: var(--home-control) !important;
+}
+.student-top-layout .home-reference .record-tab-content {
+  min-height: 198px;
+}
+.student-top-layout .home-reference .reference-review-schedule .review-schedule-panel {
+  margin-bottom: 0;
+}
+.student-top-layout .home-reference .reference-review-schedule .schedule-empty:before {
+  content: none;
+}
+.student-top-layout .home-reference .reference-review-schedule .schedule-empty:after {
+  content: none;
+}
+.student-top-layout .home-reference .reference-activity > button {
+  grid-template-columns: 92px minmax(0, 1fr) 14px;
+  padding: 14px 0 !important;
+  min-height: 96px;
+}
+.student-top-layout .home-reference .reference-activity > button:last-child {
+  border-bottom: 0 !important;
+}
+.student-top-layout .home-reference .reference-activity strong {
+  font-size: 17px !important;
+  font-weight: 500;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.student-top-layout .home-reference .reference-activity small {
+  font-size: 12px !important;
+}
+.student-top-layout .home-reference .reference-activity > button:hover strong {
+  color: var(--home-sage);
+}
+.student-top-layout .home-reference .reference-activity .chapter-illustration {
+  height: 68px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--home-sage) 6%, var(--surface)) !important;
+}
+.student-top-layout .home-reference .reference-activity .chapter-illustration img {
+  opacity: 1;
+  animation: chapter-picture-appear 0.4s ease;
+}
+.student-top-layout .home-reference .reference-activity .chapter-illustration small {
+  font-size: 10px !important;
+  line-height: 1.2;
+  opacity: 0.85;
+}
+.student-top-layout .home-reference .reference-activity .chapter-illustration.is-pending svg {
+  opacity: 0.45;
+}
+.student-top-layout .home-reference .reference-history .record-description {
+  background: var(--wash);
+  border-radius: 20px;
+  font-size: 12px;
+  padding: 3px 10px;
+}
+.student-top-layout .home-reference .record-result {
+  font-variant-numeric: tabular-nums;
+}
+.student-top-layout .home-reference .record-table td {
+  vertical-align: middle;
+}
+.student-top-layout .home-reference .record-table td:nth-child(2) {
+  white-space: nowrap;
+  font-size: 13px;
+}
+@keyframes chapter-picture-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (min-width: 761px) and (max-width: 1050px) {
+  .student-top-layout .home-reference .reference-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .student-top-layout .home-reference .reference-course {
+    grid-column: 1/-1;
+    grid-row: 1;
+  }
+  .student-top-layout .home-reference .reference-today {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .student-top-layout .home-reference .reference-recent {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .student-top-layout .home-reference .reference-more {
+    grid-column: 1/-1;
+    grid-row: 3;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task {
+    flex-wrap: wrap !important;
+    padding-left: 36px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task-content {
+    flex-basis: 100%;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task-actions {
+    margin: 8px 0 0 auto;
+  }
+}
+@media (max-width: 760px) {
+  .learning-layout.student-top-layout .workspace {
+    padding-inline: 16px !important;
+  }
+  .student-top-layout .home-reference .home-welcome {
+    height: auto;
+    min-height: 170px;
+    padding: 26px 2px !important;
+  }
+  .student-top-layout .home-reference .home-welcome h1 {
+    font-size: 28px !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: anywhere;
+  }
+  .student-top-layout .home-reference .home-welcome .home-scholar-art {
+    width: 70%;
+    opacity: 0.14;
+    bottom: 10px;
+  }
+  .student-top-layout .home-reference .reference-grid {
+    gap: 16px;
+  }
+  .student-top-layout .home-reference .reference-course {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .student-top-layout .home-reference .reference-course-body {
+    gap: 16px;
+    min-height: 190px;
+  }
+  .student-top-layout .home-reference .reference-course .home-course-cover {
+    width: 76px;
+    height: 168px;
+    flex-shrink: 0;
+    padding: 17px 7px;
+  }
+  .student-top-layout .home-reference .reference-course .home-course-cover span {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .student-top-layout .home-reference .reference-course-top {
+    gap: 12px;
+  }
+  .student-top-layout .home-reference .reference-course-top h2 {
+    font-size: 20px !important;
+    line-height: 1.5 !important;
+  }
+  .student-top-layout .home-reference .reference-course-top .course-kicker {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .student-top-layout .home-reference .reference-course-top .create-course {
+    font-size: 14px !important;
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+  }
+  .student-top-layout .home-reference .overview-progress {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .student-top-layout .home-reference .overview-progress small {
+    font-size: 12px !important;
+  }
+  .student-top-layout .home-reference .reference-metrics {
+    gap: 0;
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+  .student-top-layout .home-reference .reference-metrics span {
+    font-size: 11px !important;
+  }
+  .student-top-layout .home-reference .reference-metrics strong {
+    font-size: 22px !important;
+  }
+  .student-top-layout .home-reference .reference-metrics strong small {
+    font-size: 11px !important;
+  }
+  .student-top-layout
+    .home-reference
+    :is(.overview-card > header h2, .reference-today .plan-header h1),
+  .student-top-layout .home-reference :is(.reference-more, .reference-history) .record-heading {
+    font-size: 20px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task {
+    padding-left: 35px !important;
+    gap: 10px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task strong {
+    font-size: 15px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task-actions .plan-link {
+    min-width: 74px;
+    padding: 8px !important;
+    font-size: 13px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-task-content > div > small {
+    font-size: 12px !important;
+  }
+  .student-top-layout .home-reference .record-table-wrap {
+    overflow: visible;
+  }
+  .student-top-layout .home-reference .record-table {
+    display: block;
+    min-width: 0;
+    border: 0;
+  }
+  .student-top-layout .home-reference .record-table thead {
+    display: none;
+  }
+  .student-top-layout .home-reference .record-table tbody {
+    display: grid;
+    gap: 14px;
+  }
+  .student-top-layout .home-reference .record-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .student-top-layout .home-reference .record-table td {
+    padding: 0;
+    width: auto !important;
+    border: 0;
+  }
+  .student-top-layout .home-reference .record-table td:first-child {
+    grid-column: 1/-1;
+  }
+  .student-top-layout .home-reference .record-table td:nth-child(2) {
+    grid-column: 1/-1;
+    color: var(--muted);
+  }
+  .student-top-layout .home-reference .record-table td:nth-child(2):before {
+    content: '提交于 ';
+  }
+  .student-top-layout .home-reference .record-table strong {
+    font-size: 15px;
+  }
+  .student-top-layout .home-reference .record-result {
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .student-top-layout .home-reference .record-result progress {
+    width: 55px;
+  }
+  .student-top-layout .home-reference .record-table button {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .student-top-layout .home-reference .chapter-illustration img {
+    animation: none !important;
+  }
+}
+@media (max-width: 1050px) {
+  .learning-layout.student-top-layout .sidebar.student-topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 8px 12px !important;
+    padding: 12px 16px 0 !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .brand-editorial {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .sidebar-bottom {
+    grid-column: 2;
+    grid-row: 1;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 8px !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    gap: 20px !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    padding: 0 0 3px !important;
+    scrollbar-width: none;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav::-webkit-scrollbar {
+    display: none;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav button {
+    flex: none;
+    white-space: nowrap;
+    min-height: 44px;
+    padding: 8px 0 !important;
+  }
+}
+@media (max-width: 760px) {
+  .student-top-layout .home-reference .reference-course-body {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 14px;
+    min-height: 0;
+  }
+  .student-top-layout .home-reference .reference-course-main {
+    display: contents;
+  }
+  .student-top-layout .home-reference .reference-course .home-course-cover {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .student-top-layout .home-reference .reference-course-top {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+  .student-top-layout .home-reference .reference-course-main > .overview-progress {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    align-self: end;
+  }
+  .student-top-layout .home-reference .reference-metrics {
+    grid-column: 1/-1;
+    grid-row: 3;
+    margin: 0;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header > div {
+    width: auto !important;
+    flex: none;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header button {
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+  }
+}
+@media (max-width: 460px) {
+  .learning-layout.student-top-layout .sidebar.student-topbar .brand-badge-editorial {
+    display: none !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .brand-logo-editorial {
+    font-size: 31px !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1050px) {
+  .student-top-layout .home-reference .reference-today .plan-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header > div {
+    width: auto !important;
+    flex: none;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header button {
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+  }
+  .student-top-layout .home-reference .reference-today .plan-header h1 {
+    font-size: 22px !important;
+  }
+}
+/* 顶部导航按已确认参考图还原字号、居中关系与工具间距。 */
+@media (min-width: 1200px) {
+  .learning-layout.student-top-layout .sidebar.student-topbar {
+    height: 74px !important;
+    min-height: 74px !important;
+    padding: 0 5% !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 24px !important;
+    background: #fcfbf8 !important;
+    border-bottom: 1px solid #e4e1da !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .brand.brand-editorial {
+    display: flex !important;
+    align-items: center !important;
+    justify-self: start;
+    gap: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+  }
+  .learning-layout.student-top-layout
+    .sidebar.student-topbar
+    .brand.brand-editorial
+    .brand-logo-editorial {
+    display: block !important;
+    font:
+      500 48px/1 'STXingkai',
+      'KaiTi',
+      serif !important;
+    letter-spacing: 0 !important;
+    padding: 0 18px 0 0 !important;
+    margin: 0 !important;
+    color: #161b17 !important;
+    white-space: nowrap;
+  }
+  .learning-layout.student-top-layout
+    .sidebar.student-topbar
+    .brand.brand-editorial
+    .brand-logo-editorial:after {
+    top: 5px;
+    right: 0;
+    font:
+      11px/1.05 KaiTi,
+      serif;
+    padding: 2px 1px;
+    color: #fff9ec;
+    border-color: #a6382c;
+    background: #a6382c;
+    border-radius: 2px;
+  }
+  .learning-layout.student-top-layout
+    .sidebar.student-topbar
+    .brand.brand-editorial
+    .brand-badge-editorial {
+    display: block !important;
+    font: 400 20px/1.5 var(--atelier-serif) !important;
+    letter-spacing: 0.06em !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #454740 !important;
+    white-space: nowrap;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav {
+    justify-self: center;
+    justify-content: center !important;
+    gap: 42px !important;
+    width: max-content !important;
+    height: 74px !important;
+    overflow: visible !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav button {
+    position: relative;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 74px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font: 400 20px/1.5 var(--atelier-serif) !important;
+    letter-spacing: 0.01em;
+    color: #343932 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav button > span:not(.nav-idx) {
+    font: inherit !important;
+    color: inherit !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav button.nav-active {
+    color: #151b16 !important;
+    font-weight: 650 !important;
+    box-shadow: none !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar nav button.nav-active:after {
+    content: '';
+    display: block !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13px;
+    height: 3px;
+    background: #ac3c30;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .sidebar-bottom {
+    justify-self: end;
+    display: flex !important;
+    align-items: center !important;
+    gap: 30px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .account-entry {
+    display: flex !important;
+    align-items: center !important;
+    gap: 30px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .account-identity {
+    flex: none !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .account-avatar {
+    width: 42px !important;
+    height: 42px !important;
+    border: 1px solid #607e69;
+    background: #7e9784 !important;
+    font:
+      400 23px/1 KaiTi,
+      serif !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .account-gear {
+    width: 36px !important;
+    height: 36px !important;
+    color: #1b201b !important;
+  }
+  .learning-layout.student-top-layout .sidebar.student-topbar .account-gear svg,
+  .learning-layout.student-top-layout .sidebar.student-topbar .student-search svg {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* 每日日期与连续学习记录。 */
+.student-top-layout .home-reference .home-study-streak {
+  position: absolute;
+  right: 18px;
+  top: 28px;
+  z-index: 2;
+  padding: 0;
+  background: none;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font: 400 17px/1.5 var(--atelier-serif);
+  color: #3b443b;
+  white-space: nowrap;
+}
+.student-top-layout .home-reference .home-study-streak strong {
+  font: 500 24px/1.1 var(--atelier-serif);
+  color: #a83d30;
+  font-variant-numeric: tabular-nums;
+}
+.student-top-layout .home-reference .daily-study-prompt {
+  font: inherit;
+  color: inherit;
+}
+@media (max-width: 760px) {
+  .student-top-layout .home-reference .home-welcome > div:first-child > small {
+    font-size: 12px !important;
+    letter-spacing: 0 !important;
+  }
+  .student-top-layout .home-reference .daily-study-prompt {
+    display: none;
+  }
+  .student-top-layout .home-reference .home-study-streak {
+    top: 25px;
+    right: 2px;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .student-top-layout .home-reference .home-study-streak strong {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 761px) {
+  .student-top-layout .home-reference .home-study-streak {
+    top: 18px;
+    right: 22px;
+  }
+}
+@media (min-width: 1051px) {
+  .student-top-layout .home-reference .home-study-streak {
+    right: 18%;
+  }
+}
+
+/* 继续学习的统计统一字形与基线，单位保持轻量。 */
+.student-top-layout .home-reference .reference-course .reference-metrics strong {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  font: 500 28px/1.3 var(--atelier-serif) !important;
+  letter-spacing: 0;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink);
+}
+.student-top-layout .home-reference .reference-course .reference-metrics strong .metric-total {
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: 0;
+}
+.student-top-layout .home-reference .reference-course .reference-metrics strong small {
+  font: 400 14px/1.3 var(--atelier-serif) !important;
+  color: var(--muted);
+  margin: 0;
+}
+.student-top-layout .home-reference .reference-course .overview-progress small {
+  font-family: var(--atelier-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0;
+}
+@media (max-width: 760px) {
+  .student-top-layout .home-reference .reference-course .reference-metrics strong {
+    font-size: 22px !important;
+    gap: 4px;
+  }
+  .student-top-layout .home-reference .reference-course .reference-metrics strong small {
+    font-size: 12px !important;
+  }
+}

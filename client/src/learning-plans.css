@@ -1,0 +1,1255 @@
+/* ==========================================================================
+   学习计划（Learning Plans）：循序·致远 — 当代人文·水墨雅致版
+   严格对齐定稿效果图（Hero 手账插画、课程横幅、研习清单、本周安排、研习小笺）
+   ========================================================================== */
+
+/* 让工作区与学习计划采用弹性布局，即使全部折叠也让页脚稳稳保持在屏幕底部 */
+.workspace:has(.plan-garden) {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: calc(100vh - 74px) !important;
+  box-sizing: border-box !important;
+}
+
+.workspace .learning-plans.plan-garden {
+  --plan-sage: #536452;
+  --plan-sage-deep: #435342;
+  --plan-sage-soft: #e1e8de;
+  --plan-cinnabar: #b5483a;
+  --plan-cinnabar-border: #cf8a75;
+  --plan-cinnabar-soft: #fdf6f3;
+  --plan-card: rgba(255, 254, 250, 0.94);
+  --plan-row: #fcfaf4;
+  --plan-line: #e4e0d4;
+  --plan-line-soft: #ece8dd;
+  --plan-ink: #232722;
+  --plan-ink-soft: #4e534b;
+  --plan-muted: #7a7f73;
+  --plan-num-font:
+    'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  position: relative;
+  isolation: isolate;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1440px !important;
+  min-height: calc(100vh - 220px);
+  margin: 0 auto !important;
+  padding: 6px 0 28px !important;
+  color: var(--plan-ink) !important;
+  font-family: var(--atelier-serif, 'Noto Serif SC', 'Songti SC', serif);
+}
+
+.plan-garden *,
+.plan-garden *::before,
+.plan-garden *::after {
+  box-sizing: border-box;
+}
+
+.plan-garden .plan-num {
+  font-family: var(--plan-num-font) !important;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* 底部远山全景暗纹（固定在视口/内容底部） */
+.workspace .learning-plans.plan-garden::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%);
+  width: min(100vw - 24px, 1620px);
+  height: 120px;
+  background: url('/assets/ink/mountain-panorama-v1.png') center 68% / 100% auto no-repeat;
+  opacity: 0.14;
+  mask-image: linear-gradient(transparent, #000 55%);
+}
+
+/* ==========================================================================
+   1. Hero 标头区（循序·致远 + 手账铅笔竹影插画 + AI 制定计划）
+   ========================================================================== */
+.workspace .learning-plans.plan-garden > header.plan-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 220px;
+  margin: 0 0 16px !important;
+  padding: 24px 32px !important;
+  border: 0 !important;
+  background: transparent !important;
+  overflow: hidden;
+}
+
+.plan-garden .plan-hero-copy {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
+.workspace .learning-plans.plan-garden > header.plan-hero .plan-eyebrow {
+  display: block !important;
+  margin: 0 0 10px !important;
+  font-size: 14px !important;
+  letter-spacing: 0.24em !important;
+  color: #6f7569 !important;
+}
+
+.workspace .learning-plans.plan-garden > header.plan-hero h1 {
+  margin: 0 0 14px !important;
+  font: 600 clamp(36px, 3.2vw, 48px) / 1.25 var(--atelier-serif) !important;
+  letter-spacing: 0.06em !important;
+  color: var(--plan-ink) !important;
+}
+
+.workspace .learning-plans.plan-garden > header.plan-hero h1::after {
+  display: none !important;
+}
+
+.workspace .learning-plans.plan-garden > header.plan-hero .plan-hero-sub {
+  margin: 0 !important;
+  font-size: 17px !important;
+  letter-spacing: 0.06em;
+  color: var(--plan-ink-soft) !important;
+}
+
+.plan-garden .plan-hero-art {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: min(60%, 780px);
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 20%, #000 96%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.plan-garden .plan-hero-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right bottom;
+}
+
+.plan-garden .plan-hero-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.workspace .learning-plans.plan-garden .plan-hero-actions .plan-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px !important;
+  padding: 10px 22px !important;
+  border: 1px solid var(--plan-sage) !important;
+  border-radius: 8px !important;
+  background: var(--plan-sage) !important;
+  color: #fffef9 !important;
+  font: 500 15px / 1.4 var(--atelier-serif) !important;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 14px rgba(67, 83, 66, 0.18) !important;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.15s ease !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-hero-actions .plan-ai-btn:hover:not(:disabled) {
+  background: var(--plan-sage-deep) !important;
+  border-color: var(--plan-sage-deep) !important;
+  color: #ffffff !important;
+}
+
+/* 多课程计划切换条（当存在多份计划时显示） */
+.plan-garden .plan-course-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+  padding: 0 4px;
+}
+
+.workspace .learning-plans.plan-garden .plan-course-switcher button {
+  padding: 6px 16px !important;
+  border: 1px solid var(--plan-line) !important;
+  border-radius: 20px !important;
+  background: var(--plan-card) !important;
+  color: var(--plan-ink-soft) !important;
+  font: 400 13.5px / 1.5 var(--atelier-serif) !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-course-switcher button.active {
+  background: var(--plan-sage) !important;
+  border-color: var(--plan-sage) !important;
+  color: #fffef9 !important;
+  font-weight: 500 !important;
+}
+
+/* ==========================================================================
+   2. 课程总览横幅卡片（Course Banner Card）
+   ========================================================================== */
+.workspace .learning-plans.plan-garden .plan-course-banner {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  margin: 0 0 20px !important;
+  padding: 20px 28px !important;
+  border: 1px solid var(--plan-line) !important;
+  border-radius: 12px !important;
+  background: var(--plan-card) !important;
+  box-shadow: 0 4px 20px rgba(40, 45, 38, 0.035) !important;
+}
+
+.plan-garden .plan-banner-cover.sf-course-cover {
+  width: 88px;
+  height: 118px;
+  border-radius: 3px 6px 6px 3px;
+  box-shadow:
+    -3px 2px 0 #dcd6c8,
+    3px 6px 14px rgba(38, 44, 35, 0.12);
+}
+
+.plan-garden .plan-banner-cover.sf-course-cover > .sf-book-title {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.plan-garden .plan-banner-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plan-garden .plan-banner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.plan-garden .plan-banner-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.workspace .learning-plans.plan-garden .plan-banner-title-wrap h2 {
+  margin: 0 !important;
+  font: 600 24px / 1.35 var(--atelier-serif) !important;
+  color: var(--plan-ink) !important;
+  letter-spacing: 0.02em;
+}
+
+.plan-garden .plan-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--plan-sage-soft);
+  color: #465c45;
+  font: 500 12.5px / 1.4 var(--atelier-serif);
+  letter-spacing: 0.04em;
+}
+
+.plan-garden .plan-banner-ops {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.workspace .learning-plans.plan-garden .plan-banner-ops button {
+  min-height: 30px !important;
+  padding: 4px 10px !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  color: var(--plan-ink-soft) !important;
+  font: 400 13.5px / 1.4 var(--atelier-serif) !important;
+  box-shadow: none !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-banner-ops button:hover:not(:disabled) {
+  background: #f0ede3 !important;
+  color: var(--plan-ink) !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-banner-ops button.plan-banner-toggle-btn {
+  color: var(--plan-sage) !important;
+  font-weight: 500 !important;
+  padding: 4px 12px !important;
+  border: 1px solid var(--plan-sage-soft) !important;
+  border-radius: 6px !important;
+  background: #f4f7f2 !important;
+  margin-left: 4px !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-banner-ops button.plan-banner-toggle-btn:hover {
+  background: var(--plan-sage-soft) !important;
+  border-color: var(--plan-sage) !important;
+  color: var(--plan-sage-deep) !important;
+}
+
+.plan-garden .plan-banner-collapsed-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--plan-line-soft);
+  color: var(--plan-sage);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+
+.plan-garden .plan-banner-collapsed-foot:hover {
+  color: var(--plan-sage-deep);
+  text-decoration: underline;
+}
+
+/* 多课程计划折叠容器 */
+.plan-garden .plan-multi-container {
+  display: grid;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+
+.plan-garden .plan-course-block {
+  display: grid;
+  gap: 16px;
+  transition: all 0.25s ease;
+}
+
+.plan-garden .plan-all-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 18px;
+  background: rgba(255, 254, 250, 0.85);
+  border: 1px solid var(--plan-line);
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--plan-ink-soft);
+}
+
+.plan-garden .plan-all-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace .learning-plans.plan-garden .plan-all-actions .plan-toggle-all-btn {
+  padding: 3px 8px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--plan-sage) !important;
+  font: 500 13px / 1.4 var(--atelier-serif) !important;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-all-actions .plan-toggle-all-btn:hover {
+  color: var(--plan-sage-deep) !important;
+  text-decoration: underline;
+}
+
+.plan-garden .plan-op-sep {
+  color: #d5d0c3;
+  font-size: 12px;
+  user-select: none;
+}
+
+.plan-garden .plan-op-more-wrap {
+  position: relative;
+}
+
+.plan-garden .plan-dots-icon {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.plan-garden .plan-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.plan-garden .plan-banner-meta {
+  margin: 0;
+  color: var(--plan-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.plan-garden .plan-meta-slash {
+  margin: 0 8px;
+  color: #c5bfb0;
+}
+
+.plan-garden .plan-course-banner .plan-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 4px 0 0 !important;
+}
+
+.plan-garden .plan-course-banner .plan-progress progress {
+  flex: 0 1 480px;
+  width: 100%;
+  height: 8px;
+  border: 0 !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+  appearance: none;
+  accent-color: var(--plan-sage) !important;
+  background: #ebe7dc !important;
+}
+
+.plan-garden .plan-course-banner .plan-progress progress::-webkit-progress-bar {
+  background: #ebe7dc !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-course-banner .plan-progress progress::-webkit-progress-value {
+  background: var(--plan-sage) !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-course-banner .plan-progress progress::-moz-progress-bar {
+  background: var(--plan-sage) !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-course-banner .plan-progress strong {
+  color: var(--plan-ink) !important;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.plan-garden .plan-course-banner .plan-progress span {
+  color: var(--plan-muted);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   3. 双栏主工作区（左：研习清单 / 右：本周安排 + 研习小笺）
+   ========================================================================== */
+.plan-garden .plan-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.95fr) minmax(300px, 0.95fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* 左侧：研习清单大卡片 */
+.plan-garden .plan-checklist-card {
+  padding: 24px 28px 20px;
+  border: 1px solid var(--plan-line);
+  border-radius: 12px;
+  background: var(--plan-card);
+  box-shadow: 0 4px 20px rgba(40, 45, 38, 0.03);
+}
+
+.workspace .learning-plans.plan-garden .plan-checklist-card > h3 {
+  margin: 0 0 14px !important;
+  font: 600 21px / 1.4 var(--atelier-serif) !important;
+  color: var(--plan-ink) !important;
+  letter-spacing: 0.03em;
+}
+
+.plan-garden .plan-checklist-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--plan-line-soft);
+}
+
+.plan-garden .plan-checklist-tabs {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.workspace .learning-plans.plan-garden .plan-checklist-tabs button {
+  position: relative;
+  min-height: 40px !important;
+  padding: 8px 4px 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--plan-muted) !important;
+  font: 400 15px / 1.4 var(--atelier-serif) !important;
+  box-shadow: none !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-checklist-tabs button.active {
+  color: var(--plan-ink) !important;
+  font-weight: 600 !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-checklist-tabs button.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--plan-cinnabar);
+}
+
+.plan-garden .plan-checklist-tabs button .plan-num {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.plan-garden .plan-checklist-tabs button.active .plan-num {
+  color: var(--plan-cinnabar);
+  font-weight: 600;
+}
+
+.plan-garden .plan-checklist-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+}
+
+.plan-garden .plan-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.workspace .learning-plans.plan-garden .plan-select-wrap select {
+  appearance: none;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 4px 28px 4px 12px !important;
+  border: 1px solid var(--plan-line) !important;
+  border-radius: 6px !important;
+  background: #fbf9f3 !important;
+  color: var(--plan-ink-soft) !important;
+  font: 400 13px / 1.4 var(--atelier-serif) !important;
+  cursor: pointer;
+}
+
+.plan-garden .plan-select-wrap > span {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: 12px;
+  color: var(--plan-muted);
+}
+
+/* 任务分组折叠区（待补学 / 接下来 / 已完成） */
+.plan-garden .plan-task-group {
+  margin: 0 0 14px;
+}
+
+.plan-garden .plan-task-group > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px;
+  margin-bottom: 8px;
+  color: var(--plan-ink);
+  font: 600 15px / 1.4 var(--atelier-serif);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.plan-garden .plan-task-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.plan-garden .plan-group-chevron {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--plan-muted);
+  border-bottom: 1.5px solid var(--plan-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.plan-garden .plan-task-group[open] > summary .plan-group-chevron {
+  transform: rotate(45deg);
+  margin-top: -3px;
+}
+
+.plan-garden .plan-group-count {
+  color: var(--plan-muted);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.plan-garden .plan-group-rows {
+  display: grid;
+  gap: 10px;
+}
+
+/* 单条任务卡片行 */
+.plan-garden .plan-task-group .plan-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px !important;
+  border: 1px solid var(--plan-line-soft) !important;
+  border-radius: 10px !important;
+  background: var(--plan-row) !important;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.plan-garden .plan-task-group .plan-task:hover {
+  border-color: #d5cfc0 !important;
+  background: #fffefa !important;
+}
+
+.plan-garden .plan-task-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.workspace .learning-plans.plan-garden .plan-task-check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  padding: 0 !important;
+  border: 1.5px solid #b8b3a6 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 12px !important;
+  cursor: pointer;
+}
+
+.workspace .learning-plans.plan-garden .plan-task-check:hover:not(:disabled) {
+  border-color: var(--plan-sage) !important;
+  background: var(--plan-sage-soft) !important;
+  color: var(--plan-sage) !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-task-check.completed {
+  border-color: var(--plan-sage) !important;
+  background: var(--plan-sage) !important;
+  color: #ffffff !important;
+}
+
+.plan-garden .plan-task-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-garden .plan-task-main strong {
+  display: block;
+  margin: 0 0 5px;
+  font: 500 16px / 1.45 var(--atelier-serif);
+  color: var(--plan-ink);
+}
+
+.plan-garden .plan-task.done .plan-task-main strong {
+  color: var(--plan-ink-soft);
+}
+
+.plan-garden .plan-task-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 0;
+  color: var(--plan-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.plan-garden .plan-kind-icon {
+  width: 14px;
+  height: 14px;
+  color: #8a8f82;
+  flex: none;
+}
+
+.plan-garden .plan-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: none;
+}
+
+.plan-garden .plan-chapter-progress {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+  margin: 0 !important;
+}
+
+.plan-garden .plan-chapter-progress progress {
+  width: 108px;
+  height: 5px;
+  border: 0 !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+  appearance: none;
+  accent-color: var(--plan-sage) !important;
+  background: #e7e3d8 !important;
+}
+
+.plan-garden .plan-chapter-progress progress::-webkit-progress-bar {
+  background: #e7e3d8 !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-chapter-progress progress::-webkit-progress-value {
+  background: var(--plan-sage) !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-chapter-progress progress::-moz-progress-bar {
+  background: var(--plan-sage) !important;
+  border-radius: 999px !important;
+}
+
+.plan-garden .plan-chapter-progress small {
+  min-width: 34px;
+  margin: 0 !important;
+  text-align: right;
+  font-size: 12.5px !important;
+  color: var(--plan-muted) !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-task-actions .plan-link {
+  min-width: 86px;
+  min-height: 34px !important;
+  padding: 6px 15px !important;
+  border: 1px solid var(--plan-cinnabar-border) !important;
+  border-radius: 6px !important;
+  background: var(--plan-cinnabar-soft) !important;
+  color: #a64635 !important;
+  font: 400 13.5px / 1.4 var(--atelier-serif) !important;
+  text-align: center;
+}
+
+.workspace .learning-plans.plan-garden .plan-task-actions .plan-link:hover:not(:disabled) {
+  background: #f8e8e2 !important;
+  border-color: var(--plan-cinnabar) !important;
+  color: #8f3526 !important;
+}
+
+/* ==========================================================================
+   清单底部已完成研习任务专区（可原地展开/收起、成果统计、温故知新）
+   ========================================================================== */
+.plan-garden .plan-done-group {
+  margin-top: 14px;
+}
+
+.plan-garden .plan-done-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid var(--plan-line);
+  border-radius: 8px;
+  background: #f7f4ec;
+  color: var(--plan-ink-soft);
+  font-size: 14px;
+  list-style: none;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.plan-garden .plan-done-summary-bar::-webkit-details-marker {
+  display: none;
+}
+
+.plan-garden .plan-done-summary-bar:hover {
+  background: #f2eee3;
+  border-color: #d6d0c0;
+  box-shadow: 0 2px 10px rgba(40, 45, 38, 0.04);
+}
+
+.plan-garden .plan-done-group[open] > .plan-done-summary-bar {
+  border-radius: 8px 8px 0 0;
+  border-bottom-color: var(--plan-line-soft);
+  background: #f2eee3;
+}
+
+.plan-garden .plan-done-summary-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-garden .plan-done-title-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plan-garden .plan-done-filter-hint {
+  color: var(--plan-muted);
+  font-size: 12.5px;
+}
+
+.plan-garden .plan-done-summary-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-garden .plan-done-toggle-text {
+  font-size: 13px;
+  color: var(--plan-sage);
+  font-weight: 500;
+}
+
+.workspace .learning-plans.plan-garden .plan-done-jump-btn {
+  padding: 2px 6px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--plan-ink-soft) !important;
+  font: 400 13px / 1.4 var(--atelier-serif) !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: color 0.15s ease !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-done-jump-btn:hover {
+  color: var(--plan-sage-deep) !important;
+  text-decoration: underline;
+}
+
+.plan-garden .plan-done-summary-bar.is-clickable {
+  margin-top: 14px;
+}
+
+.plan-garden .plan-done-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--plan-sage);
+  color: #fff;
+  font-size: 11px;
+  flex: none;
+}
+
+.plan-garden .plan-pending-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--plan-cinnabar-border);
+  color: #fff;
+  font-size: 11px;
+  flex: none;
+}
+
+/* 已完成原地抽屉内容区 */
+.plan-garden .plan-done-drawer-content {
+  padding: 14px 16px 16px;
+  border: 1px solid var(--plan-line);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #faf8f2;
+}
+
+/* 成果数据摘要横条 */
+.plan-garden .plan-done-stats-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  background: #f1ede2;
+  border: 1px solid #e8e3d5;
+  font-size: 13px;
+  color: var(--plan-ink-soft);
+}
+
+.plan-garden .plan-done-stats-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.plan-garden .plan-done-stats-label {
+  color: var(--plan-muted);
+  font-size: 12.5px;
+}
+
+.plan-garden .plan-done-stats-divider {
+  color: #cbc5b5;
+  font-size: 12px;
+}
+
+.plan-garden .plan-empty-sub {
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--plan-muted);
+  font-size: 13.5px;
+}
+
+.workspace .learning-plans.plan-garden .plan-inline-reset {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 12px !important;
+  border: 1px solid var(--plan-line) !important;
+  border-radius: 4px !important;
+  background: #fffefb !important;
+  color: var(--plan-sage) !important;
+  font: 400 13px / 1.4 var(--atelier-serif) !important;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-inline-reset:hover {
+  background: #f4f7f2 !important;
+  border-color: var(--plan-sage) !important;
+  color: var(--plan-sage-deep) !important;
+}
+
+/* 任务学成徽标与温故知新按钮样式 */
+.plan-garden .plan-task-done-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 3px;
+  background: #e3ebd9;
+  color: #3e5c3b;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.workspace .learning-plans.plan-garden .plan-task.is-completed-row {
+  background: #fbf9f4 !important;
+  opacity: 0.95;
+}
+
+.workspace .learning-plans.plan-garden .plan-task.is-completed-row:hover {
+  background: #fffefa !important;
+  opacity: 1;
+}
+
+.workspace .learning-plans.plan-garden .plan-link.is-review-action {
+  border-color: #8ea489 !important;
+  background: #f2f7ef !important;
+  color: #3f593b !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-link.is-review-action:hover:not(:disabled) {
+  background: #e4efe0 !important;
+  border-color: var(--plan-sage) !important;
+  color: #2a4027 !important;
+}
+
+/* ==========================================================================
+   4. 右侧边栏（本周安排 + 研习小笺）
+   ========================================================================== */
+.plan-garden .plan-side-column {
+  display: grid;
+  gap: 18px;
+}
+
+.plan-garden .plan-week-card,
+.plan-garden .plan-margin-note {
+  position: relative;
+  padding: 22px 24px;
+  border: 1px solid var(--plan-line);
+  border-radius: 12px;
+  background: var(--plan-card);
+  box-shadow: 0 4px 20px rgba(40, 45, 38, 0.03);
+  overflow: hidden;
+}
+
+.plan-garden .plan-week-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.workspace .learning-plans.plan-garden .plan-week-head h3,
+.workspace .learning-plans.plan-garden .plan-note-head h3 {
+  margin: 0 !important;
+  font: 600 19px / 1.4 var(--atelier-serif) !important;
+  color: var(--plan-ink) !important;
+}
+
+.plan-garden .plan-week-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--plan-muted);
+  font-size: 13px;
+}
+
+.workspace .learning-plans.plan-garden .plan-week-nav button {
+  min-height: 26px !important;
+  padding: 2px 7px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--plan-muted) !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+}
+
+.workspace .learning-plans.plan-garden .plan-week-nav button:hover {
+  background: #f0ede3 !important;
+  color: var(--plan-ink) !important;
+}
+
+.plan-garden .plan-week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--plan-line-soft);
+  text-align: center;
+}
+
+.plan-garden .plan-week-weekday {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--plan-muted);
+  font-size: 12px;
+}
+
+.workspace .learning-plans.plan-garden .plan-week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 2px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--plan-ink) !important;
+  box-shadow: none !important;
+}
+
+.plan-garden .plan-week-day-num {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.plan-garden .plan-week-day.is-selected .plan-week-day-num {
+  background: #6f846d;
+  color: #ffffff;
+}
+
+.plan-garden .plan-week-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.plan-garden .plan-week-dot.is-overdue {
+  background: var(--plan-cinnabar);
+}
+
+.plan-garden .plan-week-dot.is-scheduled {
+  background: var(--plan-sage);
+}
+
+.plan-garden .plan-week-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.plan-garden .plan-week-foot strong {
+  display: block;
+  margin-bottom: 6px;
+  font: 600 15px / 1.4 var(--atelier-serif);
+  color: var(--plan-ink);
+}
+
+.plan-garden .plan-week-foot p {
+  margin: 0;
+  color: var(--plan-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.workspace .learning-plans.plan-garden .plan-week-foot button {
+  flex: none;
+  padding: 6px 13px !important;
+  border: 1px solid var(--plan-line) !important;
+  border-radius: 6px !important;
+  background: #fbf9f2 !important;
+  color: var(--plan-ink-soft) !important;
+  font: 400 12.5px / 1.4 var(--atelier-serif) !important;
+}
+
+/* 研习小笺 */
+.plan-garden .plan-margin-note {
+  background: linear-gradient(155deg, #fffefa 0%, #f6f3e8 100%);
+}
+
+.plan-garden .plan-note-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.plan-garden .plan-note-seal {
+  writing-mode: vertical-rl;
+  padding: 3px 2px;
+  border-radius: 2px;
+  background: var(--plan-cinnabar);
+  color: #fffdf6;
+  font:
+    11px / 1.1 KaiTi,
+    STKaiti,
+    serif;
+  letter-spacing: 0.1em;
+}
+
+.plan-garden .plan-note-quote {
+  margin: 0 0 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--plan-line-soft);
+  color: var(--plan-ink);
+  font: 500 15.5px / 1.6 var(--atelier-serif);
+}
+
+.plan-garden .plan-note-desc {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding-right: 68px;
+  color: var(--plan-muted);
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.plan-garden .plan-note-art {
+  position: absolute;
+  right: -6px;
+  bottom: -8px;
+  width: 118px;
+  height: 118px;
+  pointer-events: none;
+  opacity: 0.65;
+  mix-blend-mode: multiply;
+}
+
+/* 页脚：始终保持在屏幕/容器底部，折叠课程清单时不会往上窜 */
+.plan-garden .plan-page-foot {
+  margin-top: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding-top: 48px;
+  padding-bottom: 8px;
+  color: #8f9486;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+.plan-garden .plan-page-foot::before,
+.plan-garden .plan-page-foot::after {
+  content: '';
+  width: 44px;
+  height: 1px;
+  background: var(--plan-line);
+}
+
+@media (max-width: 1020px) {
+  .plan-garden .plan-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  .plan-garden .plan-hero-art {
+    right: 0;
+    width: 65%;
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 700px) {
+  .workspace .learning-plans.plan-garden .plan-course-banner {
+    grid-template-columns: 1fr;
+    padding: 18px !important;
+  }
+  .plan-garden .plan-task-group .plan-task {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .plan-garden .plan-task-actions {
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 36px;
+  }
+}

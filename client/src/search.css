@@ -1,0 +1,257 @@
+/* ==========================================================================
+   全局搜索样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：搜索输入框、分类筛选标签、结果卡片流与分页导航
+   ========================================================================== */
+
+.global-search {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 28px;
+  color: #292524;
+}
+
+.global-search header .search-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  padding: 4px 0;
+  margin: 0 0 16px;
+  border: 0;
+  background: transparent;
+  color: #78716c;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: none;
+  transition: color 0.15s ease;
+}
+
+.global-search header .search-back:hover {
+  color: var(--accent, #4e6470);
+}
+
+.global-search header p {
+  font-size: 12px;
+  color: var(--accent, #4e6470);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.global-search h1 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 26px;
+  color: #1c1917;
+  font-weight: 600;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+}
+
+.search-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.search-controls input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 18px;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  font-size: 14.5px;
+  background: #ffffff;
+  color: #1c1917;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.search-controls input:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112);
+}
+
+.search-controls select {
+  width: 180px;
+  border: 1px solid #e7e5e4;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #44403c;
+  outline: none;
+  font-size: 13.5px;
+}
+
+.search-controls select:focus {
+  border-color: var(--accent, #4e6470);
+}
+
+.search-types {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0;
+  flex-wrap: wrap;
+}
+
+.search-types button,
+.global-search footer button {
+  padding: 7px 16px;
+  border: 1px solid #d6d3d1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #57534e;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.search-types button:hover,
+.global-search footer button:hover:not(:disabled) {
+  background: #f5f2eb;
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+.search-types .active {
+  background: #1c1917 !important;
+  color: #ffffff !important;
+  border-color: #1c1917 !important;
+  font-weight: 600 !important;
+}
+
+.search-count {
+  font-size: 12.5px;
+  color: #78716c;
+  margin: 0 0 14px;
+}
+
+.search-results {
+  max-height: calc(100dvh - 310px);
+  min-height: 180px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+.search-result {
+  display: flex;
+  width: 100% !important;
+  gap: 16px;
+  text-align: left;
+  padding: 18px 22px;
+  margin-bottom: 12px;
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  background: #ffffff;
+  align-items: flex-start;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.search-result:hover {
+  border-color: var(--accent, #4e6470);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -2px rgba(28, 25, 23, 0.06);
+}
+
+.search-result > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result strong {
+  display: block;
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 16px;
+  color: #1c1917;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.search-result small {
+  display: block;
+  font-size: 12px;
+  color: #78716c;
+  margin: 5px 0;
+}
+
+.search-result p {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  color: #44403c;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.search-kind {
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: var(--accent-soft, #edf2f5);
+  color: var(--ink-soft, #383633);
+  border: 1px solid var(--line, #dedad0);
+  font-size: 11.5px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.search-arrow {
+  color: #a8a29e;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+.search-result:hover .search-arrow {
+  color: var(--accent, #4e6470);
+  transform: translateX(3px);
+}
+
+.search-empty {
+  padding: 52px 20px;
+  text-align: center;
+  color: #78716c;
+  background: #ffffff;
+  border: 1px dashed #d6d3d1;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+.global-search footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #78716c;
+}
+
+.global-search button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .global-search {
+    padding: 16px;
+  }
+  .search-controls {
+    flex-direction: column;
+  }
+  .search-controls select {
+    width: 100%;
+  }
+  .search-result {
+    gap: 10px;
+    padding: 14px;
+  }
+  .search-results {
+    max-height: calc(100dvh - 350px);
+  }
+}

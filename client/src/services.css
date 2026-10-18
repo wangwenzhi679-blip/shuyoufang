@@ -1,0 +1,308 @@
+/* ==========================================================================
+   服务状态与配置样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：服务卡片、AI模型与邮件配置、异步检查反馈与对话框
+   ========================================================================== */
+
+.service-page-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #efece6;
+}
+
+.service-page-intro p {
+  margin: 0;
+  font-size: 13.5px;
+  color: #78716c;
+}
+
+.service-page-intro > span {
+  font-size: 12px;
+  color: #166534;
+  background: #dcfce7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.service-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.service-card > header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #efece6;
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-soft, #edf2f5);
+  color: var(--accent, #4e6470);
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid var(--line, #dedad0);
+}
+
+.service-icon.mail {
+  background: #f5f2eb;
+  color: #57534e;
+  font-size: 20px;
+  border-color: #e7e5e4;
+}
+
+.service-card h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1c1917;
+}
+
+.service-card header p {
+  font-size: 12px;
+  color: #78716c;
+  margin: 0;
+}
+
+.service-card header .admin-badge {
+  margin-left: auto;
+  font-size: 11px;
+}
+
+.service-card dl {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  font-size: 12.5px;
+  gap: 14px;
+  margin: 0 0 24px;
+}
+
+.service-card dt {
+  color: #78716c;
+  font-weight: 500;
+}
+
+.service-card dd {
+  margin: 0;
+  color: #292524;
+  overflow-wrap: anywhere;
+}
+
+.service-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent, #4e6470);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-top: 1px solid #efece6;
+  padding-top: 16px;
+  margin-top: 18px;
+}
+
+.service-muted {
+  font-size: 12.5px;
+  color: #78716c;
+  line-height: 1.7;
+}
+
+.service-result {
+  background: #fafaf9;
+  border: 1px solid #e7e5e4;
+  border-radius: 9px;
+  padding: 14px;
+  margin: 12px 0;
+  font-size: 12.5px;
+}
+
+.service-result strong {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.service-result.good strong {
+  color: #166534;
+}
+
+.service-result.good {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.service-result.bad strong {
+  color: #991b1b;
+}
+
+.service-result.bad {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.service-result.neutral strong {
+  color: #57534e;
+}
+
+.service-result.neutral {
+  background: #f5f2eb;
+  border-color: #e7e5e4;
+}
+
+.service-result p {
+  font-size: 12.5px;
+  color: #44403c;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+
+.service-result small {
+  font-size: 11px;
+  color: #78716c;
+}
+
+.service-card > footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #efece6;
+}
+
+.service-card footer button {
+  font-size: 12.5px;
+  padding: 6px 14px;
+  min-height: 34px;
+}
+
+.service-dialog {
+  width: min(500px, 100%);
+}
+
+.service-dialog h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 18px;
+  color: #1c1917;
+}
+
+.service-dialog input:not([type='checkbox']),
+.service-dialog select {
+  display: block;
+  width: 100%;
+  height: 38px;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  margin-top: 7px;
+  padding: 7px 12px;
+  font-size: 13px;
+  color: #1c1917;
+  outline: none;
+}
+
+.service-dialog input:focus,
+.service-dialog select:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112, 0.18);
+}
+
+.service-dialog label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.service-dialog label.service-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #44403c;
+}
+
+.service-switch input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent, #4e6470);
+}
+
+.service-form-pair {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 12px;
+}
+
+.service-profiles {
+  margin-top: 20px;
+}
+
+.service-profiles header {
+  justify-content: space-between;
+}
+
+.service-profile {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-top: 1px solid #efece6;
+}
+
+.service-profile > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.service-profile strong {
+  font-size: 13.5px;
+  color: #1c1917;
+}
+
+.service-profile p {
+  font-size: 12px;
+  color: #78716c;
+  overflow-wrap: anywhere;
+}
+
+.service-profile > div:last-child {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.service-current {
+  margin-left: 10px;
+  font-size: 11px;
+  color: var(--accent, #4e6470);
+  font-weight: 600;
+}
+
+@media (max-width: 950px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+  .service-page-intro {
+    align-items: start;
+    flex-direction: column;
+  }
+}

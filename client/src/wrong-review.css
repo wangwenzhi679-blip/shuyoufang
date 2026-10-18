@@ -1,0 +1,303 @@
+/* ==========================================================================
+   错题复习样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：错题列表、批次操作、错题详情答题、解析与排期关联
+   ========================================================================== */
+
+.wrong-review {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 28px;
+  color: #292524;
+}
+
+.wrong-review > header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #efece6;
+}
+
+.wrong-review header p,
+.wr-meta {
+  color: #78716c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.wrong-review h1 {
+  font-family: Georgia, 'Songti SC', 'STSong', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1c1917;
+  letter-spacing: -0.02em;
+  margin: 6px 0;
+}
+
+.wrong-review header span {
+  color: #78716c;
+  font-size: 13.5px;
+}
+
+/* 错题/排期 分段标签切换 */
+.wr-section-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 20px 0 24px;
+  padding: 5px;
+  background: #f5f2eb;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.wrong-review .wr-section-tabs button {
+  min-width: 110px;
+  border: 0;
+  background: transparent;
+  color: #78716c;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.wrong-review .wr-section-tabs .active {
+  background: #ffffff !important;
+  color: #1c1917 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.08) !important;
+}
+
+/* 工具栏与筛选条 */
+.wr-toolbar,
+.wr-filters,
+.wr-tabs,
+.wrong-review footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wr-toolbar {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03);
+}
+
+.wrong-review button {
+  width: auto;
+  min-height: 36px;
+  padding: 7px 15px;
+  border-radius: 8px;
+  border: 1px solid #d6d3d1;
+  background: #ffffff;
+  color: #44403c;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wrong-review button:hover:not(:disabled) {
+  background: #f5f2eb;
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+.wrong-review button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.wr-tabs .active,
+.wrong-review .wr-primary {
+  background: #1c1917 !important;
+  color: #ffffff !important;
+  border-color: #1c1917 !important;
+  font-weight: 600 !important;
+}
+
+.wr-filters select {
+  width: 180px;
+  max-width: 40vw;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 8px 12px;
+  color: #44403c;
+  font-size: 13.5px;
+  outline: none;
+}
+
+.wr-filters select:focus {
+  border-color: var(--accent, #4e6470);
+}
+
+/* 错题卡片列表 */
+.wr-list {
+  display: grid;
+  gap: 16px;
+}
+
+.wr-list article,
+.wrong-detail {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.wrong-review h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 17.5px;
+  line-height: 1.7;
+  color: #1c1917;
+  font-weight: 600;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wr-list-options {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.wr-list-options li {
+  padding: 11px 14px;
+  border: 1px solid #e7e5e4;
+  border-radius: 9px;
+  background: #fafaf9;
+  color: #44403c;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wrong-review details {
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 12px;
+}
+
+.wrong-review summary {
+  cursor: pointer;
+  color: var(--accent, #4e6470);
+  font-weight: 600;
+}
+
+.wrong-review footer {
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.wr-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: #78716c;
+  background: #ffffff;
+  border: 1px dashed #d6d3d1;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+/* 答题选项交互 */
+.wr-options {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.wr-options button {
+  text-align: left;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  padding: 12px 16px;
+  border: 1px solid #e7e5e4;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.wr-options .selected {
+  border-color: var(--accent, #4e6470);
+  background: var(--accent-soft, #edf2f5);
+  color: var(--ink-soft, #383633);
+  font-weight: 600;
+}
+
+.wr-options .right {
+  border-color: #86efac;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.wr-options .wrong {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.wrong-detail textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 130px;
+  padding: 14px;
+  border: 1px solid #e7e5e4;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.wrong-detail textarea:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112);
+}
+
+.wr-feedback {
+  padding: 16px 20px;
+  background: #f5f2eb;
+  border: 1px solid #e7e5e4;
+  border-radius: 10px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  color: #292524;
+}
+
+.wrong-review .wr-link {
+  padding: 0;
+  border: 0;
+  color: var(--accent, #4e6470);
+  background: transparent;
+  font-weight: 600;
+}
+
+.wrong-review .wr-link:hover {
+  text-decoration: underline;
+}
+
+.wrong-review .rename-actions button {
+  min-width: 96px;
+}
+
+@media (max-width: 700px) {
+  .wrong-review {
+    padding: 14px;
+  }
+  .wr-list article,
+  .wrong-detail {
+    padding: 18px 14px;
+  }
+  .wr-filters {
+    flex-wrap: wrap;
+  }
+}

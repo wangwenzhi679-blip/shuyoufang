@@ -1,0 +1,398 @@
+/* ==========================================================================
+   学习首页样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：学习概览卡片、核心统计数据、继续学习进度、近期动态与任务面板
+   ========================================================================== */
+
+.learning-overview {
+  width: 100%;
+  min-width: 0;
+  padding-bottom: 28px;
+  color: #292524;
+}
+
+.overview-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #efece6;
+}
+
+.overview-heading h1 {
+  font-family: Georgia, 'Songti SC', 'STSong', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1c1917;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.overview-heading p,
+.overview-card p {
+  color: #78716c;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.learning-overview .overview-heading > .outline-button {
+  width: auto;
+  flex: 0 0 auto;
+  min-width: 96px;
+  padding: 8px 16px;
+  color: #44403c;
+  border: 1px solid #d6d3d1;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.learning-overview .overview-heading > .outline-button:hover {
+  background: #f5f2eb;
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+/* 四列指标统计块 */
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.overview-stats > button {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overview-stats > button:hover {
+  background: #ffffff;
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 8px 24px -4px rgba(28, 25, 23, 0.08);
+  transform: translateY(-2px);
+}
+
+.overview-stats span {
+  font-size: 13px;
+  color: #78716c;
+  font-weight: 500;
+}
+
+.overview-stats strong {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1c1917;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.overview-stats small {
+  font-size: 12px;
+  color: #a8a29e;
+}
+
+/* 概览卡片 */
+.overview-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  min-width: 0;
+  scroll-margin-top: 16px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.overview-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #efece6;
+}
+
+.overview-card h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1c1917;
+  margin: 0;
+}
+
+.overview-card header button {
+  border: 0;
+  background: transparent;
+  color: var(--accent, #4e6470);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.overview-card header button:hover {
+  text-decoration: underline;
+  color: var(--ink-soft, #383633);
+}
+
+.overview-card small {
+  color: #78716c;
+  font-size: 12px;
+}
+
+/* 继续学习横幅 */
+.overview-continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 6px 0;
+}
+
+.overview-continue h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 21px;
+  color: #1c1917;
+}
+
+.learning-overview .overview-card .create-course,
+.overview-continue .create-course {
+  background: #1c1917 !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  padding: 9px 18px !important;
+  border-radius: 9px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.1) !important;
+}
+
+.learning-overview .overview-card .create-course:hover,
+.overview-continue .create-course:hover {
+  background: var(--accent, #4e6470) !important;
+}
+
+.overview-progress {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.overview-progress progress {
+  width: 140px;
+  height: 6px;
+  accent-color: var(--accent, #4e6470);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* 双列任务区与动态列表 */
+.overview-tasks,
+.overview-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.overview-tasks > section {
+  min-width: 0;
+  margin: 0 0 20px !important;
+  padding: 22px !important;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.overview-tasks h2 {
+  font-family: Georgia, 'Songti SC', serif !important;
+  font-size: 18px !important;
+  color: #1c1917 !important;
+}
+
+.overview-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.overview-rows > button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  text-align: left;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  padding: 10px 12px;
+  cursor: pointer;
+  min-width: 0;
+  transition: all 0.15s ease;
+}
+
+.overview-rows > button:hover {
+  background: #f5f2eb;
+  border-color: #e7e5e4;
+}
+
+.overview-rows strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1917;
+  overflow-wrap: anywhere;
+}
+
+.learning-overview .overview-activity-rows {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+.learning-overview .overview-activity-rows > button {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 4px;
+  padding: 10px 12px;
+  border-radius: 9px;
+}
+
+.learning-overview .overview-activity-rows > button:hover {
+  background: #f5f2eb;
+}
+
+.learning-overview .overview-activity-rows .overview-activity-type {
+  grid-row: 1 / 3;
+  align-self: start;
+  justify-self: start;
+  background: var(--accent-soft, #edf2f5);
+  color: var(--ink-soft, #383633);
+  border: 1px solid var(--line, #dedad0);
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.learning-overview .overview-activity-rows strong {
+  grid-column: 2;
+  color: #1c1917;
+  font-size: 13.5px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.learning-overview .overview-activity-rows small {
+  grid-column: 2;
+  color: #78716c;
+  font-size: 12px;
+}
+
+.overview-error {
+  padding: 16px 20px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  border-radius: 12px;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13.5px;
+  margin-bottom: 18px;
+}
+
+.overview-error button {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #991b1b;
+  padding: 6px 14px;
+  font-weight: 600;
+}
+
+.overview-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 90px;
+  color: #78716c;
+  font-size: 14px;
+}
+
+.overview-loading span {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e7e5e4;
+  border-top-color: var(--accent, #4e6470);
+  border-radius: 50%;
+  animation: overview-spin 0.8s linear infinite;
+}
+
+@keyframes overview-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1050px) {
+  .overview-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview-tasks,
+  .overview-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .overview-heading {
+    align-items: flex-start;
+  }
+  .overview-heading h1 {
+    font-size: 24px;
+  }
+  .overview-stats {
+    gap: 10px;
+  }
+  .overview-stats > button {
+    padding: 14px;
+  }
+  .overview-stats strong {
+    font-size: 24px;
+  }
+  .overview-continue {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .overview-card {
+    padding: 16px;
+  }
+  .overview-progress {
+    flex-wrap: wrap;
+  }
+}

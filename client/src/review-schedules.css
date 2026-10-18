@@ -1,0 +1,256 @@
+/* ==========================================================================
+   复习排期样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：排期面板、任务卡片、批次操作与弹窗
+   ========================================================================== */
+
+.review-schedule-panel {
+  margin: 0 0 24px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.review-schedule-panel > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #efece6;
+}
+
+.review-schedule-panel h2 {
+  margin: 0;
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 20px;
+  color: #1c1917;
+  font-weight: 600;
+}
+
+.review-schedule-panel p,
+.review-schedule-panel small {
+  color: #78716c;
+  font-size: 13px;
+}
+
+.review-schedule-panel button,
+.review-schedule-dialog button {
+  width: auto;
+  min-height: 36px;
+  border: 1px solid #d6d3d1;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 7px 14px;
+  color: #44403c;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.review-schedule-panel button:hover:not(:disabled),
+.review-schedule-dialog button:hover:not(:disabled) {
+  background: #f5f2eb;
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+.schedule-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.schedule-tabs .active,
+.schedule-actions .schedule-open {
+  color: #ffffff !important;
+  background: #1c1917 !important;
+  border-color: #1c1917 !important;
+  font-weight: 600 !important;
+}
+
+.schedule-actions .schedule-open:hover {
+  background: var(--accent, #4e6470) !important;
+  border-color: var(--accent, #4e6470) !important;
+}
+
+.schedule-rows {
+  display: grid;
+  gap: 12px;
+}
+
+.schedule-rows article {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  padding: 16px 20px;
+  background: #fafaf9;
+  transition: all 0.15s ease;
+}
+
+.schedule-rows article:hover {
+  background: #ffffff;
+  border-color: #d6d3d1;
+  box-shadow: 0 4px 14px rgba(28, 25, 23, 0.04);
+}
+
+.schedule-rows article > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.schedule-rows strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #1c1917;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.schedule-rows small {
+  display: block;
+  margin-top: 5px;
+  color: #78716c;
+}
+
+.schedule-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.schedule-empty {
+  padding: 24px 0;
+  text-align: center;
+  color: #78716c;
+}
+
+.review-schedule-dialog {
+  width: min(500px, calc(100vw - 32px)) !important;
+  padding: 28px !important;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px -8px rgba(28, 25, 23, 0.18);
+}
+
+.review-schedule-dialog h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 20px;
+  color: #1c1917;
+  margin: 0 0 16px;
+}
+
+.review-schedule-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+  font-size: 13.5px;
+  color: #44403c;
+  font-weight: 500;
+}
+
+.review-schedule-dialog input {
+  padding: 10px 14px;
+  border: 1px solid #e7e5e4;
+  border-radius: 9px;
+  font: inherit;
+  outline: none;
+}
+
+.review-schedule-dialog input:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112);
+}
+
+.review-schedule-dialog .rename-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #efece6;
+}
+
+.review-schedule-dialog .rename-actions button {
+  min-width: 96px;
+  height: 40px;
+  font-weight: 600;
+}
+
+.review-schedule-dialog .primary {
+  color: #ffffff !important;
+  background: #1c1917 !important;
+}
+
+.review-schedule-dialog .primary:hover {
+  background: var(--accent, #4e6470) !important;
+}
+
+.wr-batch {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.wr-batch label,
+.wr-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #57534e;
+}
+
+.wr-batch input,
+.wr-select input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent, #4e6470);
+}
+
+.wr-select {
+  margin-bottom: 10px;
+}
+
+.wr-notice {
+  padding: 12px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  background: #f0fdf4;
+  font-size: 13.5px;
+  color: #166534;
+}
+
+.review-schedule-panel button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .schedule-rows article {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .schedule-actions {
+    justify-content: flex-start;
+  }
+  .review-schedule-panel {
+    padding: 18px 14px;
+  }
+  .wr-batch {
+    flex-wrap: wrap;
+  }
+}

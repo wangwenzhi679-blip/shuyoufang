@@ -1,0 +1,854 @@
+.admin-login.admin-ink-login {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px clamp(28px, 5vw, 80px) 20px;
+  background: #f8f6ee !important;
+  color: #25291f;
+  font-family: 'Microsoft YaHei', sans-serif;
+  overflow-x: clip;
+}
+.admin-ink-login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Cpath fill='%23746d5a' opacity='.09' filter='url(%23p)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+.admin-ink-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+.admin-ink-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  user-select: none;
+}
+.admin-ink-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  border-bottom: 1px solid #98998a;
+  padding: 0 0 16px;
+  flex: none;
+}
+.admin-ink-brand {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  white-space: nowrap;
+}
+.admin-ink-brand strong {
+  font:
+    400 43px/1.1 'STXingkai',
+    'KaiTi',
+    serif;
+  letter-spacing: 1px;
+}
+.admin-ink-brand > span {
+  border-left: 1px solid #777d68;
+  padding-left: 22px;
+  font:
+    23px/1.3 'KaiTi',
+    serif;
+  letter-spacing: 2px;
+}
+.admin-ink-label {
+  font:
+    16px 'KaiTi',
+    serif;
+  color: #606751;
+  letter-spacing: 2px;
+}
+.admin-ink-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  align-items: start;
+  align-content: center;
+  gap: clamp(60px, 9vw, 150px);
+  width: 100%;
+  max-width: 1260px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  flex: 1 0 auto;
+  padding: 48px 0 68px;
+  min-width: 0;
+}
+.admin-ink-intro {
+  min-width: 0;
+  padding-top: 2px;
+}
+.admin-ink-intro h1 {
+  font:
+    400 clamp(56px, 6vw, 90px) / 1.23 'STXingkai',
+    'KaiTi',
+    serif;
+  letter-spacing: 1px;
+  margin: 0;
+  color: #1f251b;
+}
+.admin-ink-intro h1 > span {
+  display: block;
+  white-space: nowrap;
+  position: relative;
+}
+.admin-ink-intro h1 > span + span {
+  padding-left: 42px;
+  margin-top: 5px;
+}
+.admin-ink-intro h1 i {
+  display: inline-flex;
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font:
+    11px/1.1 'KaiTi',
+    serif;
+  color: #a54532;
+  border: 1px solid #a54532;
+  border-radius: 2px;
+  width: 22px;
+  height: 40px;
+  letter-spacing: 0;
+  font-style: normal;
+}
+.admin-ink-intro > p {
+  font:
+    19px/1.7 'KaiTi',
+    serif;
+  letter-spacing: 2px;
+  margin: 24px 0 0 42px;
+  color: #444d38;
+}
+.admin-ink-form {
+  min-width: 0;
+  width: 100%;
+}
+.admin-ink-eyebrow {
+  font:
+    16px/1.5 'KaiTi',
+    serif;
+  letter-spacing: 2px;
+  border-left: 2px solid #424c34;
+  padding-left: 12px;
+  margin: 0 0 14px;
+}
+.admin-ink-form h2 {
+  font:
+    600 32px/1.35 'KaiTi',
+    serif;
+  margin: 0 0 12px;
+  color: #23281e;
+}
+.admin-ink-description {
+  font:
+    16px/1.6 'KaiTi',
+    serif;
+  letter-spacing: 1px;
+  margin: 0 0 32px;
+  color: #515a42;
+}
+.admin-ink-login .admin-ink-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding: 0 !important;
+  margin: 0;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+.admin-ink-login .admin-ink-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font:
+    16px/1.4 'KaiTi',
+    serif;
+  color: #434c37;
+  min-width: 0;
+}
+.admin-ink-login .admin-ink-form input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  padding: 7px 2px;
+  border: 0;
+  border-bottom: 1px solid #7b826f;
+  border-radius: 0;
+  background: transparent;
+  color: #272e20;
+  font:
+    16px 'Microsoft YaHei',
+    sans-serif;
+  box-shadow: none;
+}
+.admin-ink-login .admin-ink-form input:focus {
+  outline: 0;
+  border-bottom: 2px solid #3f4b2f;
+  box-shadow: none;
+}
+.admin-ink-login .admin-ink-form input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #f8f6ee inset;
+  -webkit-text-fill-color: #272e20;
+}
+.admin-ink-password {
+  position: relative;
+  min-width: 0;
+}
+.admin-ink-login .admin-ink-password input {
+  padding-right: 34px;
+}
+.admin-ink-eye {
+  position: absolute;
+  right: 1px;
+  top: 7px;
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 4px;
+  box-shadow: none !important;
+  cursor: pointer;
+  color: #535e43;
+  border-radius: 0;
+}
+.admin-ink-eye svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+}
+.admin-ink-submit {
+  width: 100%;
+  height: 55px;
+  min-height: 55px;
+  padding: 6px 14px;
+  border: 0 !important;
+  background-color: #22281c !important;
+  color: #f8f6ee !important;
+  font:
+    22px 'KaiTi',
+    serif;
+  letter-spacing: 2px;
+  border-radius: 3% 2% 4% 2% / 25% 20% 24% 15%;
+  box-shadow:
+    2px 1px 0 #4b5340,
+    -2px -1px 0 #4b5340;
+  cursor: pointer;
+  margin-top: 3px;
+  transition: none !important;
+  transform: none !important;
+}
+.admin-ink-submit > span {
+  margin-left: 10px;
+}
+.admin-ink-submit:hover,
+.admin-ink-submit:active {
+  background-color: #22281c !important;
+  color: #f8f6ee !important;
+  transform: none !important;
+  opacity: 1;
+  filter: none;
+}
+.admin-ink-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.admin-ink-error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #9e4030;
+  overflow-wrap: anywhere;
+}
+.admin-ink-back {
+  align-self: center;
+  font:
+    16px/1.5 'KaiTi',
+    serif;
+  color: #556046;
+  text-decoration: none;
+  border-bottom: 1px solid #9a9f8c;
+  padding-bottom: 2px;
+}
+.admin-ink-back:hover {
+  color: #27351e;
+}
+.admin-ink-submit:focus-visible,
+.admin-ink-eye:focus-visible,
+.admin-ink-back:focus-visible {
+  outline: 2px solid #697454;
+  outline-offset: 4px;
+}
+.admin-ink-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  font:
+    14px 'KaiTi',
+    serif;
+  color: #47543a;
+  flex: none;
+  min-height: 24px;
+}
+.admin-ink-footer::before,
+.admin-ink-footer::after {
+  content: '';
+  height: 1px;
+  background: #a5a894;
+  flex: 1;
+}
+.admin-ink-footer > i {
+  font:
+    11px 'KaiTi',
+    serif;
+  color: #ae4834;
+  border: 1px solid #ae4834;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 19px;
+  border-radius: 2px;
+  font-style: normal;
+}
+@media (max-height: 740px) and (min-width: 801px) {
+  .admin-ink-content {
+    padding: 32px 0 40px;
+  }
+  .admin-ink-intro h1 {
+    font-size: 68px;
+  }
+  .admin-ink-description {
+    margin-bottom: 22px;
+  }
+  .admin-ink-login .admin-ink-form form {
+    gap: 19px;
+  }
+  .admin-ink-submit {
+    height: 49px;
+    min-height: 49px;
+  }
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .admin-ink-content {
+    gap: 60px;
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+  .admin-ink-intro h1 {
+    font-size: 58px;
+  }
+  .admin-ink-intro h1 > span + span {
+    padding-left: 25px;
+  }
+  .admin-ink-intro > p {
+    font-size: 16px;
+    margin-left: 25px;
+    letter-spacing: 1px;
+  }
+  .admin-ink-intro h1 i {
+    right: -14px;
+    width: 16px;
+    height: 33px;
+    font-size: 9px;
+  }
+}
+@media (max-width: 800px) {
+  .admin-login.admin-ink-login {
+    padding: 22px 24px 18px;
+  }
+  .admin-ink-header {
+    padding-bottom: 15px;
+  }
+  .admin-ink-brand {
+    gap: 12px;
+  }
+  .admin-ink-brand strong {
+    font-size: 32px;
+  }
+  .admin-ink-brand > span {
+    font-size: 16px;
+    padding-left: 12px;
+    letter-spacing: 0;
+  }
+  .admin-ink-label {
+    display: none;
+  }
+  .admin-ink-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    gap: 32px;
+    padding: 30px 0 40px;
+  }
+  .admin-ink-intro {
+    align-self: center;
+    text-align: center;
+  }
+  .admin-ink-intro h1 {
+    font-size: 43px;
+  }
+  .admin-ink-intro h1 > span + span {
+    padding-left: 15px;
+  }
+  .admin-ink-intro h1 i {
+    right: -21px;
+    width: 16px;
+    height: 32px;
+    font-size: 9px;
+    bottom: 7px;
+  }
+  .admin-ink-intro > p {
+    font-size: 14px;
+    letter-spacing: 0;
+    margin: 14px 0 0;
+  }
+  .admin-ink-art img {
+    object-fit: cover;
+    opacity: 0.32;
+  }
+  .admin-ink-form h2 {
+    font-size: 28px;
+  }
+  .admin-ink-description {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .admin-ink-form {
+    padding: 18px;
+    box-sizing: border-box;
+    background: rgba(248, 246, 238, 0.85);
+  }
+  .admin-ink-login .admin-ink-form form {
+    gap: 20px;
+  }
+  .admin-ink-footer {
+    font-size: 12px;
+    gap: 10px;
+  }
+  .admin-ink-submit {
+    font-size: 19px;
+  }
+}
+.admin-ink-studies {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  color: #657058;
+  opacity: 0.44;
+}
+.admin-ink-intro,
+.admin-ink-form,
+.admin-ink-header,
+.admin-ink-footer {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 800px) {
+  .admin-ink-studies {
+    display: none;
+  }
+}
+.admin-ink-studies {
+  opacity: 0.65;
+  color: #536148;
+}
+.admin-ink-intro h1 {
+  width: max-content;
+  max-width: 100%;
+  position: relative;
+}
+.admin-ink-intro h1 i {
+  right: -35px !important;
+  bottom: 13px !important;
+}
+.admin-ink-login .admin-ink-eye {
+  color: #535e43 !important;
+}
+.admin-ink-login .admin-ink-submit {
+  font:
+    22px 'KaiTi',
+    serif !important;
+  letter-spacing: 2px !important;
+  border-radius: 3% 2% 4% 2% / 25% 20% 24% 15% !important;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .admin-ink-studies {
+    opacity: 0.45;
+  }
+  .admin-ink-intro h1 i {
+    right: -23px !important;
+  }
+}
+@media (max-width: 800px) {
+  .admin-ink-intro h1 i {
+    right: -22px !important;
+  }
+  .admin-ink-login .admin-ink-submit {
+    font-size: 19px !important;
+  }
+}
+.admin-login.admin-ink-login .admin-ink-form .admin-ink-submit,
+.admin-login.admin-ink-login .admin-ink-form .admin-ink-submit:hover,
+.admin-login.admin-ink-login .admin-ink-form .admin-ink-submit:active {
+  background: transparent
+    url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 400 60%27 preserveAspectRatio=%27none%27%3E%3Cpath fill=%27%231c2118%27 d=%27M8 12Q3 8 18 9L68 7 108 9 162 6 211 8 278 7 342 9 379 10 392 15 382 18 398 21 388 25 400 29 390 33 397 36 386 40 394 43 380 48 335 51 276 49 218 53 157 51 103 54 47 51 14 49 5 45 11 42 2 38 6 34 0 30 6 26 2 21 9 17Z%27/%3E%3Cpath fill=%27%235b6052%27 opacity=%27.5%27 d=%27M20 6l80 1 28-2 96 2 82-1 66 4-57-1-116 1-81-1-55 1Z M25 52l70 3 83-2 87 2 96-3-73 4-76-1-77 2-81-2Z%27/%3E%3C/svg%3E')
+    center/100% 100% no-repeat !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  color: #f8f6ee !important;
+}
+.admin-login.admin-ink-login .admin-ink-form .admin-ink-eye {
+  position: absolute !important;
+  right: 1px !important;
+  top: 7px !important;
+  width: 29px !important;
+  height: 29px !important;
+  min-height: 29px !important;
+  margin: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 4px !important;
+  background: transparent !important;
+  color: #535e43 !important;
+  transform: none !important;
+}
+/* Reuse the user login cover artwork and visual language directly. */
+.admin-login.admin-ink-login {
+  background: #fbfbf5 !important;
+  padding: 0 17.4vw 14px !important;
+}
+.admin-ink-login .admin-ink-header {
+  height: 101px !important;
+  box-sizing: border-box;
+  padding: 23px 0 20px !important;
+  max-width: none;
+  flex: none;
+  border-bottom: 1px solid rgba(78, 90, 64, 0.2);
+}
+.admin-ink-login .admin-ink-brand {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.admin-ink-login .admin-ink-brand strong {
+  font:
+    400 37px/1.08 'STXingkai',
+    'KaiTi',
+    serif;
+  letter-spacing: 1px;
+}
+.admin-ink-login .admin-ink-brand > span {
+  border: 0;
+  padding-left: 4px;
+  font:
+    11px/1.3 'KaiTi',
+    serif;
+  letter-spacing: 2px;
+  color: #646c59;
+}
+.admin-ink-login .admin-ink-label {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #434c36;
+}
+.admin-ink-login .admin-ink-content {
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 9vw;
+  padding: 28px 4vw 28px 0;
+  align-content: center;
+  align-items: start;
+}
+.admin-ink-login .admin-ink-intro {
+  padding: 0;
+}
+.admin-ink-login .admin-ink-intro h1 {
+  font:
+    400 clamp(54px, 5.45vw, 86px) / 1.18 'STXingkai',
+    'KaiTi',
+    serif;
+  letter-spacing: 1px;
+  color: #fbfbf5;
+  -webkit-text-stroke: 1px #292e24;
+}
+.admin-ink-login .admin-ink-intro h1 > span {
+  background-image:
+    radial-gradient(ellipse at 12% 78%, rgba(35, 42, 31, 0.25), transparent 20%),
+    radial-gradient(ellipse at 48% 60%, rgba(41, 49, 35, 0.16), transparent 19%),
+    linear-gradient(#fbfbf5, #fbfbf5);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #292e24;
+}
+.admin-ink-login .admin-ink-intro h1 > span + span {
+  padding-left: 48px;
+  margin-top: 4px;
+}
+.admin-ink-login .admin-ink-intro > p {
+  font:
+    16px/1.6 'KaiTi',
+    serif;
+  letter-spacing: 1px;
+  margin: 22px 0 0;
+  color: #414b35;
+}
+.admin-ink-login .admin-ink-form h2 {
+  font-size: 28px;
+}
+.admin-ink-login .admin-ink-description {
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+.admin-ink-login .admin-ink-eyebrow {
+  font-size: 18px;
+  letter-spacing: 2.5px;
+  border: 0;
+  padding: 0;
+  margin-bottom: 27px;
+}
+.admin-ink-login .admin-ink-art img {
+  position: absolute;
+  object-fit: contain;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  max-width: none;
+}
+.admin-ink-login .admin-ink-art .admin-art-mountains {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0.47;
+}
+.admin-ink-login .admin-ink-art .admin-art-studies {
+  left: 2.8%;
+  top: 30.2%;
+  width: 59%;
+  height: 65%;
+  object-fit: fill;
+  opacity: 0.66;
+  mask-image: radial-gradient(
+    ellipse at 53% 55%,
+    black 49%,
+    rgba(0, 0, 0, 0.92) 75%,
+    transparent 100%
+  );
+}
+.admin-ink-login .admin-ink-art .admin-art-bamboo {
+  left: -0.6%;
+  bottom: -0.5%;
+  width: 24%;
+  height: 67%;
+  object-position: left bottom;
+  opacity: 0.92;
+}
+.admin-ink-login .admin-ink-art .admin-art-cloud {
+  right: 10.2%;
+  top: 29%;
+  width: 19%;
+  height: 15%;
+  opacity: 0.58;
+  mask-image: radial-gradient(ellipse at center, black 32%, transparent 73%);
+}
+.admin-ink-login .admin-ink-art .admin-art-plum {
+  right: -2.5%;
+  bottom: 10.5%;
+  width: 27%;
+  height: 35%;
+  opacity: 0.78;
+}
+.admin-ink-login .admin-ink-footer {
+  gap: 14px;
+  font-size: 13px;
+  padding-bottom: 4px;
+  max-width: 680px;
+}
+.admin-ink-login .admin-ink-footer > i {
+  display: none;
+}
+.admin-ink-login .admin-ink-form input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fbfbf5 inset !important;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .admin-login.admin-ink-login {
+    padding-left: 8vw !important;
+    padding-right: 8vw !important;
+  }
+  .admin-ink-login .admin-ink-content {
+    gap: 5vw;
+    padding-right: 0;
+  }
+  .admin-ink-login .admin-ink-intro h1 {
+    font-size: 58px;
+  }
+  .admin-ink-login .admin-ink-intro h1 > span + span {
+    padding-left: 26px;
+  }
+}
+@media (max-width: 800px) {
+  .admin-login.admin-ink-login {
+    padding: 20px 24px 16px !important;
+  }
+  .admin-ink-login .admin-ink-header {
+    height: auto !important;
+    min-height: 70px;
+    padding: 0 0 16px !important;
+  }
+  .admin-ink-login .admin-ink-brand strong {
+    font-size: 30px;
+  }
+  .admin-ink-login .admin-ink-content {
+    display: flex;
+    gap: 28px;
+    padding: 26px 0 38px;
+    max-width: 400px;
+  }
+  .admin-ink-login .admin-ink-intro h1 {
+    font-size: 44px;
+  }
+  .admin-ink-login .admin-ink-intro h1 > span + span {
+    padding-left: 22px;
+  }
+  .admin-ink-login .admin-ink-intro > p {
+    font-size: 14px;
+    margin: 14px 0 0;
+  }
+  .admin-ink-login .admin-ink-form {
+    background: rgba(251, 251, 245, 0.9);
+  }
+  .admin-ink-login .admin-ink-art .admin-art-mountains {
+    opacity: 0.18;
+  }
+  .admin-ink-login .admin-ink-art .admin-art-studies {
+    left: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: 36%;
+    opacity: 0.22;
+  }
+  .admin-ink-login .admin-ink-art .admin-art-bamboo {
+    width: 44%;
+    height: 50%;
+    opacity: 0.4;
+  }
+  .admin-ink-login .admin-art-cloud,
+  .admin-ink-login .admin-art-plum {
+    display: none;
+  }
+}
+
+.admin-ink-login .admin-ink-brand strong {
+  font-size: 44px !important;
+}
+.admin-ink-login .admin-ink-brand > span {
+  font-size: 13px !important;
+  letter-spacing: 2px !important;
+}
+.admin-ink-login .admin-ink-brand {
+  gap: 5px !important;
+}
+@media (max-width: 800px) {
+  .admin-ink-login .admin-ink-brand strong {
+    font-size: 35px !important;
+  }
+  .admin-ink-login .admin-ink-brand > span {
+    font-size: 11px !important;
+  }
+}
+.admin-ink-login .admin-ink-intro {
+  position: relative;
+  top: -18px !important;
+}
+@media (max-width: 800px) {
+  .admin-ink-login .admin-ink-intro {
+    top: -8px !important;
+  }
+}
+.admin-ink-login .admin-ink-form {
+  position: relative;
+  top: -18px !important;
+}
+@media (max-width: 800px) {
+  .admin-ink-login .admin-ink-form {
+    top: 0 !important;
+  }
+}
+
+@media (min-width: 801px) {
+  .admin-ink-login .admin-ink-intro,
+  .admin-ink-login .admin-ink-form {
+    top: -100px !important;
+  }
+}
+.admin-ink-login .admin-ink-brand strong {
+  font-size: 49px !important;
+}
+.admin-ink-login .admin-ink-brand > span {
+  font-size: 15px !important;
+}
+.admin-ink-login .admin-ink-brand {
+  position: relative !important;
+  top: 20px !important;
+}
+.admin-ink-login .admin-ink-label {
+  position: relative !important;
+  top: 20px !important;
+  font-size: 16px !important;
+}
+.admin-ink-login .admin-ink-header {
+  border-bottom-color: transparent !important;
+}
+@media (max-width: 800px) {
+  .admin-ink-login .admin-ink-brand strong {
+    font-size: 38px !important;
+  }
+  .admin-ink-login .admin-ink-brand > span {
+    font-size: 12px !important;
+  }
+}
+.admin-ink-login .admin-ink-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  height: 1px;
+  background: rgba(78, 90, 64, 0.2);
+  pointer-events: none;
+}

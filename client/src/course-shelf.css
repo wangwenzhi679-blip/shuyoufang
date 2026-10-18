@@ -1,0 +1,1506 @@
+body:has(.course-shelf) {
+  overflow-x: clip;
+}
+.learning-layout.student-top-layout .workspace:has(.course-shelf) {
+  display: flex !important;
+  flex-direction: column !important;
+  padding-top: 0 !important;
+  padding-bottom: 12px !important;
+  min-height: calc(100dvh - 76px);
+  background: #f8f5ed !important;
+  overflow-x: clip;
+}
+.course-shelf {
+  --surface: #fdfbf7;
+  --wash: #e8e6dd;
+  --line: #ddd8ca;
+  --shelf-sage: #455b49;
+  --shelf-subtle: color-mix(in srgb, var(--surface) 92%, transparent);
+  --shelf-type: var(--atelier-serif, 'SimSun', serif);
+  position: relative;
+  isolation: isolate;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  color: var(--ink);
+  font-family: var(--shelf-type);
+  padding-bottom: 6px;
+}
+.course-shelf:before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-1 * max(4.4vw, (100vw - 1360px)/2)) -20px;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.18;
+  background: url('/assets/ink/mountain-panorama-v1.png') center bottom/100% auto no-repeat;
+  mask-image: linear-gradient(transparent 60%, #000 86%);
+}
+.course-shelf:after {
+  content: '';
+  position: absolute;
+  inset: 0 -8vw -20px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='.5'/%3E%3C/svg%3E");
+}
+.course-shelf * {
+  box-sizing: border-box;
+}
+.course-shelf button,
+.course-shelf input {
+  font-family: var(--shelf-type) !important;
+}
+.course-shelf button {
+  cursor: pointer;
+}
+.course-shelf button:focus-visible,
+.course-shelf input:focus-visible {
+  outline: 2px solid var(--shelf-sage) !important;
+  outline-offset: 4px;
+}
+.course-shelf .shelf-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 230px;
+  display: flex;
+  align-items: center;
+  padding: 32px 64px;
+  margin: 0;
+}
+.course-shelf .shelf-hero:before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: 0 calc(-1 * max(4.4vw, (100vw - 1360px)/2));
+  background: url('/assets/ink/mountain-panorama-v1.png') left bottom/100% auto no-repeat;
+  opacity: 0.1;
+  mask-image: linear-gradient(90deg, #000, transparent 75%);
+  pointer-events: none;
+}
+.course-shelf .shelf-hero > img {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: auto;
+  right: calc(-1 * max(4.4vw, (100vw - 1360px)/2));
+  width: min(62%, 860px);
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: right bottom;
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 20%, #000 96%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, #000 10%, #000 95%, transparent 100%);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+.course-shelf .shelf-hero > div {
+  max-width: 65%;
+  position: relative;
+}
+.course-shelf .shelf-kicker {
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+}
+.shelf-kicker span {
+  margin-left: 10px;
+  color: var(--muted);
+}
+.workspace .course-shelf .shelf-hero h1 {
+  font: 600 clamp(38px, 3.65vw, 54px) / 1.28 var(--shelf-type) !important;
+  color: var(--ink) !important;
+  letter-spacing: 0.025em !important;
+  margin: 0 !important;
+}
+.workspace .course-shelf .shelf-hero h1:after {
+  content: '';
+  display: block;
+  width: 25px;
+  height: 2px;
+  margin: 13px 0 10px;
+  background: var(--accent);
+}
+.course-shelf .shelf-intro {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.65;
+  letter-spacing: 0.025em;
+  color: var(--ink-soft);
+}
+.course-shelf .shelf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 74px;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 20px;
+}
+.course-shelf .shelf-filters {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 44px;
+  padding-left: 20px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-filters > button {
+  position: relative;
+  background: transparent !important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 17px 2px 16px;
+  color: var(--ink-soft);
+  font-size: calc(var(--user-ui-size, 14px) * 1.14) !important;
+  font-weight: 400;
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+}
+.shelf-filters button > span {
+  margin-left: 11px;
+  font-size: 0.88em;
+  letter-spacing: 0;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.course-shelf .shelf-filters > button[aria-pressed='true'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+.course-shelf .shelf-filters > button[aria-pressed='true']:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 2px;
+  background: var(--accent);
+}
+.course-shelf .shelf-tools {
+  display: flex;
+  align-items: center;
+}
+.course-shelf .shelf-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 290px;
+  height: 42px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+  color: var(--muted);
+}
+.shelf-search > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-search > input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--ink);
+  font-size: var(--user-ui-size, 14px) !important;
+}
+.course-shelf .shelf-search > input:focus {
+  outline: none !important;
+}
+.course-shelf .shelf-search:focus-within {
+  outline: 2px solid var(--shelf-sage);
+  outline-offset: 3px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 38px;
+  padding: 7px 18px;
+  border: 1px solid var(--shelf-sage) !important;
+  border-radius: 5px;
+  background: var(--shelf-sage) !important;
+  color: #fffdf6 !important;
+  font-size: var(--user-ui-size, 14px) !important;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.035em;
+  box-shadow: none;
+  white-space: nowrap;
+}
+.course-shelf .shelf-primary:hover {
+  background: #364b3c !important;
+  border-color: #364b3c !important;
+  transform: none;
+}
+.course-shelf .shelf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.55fr) minmax(276px, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+.shelf-course-list {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.course-shelf .shelf-course {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  min-height: 264px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--shelf-subtle);
+  box-shadow: 0 3px 12px #343a2b06;
+}
+.course-shelf .shelf-cover-button {
+  display: block;
+  position: relative;
+  justify-self: center;
+  max-width: 100%;
+  padding: 0;
+  background: transparent !important;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: none;
+  perspective: 900px;
+}
+.course-shelf .sf-course-cover.shelf-book {
+  width: 146px;
+  height: 212px;
+  min-width: 0;
+  border-radius: 2px 5px 5px 2px;
+  transform: rotateY(-8deg);
+  transform-origin: center;
+  box-shadow:
+    -4px 2px 0 color-mix(in srgb, var(--line) 70%, var(--surface)),
+    3px 8px 14px #343a2b14;
+}
+.course-shelf .shelf-book:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #3a4a321d, transparent 4%, #fff6 7%, transparent 10%);
+  border-left: 3px solid #4d5a3820;
+}
+.course-shelf .sf-course-cover.shelf-book > .sf-book-title {
+  font-size: 19px;
+}
+.course-shelf .sf-course-cover.shelf-book > .sf-book-top {
+  font-size: 9px;
+}
+.course-shelf .sf-course-cover.shelf-book > .sf-book-brand {
+  font-size: 7.5px;
+}
+.shelf-course-body {
+  min-width: 0;
+}
+.course-shelf .shelf-course-state {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 3px;
+  color: var(--shelf-sage);
+  background: color-mix(in srgb, var(--shelf-sage) 13%, var(--surface));
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+}
+.workspace .course-shelf .shelf-course h2 {
+  margin: 8px 0 4px !important;
+  font: 600 clamp(21px, 1.85vw, 26px) / 1.35 var(--shelf-type) !important;
+  color: var(--ink) !important;
+  letter-spacing: 0.015em;
+  overflow-wrap: anywhere;
+}
+.course-shelf .shelf-course-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.course-shelf .shelf-current {
+  margin: 10px 0 10px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.shelf-current time {
+  display: block;
+  font-size: 11.5px;
+}
+.course-shelf .shelf-progress {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.shelf-progress > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.course-shelf .shelf-progress progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 7px;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  appearance: none;
+  background: var(--wash);
+  accent-color: #7f947d;
+}
+.shelf-progress progress::-webkit-progress-bar {
+  background: var(--wash);
+  border-radius: 8px;
+}
+.shelf-progress progress::-webkit-progress-value {
+  background: #7f947d;
+  border-radius: 8px;
+}
+.shelf-progress progress::-moz-progress-bar {
+  background: #7f947d;
+  border-radius: 8px;
+}
+.course-shelf .shelf-course-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-directory {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  color: var(--ink-soft);
+  font-size: 13.5px !important;
+  box-shadow: none;
+  white-space: nowrap;
+}
+.shelf-directory > svg {
+  width: 16px;
+  height: 16px;
+}
+.shelf-directory:hover {
+  color: var(--shelf-sage);
+}
+.course-shelf .shelf-import {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 264px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background:
+    radial-gradient(ellipse at 95% 0, #b7c7a61a, transparent 65%),
+    color-mix(in srgb, var(--surface) 72%, transparent);
+  text-align: center;
+  box-shadow: 0 3px 12px #343a2b03;
+}
+.course-shelf .shelf-import-art {
+  display: block;
+  flex: none;
+  width: 176px;
+  max-width: 100%;
+  height: 102px;
+  margin: 0 auto 10px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.workspace .course-shelf .shelf-import h2 {
+  margin: 0 0 6px !important;
+  color: var(--ink) !important;
+  font: 500 21px/1.45 var(--shelf-type) !important;
+  letter-spacing: 0.02em;
+}
+.course-shelf .shelf-import p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 280px;
+}
+.course-shelf .shelf-import > small {
+  margin: 0;
+  padding: 2px 10px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-import-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 186px;
+  max-width: 100%;
+  min-height: 38px;
+  margin-top: 12px;
+  padding: 6px 16px;
+  border: 1px solid var(--ink-soft);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13.5px !important;
+  line-height: 1.45;
+  box-shadow: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.shelf-import-button > svg {
+  width: 16px;
+  height: 16px;
+}
+.shelf-import-button:hover {
+  background: var(--wash);
+}
+.course-shelf .shelf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 264px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--shelf-subtle);
+  text-align: center;
+}
+.shelf-empty > svg {
+  width: 40px;
+  height: 40px;
+  color: var(--shelf-sage);
+  margin-bottom: 10px;
+  opacity: 0.65;
+}
+.workspace .course-shelf .shelf-empty h2 {
+  font-size: 21px !important;
+  font-weight: 500 !important;
+  margin: 4px 0 8px !important;
+}
+.shelf-empty p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.course-shelf .shelf-guide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: 107px;
+  margin: auto 0 0;
+  padding: 10px 28px 10px 18px;
+  border-block: 1px solid var(--line);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--surface) 58%, transparent);
+}
+.shelf-guide:before,
+.shelf-guide:after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 4px;
+  border-inline: 1px solid var(--line);
+  pointer-events: none;
+}
+.shelf-guide:before {
+  left: 3px;
+}
+.shelf-guide:after {
+  right: 3px;
+}
+.course-shelf .shelf-guide-art {
+  flex: 0 0 340px;
+  align-self: stretch;
+  min-height: 85px;
+  background: url('/assets/ink/course-guide-notebook-v2.png') 50% 70% / contain no-repeat;
+  opacity: 0.88;
+  pointer-events: none;
+}
+.course-shelf .shelf-guide-copy {
+  flex: 1;
+  min-width: 0;
+  padding-left: 34px;
+  border-left: 1px solid var(--line);
+}
+.workspace .course-shelf .shelf-guide h2 {
+  margin: 0 0 6px !important;
+  color: var(--ink) !important;
+  font: 500 clamp(22px, 2vw, 31px) / 1.45 var(--shelf-type) !important;
+  letter-spacing: 0.04em;
+}
+.course-shelf .shelf-guide p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: 0.015em;
+}
+.shelf-seal {
+  writing-mode: vertical-rl;
+  flex: none;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 3px 2px;
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.2;
+}
+.course-shelf .shelf-guide-seal {
+  font-size: 12px;
+  margin-left: 8px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-guide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: var(--user-ui-size, 14px) !important;
+  line-height: 1.6;
+  box-shadow: none;
+  white-space: nowrap;
+}
+.shelf-guide-link span {
+  font-size: 17px;
+}
+.course-shelf .shelf-guide-link:hover {
+  color: var(--shelf-sage);
+  border-bottom-color: var(--shelf-sage);
+}
+.course-shelf .shelf-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  min-height: 52px;
+  padding: 16px 0 4px;
+  color: var(--ink-soft);
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+.shelf-footer:before,
+.shelf-footer:after {
+  content: '';
+  width: 36px;
+  height: 1px;
+  background: var(--line);
+}
+.course-shelf .shelf-help {
+  --surface: #fdfbf6;
+  --wash: #f0f0e8;
+  --ink: #272d27;
+  --muted: #888a80;
+  --line: #deded3;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: hidden;
+  margin: auto;
+  padding: 0;
+  background: radial-gradient(ellipse at 0 100%, #e4e9dd50, transparent 48%), var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 20px 65px #282c222b;
+  font: 14px/1.65 var(--atelier-serif);
+  outline: none;
+}
+.course-shelf .shelf-help[open] {
+  display: flex;
+  flex-direction: column;
+}
+.shelf-help::backdrop {
+  background: #26282066;
+  backdrop-filter: blur(3px);
+}
+.shelf-help > header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+  margin: 0 26px;
+  padding: 22px 0 18px;
+  border-bottom: 1px solid var(--line);
+}
+.workspace .course-shelf .shelf-help h2 {
+  margin: 0 !important;
+  flex: 1;
+  font-size: 23px !important;
+  line-height: 1.4 !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em;
+}
+.shelf-help > header .shelf-seal {
+  font-size: 10px;
+  line-height: 1.1;
+  padding: 3px 1px;
+  opacity: 0.8;
+}
+.shelf-help > header button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: var(--muted);
+}
+.shelf-help .shelf-help-body {
+  padding: 16px 26px 22px;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.shelf-help .shelf-help-intro {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.shelf-help ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+.shelf-help li {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 17px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.shelf-help li:first-child {
+  border: 0;
+  padding-top: 0;
+}
+.shelf-help li:last-child {
+  padding-bottom: 0;
+}
+.shelf-help .shelf-help-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #cbd2c5;
+  border-radius: 5px;
+  color: var(--shelf-sage);
+  background: #6e876207;
+}
+.shelf-help-icon svg {
+  width: 19px;
+  height: 19px;
+}
+.shelf-help strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.shelf-help li p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 7px 0 0;
+}
+.shelf-help > footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex: none;
+  border-top: 1px solid var(--line);
+  padding: 14px 26px 18px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-help > footer button {
+  width: 88px;
+  min-width: 88px;
+  min-height: 35px;
+  height: 35px;
+  padding: 0 12px;
+  border: 1px solid #cbd2c5;
+  border-radius: 4px;
+  font: 400 13px/1.5 var(--atelier-serif);
+  font-size: 13px !important;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+.shelf-help-back {
+  background: transparent;
+  color: var(--ink-soft);
+}
+.shelf-help-back:hover {
+  background: var(--wash);
+}
+html[data-user-theme='dark'] .course-shelf .shelf-help {
+  --surface: #242722;
+  --wash: #1f221e;
+  --ink: #ebe8de;
+  --muted: #a9ae9f;
+  --line: #454b3f;
+}
+html[data-user-theme='dark'] .shelf-help .shelf-help-icon {
+  border-color: var(--line);
+}
+@media (max-width: 480px) {
+  .shelf-help > header {
+    margin-inline: 20px;
+    padding-block: 18px 14px;
+  }
+  .shelf-help .shelf-help-body {
+    padding: 16px 20px 20px;
+  }
+  .shelf-help > footer {
+    padding: 12px 20px 16px;
+  }
+}
+
+html[data-user-theme='dark'] .course-shelf {
+  --surface: #2c2a24;
+  --wash: #353228;
+  --line: #514a3b;
+  --shelf-sage: #a5b99c;
+}
+html[data-user-theme='dark'] .workspace:has(.course-shelf) {
+  background: #24231f !important;
+}
+html[data-user-theme='dark'] .course-shelf .shelf-primary {
+  color: #22291f !important;
+}
+html[data-user-theme='dark'] .course-shelf .shelf-primary:hover {
+  background: #91a68a !important;
+}
+html[data-user-theme='dark'] .course-shelf .shelf-hero > img {
+  mix-blend-mode: screen;
+  opacity: 0.24;
+}
+html[data-user-theme='dark'] .course-shelf:before {
+  opacity: 0.1;
+}
+@media (max-width: 1250px) {
+  .course-shelf .shelf-layout {
+    grid-template-columns: minmax(0, 2.15fr) minmax(264px, 1fr);
+  }
+  .course-shelf .shelf-course {
+    grid-template-columns: 152px minmax(0, 1fr);
+    gap: 20px;
+    padding: 18px 20px;
+    min-height: 252px;
+  }
+  .course-shelf .sf-course-cover.shelf-book {
+    width: 136px;
+    height: 198px;
+  }
+  .course-shelf .sf-course-cover.shelf-book > .sf-book-title {
+    font-size: 18px;
+  }
+  .workspace .course-shelf .shelf-course h2 {
+    font-size: 22px !important;
+  }
+  .course-shelf .shelf-current {
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .course-shelf .shelf-course-description {
+    font-size: 13.5px;
+  }
+  .course-shelf .shelf-import {
+    min-height: 252px;
+    padding: 18px 18px;
+  }
+  .course-shelf .shelf-import-art {
+    height: 96px;
+    margin-bottom: 8px;
+  }
+  .workspace .course-shelf .shelf-import h2 {
+    font-size: 20px !important;
+  }
+  .course-shelf .shelf-guide {
+    gap: 24px;
+    padding-right: 22px;
+  }
+  .course-shelf .shelf-guide-art {
+    flex-basis: 210px;
+  }
+  .course-shelf .shelf-guide-copy {
+    padding-left: 24px;
+  }
+  .course-shelf .shelf-guide p {
+    font-size: 14px;
+  }
+  .course-shelf .shelf-guide-seal {
+    margin-left: 0;
+  }
+}
+@media (max-width: 980px) {
+  .course-shelf .shelf-hero {
+    padding-left: 30px;
+    min-height: 230px;
+  }
+  .course-shelf .shelf-hero > div {
+    max-width: 80%;
+  }
+  .course-shelf .shelf-intro {
+    font-size: 18px;
+  }
+  .course-shelf .shelf-filters {
+    gap: 26px;
+    padding-left: 0;
+  }
+  .course-shelf .shelf-search {
+    width: 215px;
+  }
+  .course-shelf .shelf-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .course-shelf .shelf-course {
+    grid-template-columns: 156px minmax(0, 1fr);
+    gap: 22px;
+    min-height: 248px;
+  }
+  .course-shelf .sf-course-cover.shelf-book {
+    width: 142px;
+    height: 206px;
+  }
+  .course-shelf .shelf-import {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 20px;
+    min-height: 156px;
+    padding: 18px 22px;
+    text-align: left;
+  }
+  .course-shelf .shelf-import-art {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    width: 140px;
+    height: 112px;
+    margin: 0;
+  }
+  .workspace .course-shelf .shelf-import h2 {
+    grid-column: 2;
+    margin: 0 !important;
+    font-size: 20px !important;
+  }
+  .course-shelf .shelf-import p {
+    grid-column: 2;
+    margin: 0;
+  }
+  .course-shelf .shelf-import > small {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-import-button {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    width: 142px;
+    margin: 0;
+    padding-inline: 12px;
+  }
+  .course-shelf .shelf-guide {
+    gap: 18px;
+  }
+  .course-shelf .shelf-guide-art {
+    flex-basis: 150px;
+  }
+  .course-shelf .shelf-guide-copy {
+    padding-left: 18px;
+  }
+  .course-shelf .shelf-guide-seal {
+    display: none;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-guide-link {
+    font-size: 12px !important;
+  }
+}
+@media (max-width: 760px) {
+  .course-shelf .shelf-hero {
+    min-height: 210px;
+    padding: 28px 4px;
+  }
+  .course-shelf .shelf-hero > div {
+    max-width: 94%;
+  }
+  .course-shelf .shelf-hero > img {
+    opacity: 0.32;
+    object-position: 80% bottom;
+  }
+  .workspace .course-shelf .shelf-hero h1 {
+    font-size: 34px !important;
+  }
+  .course-shelf .shelf-kicker {
+    font-size: 13px;
+  }
+  .course-shelf .shelf-intro {
+    font-size: 15px;
+  }
+  .course-shelf .shelf-toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    min-height: 0;
+    padding-bottom: 16px;
+  }
+  .course-shelf .shelf-filters {
+    min-height: 52px;
+    gap: 26px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-filters > button {
+    font-size: 14px !important;
+    padding: 13px 0;
+  }
+  .shelf-filters button > span {
+    margin-left: 7px;
+  }
+  .course-shelf .shelf-tools {
+    width: 100%;
+  }
+  .course-shelf .shelf-search {
+    width: 100%;
+    height: 40px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-search > input {
+    font-size: 13px !important;
+  }
+  .course-shelf .shelf-course {
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 15px;
+    padding: 16px 14px;
+    min-height: 220px;
+  }
+  .course-shelf .sf-course-cover.shelf-book {
+    width: 96px;
+    height: 148px;
+  }
+  .course-shelf .sf-course-cover.shelf-book > .sf-book-title {
+    font-size: 14px;
+  }
+  .course-shelf .sf-course-cover.shelf-book > .sf-book-top {
+    font-size: 7px;
+  }
+  .course-shelf .sf-course-cover.shelf-book > .sf-book-brand {
+    font-size: 6px;
+  }
+  .workspace .course-shelf .shelf-course h2 {
+    font-size: 19px !important;
+    line-height: 1.45 !important;
+    margin-top: 6px !important;
+  }
+  .course-shelf .shelf-course-state {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+  .course-shelf .shelf-course-description {
+    font-size: 12px;
+  }
+  .course-shelf .shelf-current {
+    font-size: 12px;
+    margin: 8px 0 8px;
+  }
+  .course-shelf .shelf-progress {
+    padding-top: 9px;
+    margin-bottom: 11px;
+  }
+  .shelf-progress > div {
+    font-size: 11px;
+  }
+  .course-shelf .shelf-progress progress {
+    height: 5px;
+    margin-top: 6px;
+  }
+  .course-shelf .shelf-course-actions {
+    gap: 8px 14px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-course-actions .shelf-primary {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 12px !important;
+    gap: 8px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-directory {
+    font-size: 12px !important;
+    gap: 5px;
+  }
+  .shelf-directory > svg {
+    width: 14px;
+  }
+  .course-shelf .shelf-import {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    gap: 8px 14px;
+    padding: 18px;
+    min-height: 0;
+  }
+  .course-shelf .shelf-import-art {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    width: 104px;
+    height: 110px;
+  }
+  .workspace .course-shelf .shelf-import h2 {
+    grid-column: 1;
+    font-size: 17px !important;
+  }
+  .course-shelf .shelf-import p {
+    grid-column: 1;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .course-shelf .shelf-import > small {
+    grid-column: 1;
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-import-button {
+    grid-column: 1;
+    grid-row: 4;
+    width: 100%;
+    min-height: 34px;
+    margin: 0;
+    padding: 6px 8px;
+    font-size: 12px !important;
+    gap: 6px;
+  }
+  .course-shelf .shelf-guide {
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: 10px 13px;
+    min-height: 0;
+    margin-top: auto;
+    padding: 17px 15px;
+  }
+  .course-shelf .shelf-guide-art {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: 78px;
+    background-size: 150% auto;
+  }
+  .course-shelf .shelf-guide-copy {
+    padding-left: 0;
+    border: 0;
+  }
+  .workspace .course-shelf .shelf-guide h2 {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+  }
+  .course-shelf .shelf-guide p {
+    font-size: 12px;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-guide-link {
+    grid-column: 2;
+    justify-self: start;
+    font-size: 11px !important;
+    padding: 3px 0;
+  }
+  .course-shelf .shelf-footer {
+    min-height: 48px;
+    padding: 14px 0 4px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    gap: 12px;
+  }
+  .shelf-footer:before,
+  .shelf-footer:after {
+    width: 22px;
+  }
+}
+/* Quiet feedback keeps the paper layout still while making controls clear. */
+.course-shelf .shelf-course,
+.course-shelf .shelf-import {
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.course-shelf .shelf-course:focus-within {
+  border-color: color-mix(in srgb, var(--shelf-sage) 50%, var(--line));
+}
+.course-shelf .shelf-course[data-complete='true'] .shelf-course-state {
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 3px 10px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-search-clear {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 5px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-soft);
+  box-shadow: none;
+}
+.shelf-search-clear svg {
+  width: 16px;
+  height: 16px;
+}
+.course-shelf .shelf-search-clear:hover {
+  background: var(--wash);
+}
+.course-shelf .shelf-search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+@media (hover: hover) {
+  .course-shelf .shelf-course:hover {
+    border-color: color-mix(in srgb, var(--shelf-sage) 30%, var(--line));
+    box-shadow: 0 5px 18px #343a2b0b;
+  }
+  .course-shelf .shelf-import:hover {
+    border-color: color-mix(in srgb, var(--shelf-sage) 30%, var(--line));
+  }
+  .course-shelf .shelf-filters > button:hover {
+    color: var(--ink);
+  }
+  .course-shelf .shelf-cover-button:hover {
+    filter: brightness(1.025);
+    transform: none;
+  }
+}
+/* Align the shelf controls and first pair of cards on one shared grid. */
+.course-shelf .shelf-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.course-shelf .shelf-sort {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  margin: 0;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-sort > select {
+  height: 42px;
+  padding: 0 30px 0 12px;
+  border: 1px solid var(--line) !important;
+  border-radius: 7px !important;
+  background-color: color-mix(in srgb, var(--surface) 40%, transparent) !important;
+  color: var(--ink-soft) !important;
+  font-family: var(--shelf-type) !important;
+  font-size: 13px !important;
+  cursor: pointer;
+  outline: none;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-sort > select:hover {
+  border-color: color-mix(in srgb, var(--shelf-sage) 40%, var(--line)) !important;
+  color: var(--ink) !important;
+}
+.course-shelf .shelf-course-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.course-shelf .shelf-course-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.course-shelf .shelf-course-head-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.course-shelf .shelf-pin-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  border-radius: 3px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-pin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent !important;
+  color: var(--muted);
+  font-size: 12px !important;
+  line-height: 1.35;
+  box-shadow: none;
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+}
+.course-shelf .shelf-pin-btn > svg {
+  width: 13.5px;
+  height: 13.5px;
+}
+.learning-layout.student-top-layout .course-shelf .shelf-pin-btn:hover {
+  border-color: var(--line);
+  background: var(--wash) !important;
+  color: var(--ink);
+}
+.learning-layout.student-top-layout .course-shelf .shelf-pin-btn.is-pinned {
+  border-color: color-mix(in srgb, var(--shelf-sage) 35%, var(--line));
+  background: color-mix(in srgb, var(--shelf-sage) 10%, var(--surface)) !important;
+  color: var(--shelf-sage);
+}
+.learning-layout.student-top-layout .course-shelf .shelf-pin-btn.is-danger:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
+  color: var(--accent);
+}
+.course-shelf .shelf-course[data-pinned='true'] {
+  border-color: color-mix(in srgb, var(--shelf-sage) 36%, var(--line));
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--shelf-sage) 4%, var(--surface)),
+    var(--shelf-subtle)
+  );
+}
+.course-shelf .shelf-course-traces {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  margin: 0 0 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--wash) 52%, transparent);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+.course-shelf .shelf-course-traces b {
+  font-weight: 600;
+  color: var(--ink);
+}
+.course-shelf .shelf-course-traces i {
+  color: var(--muted);
+  font-style: normal;
+  opacity: 0.65;
+}
+.course-shelf .shelf-import[data-dragging='true'] {
+  border: 1.5px dashed var(--shelf-sage) !important;
+  background:
+    radial-gradient(
+      ellipse at 50% 35%,
+      color-mix(in srgb, var(--shelf-sage) 14%, transparent),
+      transparent 72%
+    ),
+    var(--surface) !important;
+  box-shadow: 0 8px 24px #343a2b14;
+}
+.course-shelf .shelf-drop-notice {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.45;
+}
+@media (min-width: 981px) {
+  .course-shelf .shelf-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .course-shelf .shelf-filters {
+    padding-left: 0;
+    gap: 36px;
+  }
+  .course-shelf .shelf-tools {
+    width: auto;
+    flex: 0 1 430px;
+    justify-content: flex-end;
+  }
+  .course-shelf .shelf-search {
+    flex: 1 1 250px;
+    width: auto;
+  }
+  .course-shelf .shelf-layout {
+    gap: 20px;
+    align-items: stretch;
+  }
+  .course-shelf .shelf-course-list {
+    display: contents;
+  }
+  .course-shelf .shelf-course,
+  .course-shelf .shelf-empty {
+    grid-column: 1;
+  }
+  .course-shelf .shelf-import {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: flex-start;
+    min-height: 264px;
+    padding: 20px 22px;
+    background: var(--shelf-subtle);
+  }
+  .course-shelf .shelf-import-art {
+    width: 170px;
+    height: 100px;
+    margin: 0 auto 8px;
+  }
+  .workspace .course-shelf .shelf-import h2 {
+    font-size: 21px !important;
+    margin-bottom: 6px !important;
+  }
+  .course-shelf .shelf-import p {
+    max-width: 100%;
+    line-height: 1.65;
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+  .learning-layout.student-top-layout .course-shelf .shelf-import-button {
+    margin-top: auto;
+    min-height: 38px;
+    width: 100%;
+    max-width: 196px;
+  }
+  .course-shelf .shelf-import > small {
+    border: 0;
+    padding: 0 0 12px;
+    letter-spacing: 0.08em;
+  }
+  .course-shelf .shelf-course {
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: 22px;
+    min-height: 264px;
+    padding: 20px 24px;
+  }
+  .course-shelf .shelf-course-body {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: flex-start;
+  }
+  .course-shelf .shelf-course-body h2 {
+    font-size: clamp(21px, 1.8vw, 25px) !important;
+    text-wrap: balance;
+  }
+  .course-shelf .shelf-progress {
+    width: 100%;
+    margin-top: auto;
+  }
+  .course-shelf .shelf-current {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .course-shelf .shelf-course-actions {
+    min-height: 38px;
+  }
+  .course-shelf .shelf-guide {
+    gap: 24px;
+    padding-inline: 28px;
+    min-height: 112px;
+  }
+  .course-shelf .shelf-guide-art {
+    flex-basis: 240px;
+  }
+  .course-shelf .shelf-guide-copy {
+    padding-left: 28px;
+  }
+  .workspace .course-shelf .shelf-guide h2 {
+    font-size: 26px !important;
+  }
+  .course-shelf .shelf-guide p {
+    font-size: 15px;
+    text-wrap: pretty;
+  }
+}
+@media (min-width: 981px) and (max-width: 1250px) {
+  .course-shelf .shelf-course {
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 18px;
+    padding: 18px 20px;
+  }
+  .course-shelf .shelf-import {
+    padding: 18px 18px;
+  }
+  .course-shelf .shelf-course-body h2 {
+    font-size: 22px !important;
+  }
+}
+@media (max-width: 760px) {
+  .course-shelf .shelf-tools {
+    flex-wrap: wrap;
+  }
+  .course-shelf .shelf-search {
+    flex: 1 1 180px;
+  }
+  .course-shelf .shelf-sort,
+  .learning-layout.student-top-layout .course-shelf .shelf-sort > select {
+    height: 40px;
+    font-size: 12px !important;
+  }
+  .course-shelf .shelf-course-traces {
+    font-size: 11px;
+    padding: 4px 8px;
+    margin-bottom: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .course-shelf * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

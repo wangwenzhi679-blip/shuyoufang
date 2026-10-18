@@ -1,0 +1,421 @@
+/* ==========================================================================
+   管理端扩展与组件增强样式：当代人文·典雅轻奢（Warm Editorial）
+   全景覆盖：公告对话框与预览、日期选择器、时间范围面板、备份与运行设置
+   ========================================================================== */
+
+/* 公告管理工具栏与对话框 */
+.admin-announcement-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.admin-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-announcement-dialog {
+  width: min(580px, 100%);
+}
+
+.admin-announcement-dialog input,
+.admin-announcement-dialog select {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1c1917;
+  font-size: 13.5px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.admin-announcement-dialog input:focus,
+.admin-announcement-dialog select:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112, 0.18);
+}
+
+.admin-announcement-dialog textarea {
+  min-height: 160px;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.6;
+  outline: none;
+}
+
+.admin-announcement-dialog textarea:focus {
+  border-color: var(--accent, #4e6470);
+  box-shadow: 0 0 0 3px rgba(78, 100, 112, 0.18);
+}
+
+.admin-form-pair {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+}
+
+.admin-announcement-preview h3 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 18px;
+  color: #1c1917;
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.admin-announcement-preview p {
+  font-size: 14px;
+  color: #44403c;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+.admin-announcement-preview small {
+  color: #78716c;
+}
+
+.admin-recent {
+  margin-top: 20px;
+}
+
+.admin-recent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-recent li {
+  border-bottom: 1px solid #efece6;
+  padding: 12px 0;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-recent li small {
+  color: #78716c;
+  display: block;
+  margin-top: 3px;
+}
+
+/* 日期选择器（DatePicker & Calendar）当代人文温润雅致质感 */
+.admin-date-picker {
+  position: relative;
+}
+
+.admin-date-picker > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 146px;
+  height: 38px;
+  font-size: 13px;
+  color: #44403c;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.admin-date-picker > button:hover {
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+.admin-calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 50;
+  width: 284px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px -4px rgba(28, 25, 23, 0.12);
+}
+
+.admin-calendar header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.admin-calendar header button {
+  padding: 4px 8px;
+  min-height: 30px;
+  border: 1px solid #e7e5e4;
+  border-radius: 6px;
+  background: #fafaf9;
+  color: #44403c;
+}
+
+.admin-calendar header select {
+  min-width: 0 !important;
+  width: auto;
+  font-size: 12.5px;
+  padding: 4px 8px;
+  height: 32px;
+  border: 1px solid #e7e5e4;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1c1917;
+}
+
+.admin-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  text-align: center;
+}
+
+.admin-calendar-grid small {
+  padding: 5px 2px;
+  color: #a8a29e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-calendar-grid button {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  font-size: 12.5px;
+  border-radius: 7px;
+  background: transparent;
+  color: #292524;
+  transition: all 0.12s ease;
+}
+
+.admin-calendar-grid button:hover {
+  background: var(--accent-soft, #edf2f5);
+  color: var(--ink-soft, #383633);
+}
+
+.admin-calendar-grid button.selected {
+  background: #1c1917 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.admin-calendar footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  border-top: 1px solid #efece6;
+  padding-top: 10px;
+}
+
+.admin-calendar footer button {
+  font-size: 12px;
+  padding: 4px 10px;
+  min-height: 28px;
+}
+
+/* 日期范围面板（DateRange） */
+.admin-date-range {
+  position: relative;
+}
+
+.admin-date-range > button {
+  height: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e7e5e4;
+  font-size: 13px;
+  color: #44403c;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.admin-date-range > button:hover {
+  border-color: var(--accent, #4e6470);
+  color: var(--accent, #4e6470);
+}
+
+.admin-range-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 9px);
+  z-index: 45;
+  width: 320px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  box-shadow: 0 16px 36px -4px rgba(28, 25, 23, 0.14);
+}
+
+.admin-range-panel h3 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 14px;
+  color: #1c1917;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+
+.admin-range-panel > div {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-range-panel label {
+  display: grid;
+  gap: 6px;
+  align-items: start;
+  font-size: 12px;
+  color: #57534e;
+  font-weight: 500;
+}
+
+.admin-range-panel .admin-date-picker > button {
+  width: 100%;
+  height: 36px;
+  font-size: 12.5px;
+}
+
+.admin-range-panel .admin-calendar {
+  left: 0;
+  width: 280px;
+  z-index: 55;
+}
+
+.admin-range-panel footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+  border-top: 1px solid #efece6;
+  padding-top: 14px;
+}
+
+.admin-range-panel footer button {
+  font-size: 12.5px;
+  padding: 6px 14px;
+  min-height: 32px;
+  border-radius: 7px;
+}
+
+.admin-range-panel footer button:first-child {
+  border: 0;
+  color: #78716c;
+  background: transparent;
+}
+
+.admin-range-panel footer button:first-child:hover {
+  color: #1c1917;
+}
+
+/* 运行设置面板 */
+.admin-runtime-panel {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  padding: 26px;
+  max-width: 800px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+}
+
+.admin-runtime-panel h2 {
+  font-family: Georgia, 'Songti SC', serif;
+  font-size: 20px;
+  color: #1c1917;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.admin-runtime-panel p {
+  font-size: 13.5px;
+  color: #78716c;
+  line-height: 1.7;
+}
+
+.admin-runtime-panel dl > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #efece6;
+  font-size: 14px;
+}
+
+.admin-runtime-panel dt {
+  font-weight: 500;
+  color: #292524;
+}
+
+.admin-runtime-panel dd {
+  margin: 0;
+  color: #57534e;
+}
+
+/* 数据备份列表行 */
+.admin-backup-row {
+  padding: 18px 0;
+  border-bottom: 1px solid #efece6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-backup-row strong {
+  font-size: 14px;
+  color: #1c1917;
+}
+
+.admin-backup-id {
+  margin-left: 12px;
+  color: #78716c;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.admin-backup-row button {
+  min-width: 96px;
+  min-height: 36px;
+  font-size: 13px;
+}
+
+.admin-runtime-panel [role='alert'] {
+  color: #991b1b;
+}
+
+@media (max-width: 700px) {
+  .admin-filters {
+    padding: 12px;
+    gap: 8px;
+  }
+  .admin-filters > input {
+    max-width: none;
+    flex-basis: 100%;
+  }
+  .admin-range-panel {
+    right: auto;
+    left: 0;
+    width: 290px;
+  }
+  .admin-range-panel .admin-calendar {
+    width: 260px;
+  }
+}

@@ -1,0 +1,199 @@
+body .modal-backdrop.course-create-backdrop .record-modal.course-create-dialog {
+  height: 580px;
+  max-height: calc(100dvh - 40px);
+  outline: none;
+}
+.account-panel.course-create-dialog .account-header {
+  border-bottom: 1px solid var(--line);
+  margin: 0 26px !important;
+  padding: 22px 0 18px !important;
+}
+.account-panel.course-create-dialog .account-header > div:after {
+  right: 42px;
+}
+.account-panel.course-create-dialog .course-create-body {
+  padding: 16px 26px 20px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.course-create-dialog .course-create-intro {
+  margin: 0 0 18px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.course-create-dialog fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.account-panel.course-create-dialog .course-create-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0 0 17px;
+  color: var(--ink);
+  font-size: 13px !important;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.course-create-dialog .course-create-field > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.course-create-dialog .course-create-field small {
+  display: inline;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+body .account-backdrop .course-create-dialog .course-create-field :is(input, textarea) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 8px 11px !important;
+  border: 1px solid #cbd2c5 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+  font: 400 13px/1.6 var(--atelier-serif, 'SimSun', serif) !important;
+}
+body .account-backdrop .course-create-dialog .course-create-field textarea {
+  height: 66px !important;
+  min-height: 66px !important;
+  resize: vertical;
+  max-height: 140px;
+}
+.course-create-dialog .course-create-field :is(input, textarea)::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+.course-create-dialog .course-create-materials h3 {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0 0 7px;
+}
+.account-panel.course-create-dialog .course-create-picker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 115px;
+  margin: 0;
+  border: 1px dashed #b7c3b1;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #9fb3910b, transparent), var(--wash);
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 13px !important;
+  font-weight: 400;
+}
+body .account-backdrop .course-create-dialog .course-create-picker input[type='file'] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  opacity: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+.course-create-dialog .course-create-picker:focus-within {
+  outline: 2px solid #6b8b76;
+  outline-offset: 3px;
+}
+.course-create-dialog .course-create-picker > svg {
+  margin-bottom: 2px;
+  opacity: 0.75;
+}
+.course-create-dialog .course-create-picker > small {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+.course-create-dialog .course-create-file-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 8px 0 0;
+}
+.course-create-dialog .course-create-files {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+.course-create-dialog .course-create-files li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.course-create-files li > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.course-create-files li > small {
+  flex: none;
+  font-size: 10px;
+  color: var(--muted);
+}
+.account-panel.course-create-dialog .course-create-error {
+  font-size: 12px !important;
+  line-height: 1.7;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-radius: 4px;
+  color: #ad4c3e;
+  background: #ad4c3e0b;
+}
+.course-create-dialog .course-create-saving {
+  flex: 1;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.course-create-dialog button:disabled,
+.course-create-dialog fieldset:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+html[data-user-theme='dark']
+  body
+  .account-backdrop
+  .course-create-dialog
+  .course-create-field
+  :is(input, textarea) {
+  border-color: var(--line) !important;
+}
+@media (max-width: 480px) {
+  .account-panel.course-create-dialog .account-header {
+    margin-inline: 20px !important;
+    padding-block: 18px 14px !important;
+  }
+  .account-panel.course-create-dialog .course-create-body {
+    padding-inline: 20px;
+  }
+}

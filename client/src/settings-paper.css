@@ -1,0 +1,571 @@
+/* Settings use a separate frame so legacy modal rules cannot change the proportions. */
+body .modal-backdrop.account-backdrop .record-modal.account-panel.settings-paper-dialog {
+  --surface: #fdfbf6;
+  --wash: #f0f0e8;
+  --ink: #272d27;
+  --muted: #888a80;
+  --line: #deded3;
+  --accent: #496c5c;
+  width: min(440px, calc(100vw - 32px)) !important;
+  height: 580px;
+  max-height: calc(100dvh - 40px);
+  box-sizing: border-box;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  background:
+    radial-gradient(ellipse at 0 100%, #e4e9dd50, transparent 48%),
+    linear-gradient(115deg, #fff9, transparent), var(--surface) !important;
+  color: var(--ink) !important;
+  box-shadow: 0 20px 65px #282c222b !important;
+  font: 14px/1.65 var(--atelier-serif, 'SimSun', serif) !important;
+}
+.account-panel.settings-paper-dialog :is(button, input, select) {
+  box-sizing: border-box;
+  letter-spacing: 0;
+  font-family: inherit !important;
+}
+.account-panel.settings-paper-dialog .account-header {
+  flex: none;
+  position: relative;
+  align-items: center;
+  margin: 0 !important;
+  padding: 22px 26px 18px !important;
+  border: 0;
+}
+.account-panel.settings-paper-dialog .account-header > div {
+  display: block;
+}
+.account-panel.settings-paper-dialog .account-header > div::after {
+  position: absolute;
+  right: 68px;
+  top: 24px;
+  content: '研习';
+  font-size: 10px;
+  line-height: 1.1;
+}
+.account-panel.settings-paper-dialog .account-header h2 {
+  font: 600 24px/1.4 var(--atelier-serif, serif) !important;
+  letter-spacing: 0.05em;
+}
+.account-panel.settings-paper-dialog .account-header p {
+  display: none;
+}
+.account-panel.settings-paper-dialog .account-close {
+  width: 28px;
+  height: 28px;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--muted);
+  border-radius: 4px;
+}
+.account-panel.settings-paper-dialog .account-settings-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  flex-direction: column;
+}
+.account-panel.settings-paper-dialog .account-settings-layout nav {
+  display: flex;
+  flex: none;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 24px;
+  margin: 0 26px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+.account-panel.settings-paper-dialog .account-settings-layout nav button {
+  position: relative;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  min-width: 52px;
+  padding: 10px 2px 13px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--muted);
+  font-size: 15px !important;
+  line-height: 1.5;
+  box-shadow: none !important;
+}
+.account-panel.settings-paper-dialog .account-settings-layout nav button svg {
+  display: none;
+}
+.account-panel.settings-paper-dialog .account-settings-layout nav button.selected {
+  color: var(--ink);
+  font-weight: 500 !important;
+}
+.account-panel.settings-paper-dialog .account-settings-layout nav button.selected::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: calc(50% - 23px);
+  right: calc(50% - 23px);
+  height: 2px;
+  background: #ad4c3e;
+}
+.account-panel.settings-paper-dialog .account-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: 14px 26px;
+  font-size: 14px;
+}
+.account-panel.settings-paper-dialog .account-body .account-setting-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  min-height: 54px;
+  box-sizing: border-box;
+}
+.account-panel.settings-paper-dialog .account-setting-row > span {
+  flex: 1;
+  min-width: 0;
+}
+.account-panel.settings-paper-dialog .account-setting-row strong {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400 !important;
+}
+.account-panel.settings-paper-dialog .account-setting-row small {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 4px;
+  color: var(--muted);
+}
+body .account-backdrop .account-panel.settings-paper-dialog .account-body select {
+  flex: none;
+  width: 146px;
+  max-width: 44%;
+  height: 37px !important;
+  padding: 6px 10px !important;
+  margin: 0 !important;
+  border: 1px solid #cbd2c5 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--ink) !important;
+}
+.account-panel.settings-paper-dialog .account-body input[type='checkbox'] {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 23px;
+  margin: 0;
+  border: 0;
+  border-radius: 20px;
+  background: #cbd0c6;
+  cursor: pointer;
+}
+.account-panel.settings-paper-dialog .account-body input[type='checkbox']::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 17px;
+  height: 17px;
+  background: #fffdf8;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px #17261c20;
+  transition: transform 0.15s;
+}
+.account-panel.settings-paper-dialog .account-body input[type='checkbox']:checked {
+  background: #496c5c;
+}
+.account-panel.settings-paper-dialog .account-body input[type='checkbox']:checked::after {
+  transform: translateX(17px);
+}
+.account-panel.settings-paper-dialog .settings-section-title {
+  position: relative;
+  margin: 0 0 8px;
+  padding-left: 12px;
+  font: 600 16px/1.5 var(--atelier-serif, serif);
+  color: var(--ink);
+}
+.account-panel.settings-paper-dialog .settings-section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 3px;
+  height: 15px;
+  background: #ad4c3e;
+}
+.account-panel.settings-paper-dialog .settings-image-section {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.account-panel.settings-paper-dialog .settings-image-section > p {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.account-panel.settings-paper-dialog .settings-image-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.account-panel.settings-paper-dialog .settings-image-card img {
+  display: block;
+  width: 185px;
+  max-width: 52%;
+  height: 68px;
+  object-fit: cover;
+  object-position: 50% 65%;
+  border: 1px solid #dcdfd1;
+  border-radius: 4px;
+  background: #eef0e4;
+}
+.account-panel.settings-paper-dialog .settings-image-card button {
+  flex: none;
+  margin: 0 !important;
+  height: 36px;
+  padding: 0 12px !important;
+  border: 1px solid #8ba091;
+  border-radius: 4px;
+  background: transparent;
+  color: #496c5c;
+  font-size: 13px !important;
+  white-space: nowrap;
+}
+.account-panel.settings-paper-dialog .account-font-preview {
+  margin: 16px 0 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: linear-gradient(130deg, #dde6d87a, transparent), var(--wash);
+}
+.account-panel.settings-paper-dialog .account-font-preview small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.account-panel.settings-paper-dialog .account-font-preview p {
+  margin: 10px 0 0;
+  line-height: 1.6;
+}
+.account-panel.settings-paper-dialog > .account-session-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin: 0 26px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+.account-panel.settings-paper-dialog > .account-session-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 112px;
+  height: 30px;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0;
+  background: transparent;
+  color: #697467;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+.account-panel.settings-paper-dialog > .account-session-actions button:last-child {
+  color: #98584c;
+}
+.account-panel.settings-paper-dialog > .account-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 26px 18px !important;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+body .account-backdrop .account-panel.settings-paper-dialog > .account-footer button {
+  flex: none !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  border-radius: 4px !important;
+  border: 1px solid #cbd2c5 !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+body .account-backdrop .account-panel.settings-paper-dialog > .account-footer button.primary {
+  background: #496c5c !important;
+  border-color: #496c5c !important;
+  color: #fffdf7 !important;
+}
+.account-panel.settings-paper-dialog :is(button, input, select):focus-visible {
+  outline: 2px solid #6b8b76;
+  outline-offset: 3px;
+}
+.account-panel.settings-paper-dialog button:hover:not(:disabled) {
+  color: #496c5c;
+}
+html[data-user-theme='dark'] body .account-backdrop .account-panel.settings-paper-dialog {
+  --surface: #242722;
+  --wash: #1f221e;
+  --ink: #ebe8de;
+  --muted: #a9ae9f;
+  --line: #454b3f;
+  --accent: #9cb9a2;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-user-theme='system'] body .account-backdrop .account-panel.settings-paper-dialog {
+    --surface: #242722;
+    --wash: #1f221e;
+    --ink: #ebe8de;
+    --muted: #a9ae9f;
+    --line: #454b3f;
+    --accent: #9cb9a2;
+  }
+}
+@media (max-width: 480px) {
+  .account-panel.settings-paper-dialog .account-header {
+    padding: 18px 20px 14px !important;
+  }
+  .account-panel.settings-paper-dialog .account-settings-layout nav {
+    margin: 0 20px;
+    gap: 22px;
+  }
+  .account-panel.settings-paper-dialog .account-body {
+    padding: 16px 20px;
+  }
+  .account-panel.settings-paper-dialog > .account-session-actions {
+    margin: 0 20px;
+  }
+  .account-panel.settings-paper-dialog > .account-footer {
+    padding: 10px 20px 16px !important;
+  }
+  .account-panel.settings-paper-dialog .account-setting-row strong {
+    font-size: 14px;
+  }
+  .account-panel.settings-paper-dialog .account-setting-row small {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-panel.settings-paper-dialog * {
+    transition: none !important;
+  }
+}
+body .account-backdrop .account-panel.settings-paper-dialog > .account-footer {
+  margin: 0 !important;
+}
+/* Account confirmations and security forms share the paper frame, with content-sized height. */
+body .modal-backdrop.account-backdrop .record-modal.account-panel.account-action-dialog {
+  --surface: #fdfbf6;
+  --wash: #f0f0e8;
+  --ink: #272d27;
+  --muted: #85887b;
+  --line: #deded3;
+  width: min(400px, calc(100vw - 32px)) !important;
+  height: auto;
+  max-height: calc(100dvh - 40px);
+  padding: 0 !important;
+  gap: 0;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  font: 14px/1.7 var(--atelier-serif, 'SimSun', serif) !important;
+  box-shadow: 0 18px 60px #282c2229 !important;
+}
+.account-panel.account-action-dialog .account-header {
+  position: relative;
+  align-items: center;
+  flex: none;
+  padding: 20px 24px 15px !important;
+  margin: 0 !important;
+  border: 0;
+}
+.account-panel.account-action-dialog .account-header > div {
+  display: block;
+}
+.account-panel.account-action-dialog .account-header > div::after {
+  content: '研习';
+  position: absolute;
+  right: 64px;
+  top: 23px;
+  font: 9px/1.1 serif;
+  letter-spacing: 1px;
+}
+.account-panel.account-action-dialog .account-header h2 {
+  margin: 0 !important;
+  font: 600 21px/1.4 var(--atelier-serif, serif) !important;
+  letter-spacing: 0.03em;
+}
+.account-panel.account-action-dialog .account-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--muted);
+  box-shadow: none !important;
+}
+.account-panel.account-action-dialog .account-body {
+  padding: 8px 24px 24px;
+  min-height: 0;
+  overflow: auto;
+  font-size: 14px !important;
+}
+.account-panel.account-action-dialog .account-body > p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.8;
+  color: var(--ink) !important;
+}
+.account-panel.account-action-dialog .account-body > small {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+body .account-backdrop .account-panel.account-action-dialog > .account-footer {
+  display: flex !important;
+  flex: none;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 15px 24px 18px !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent;
+}
+body .account-backdrop .account-panel.account-action-dialog > .account-footer > button {
+  flex: 0 0 112px !important;
+  width: 112px !important;
+  min-width: 112px !important;
+  max-width: 112px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 1px solid #bdc8b8 !important;
+  border-radius: 4px !important;
+  font: 500 13px/1.4 var(--atelier-serif, serif) !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+body .account-backdrop .account-panel.account-action-dialog > .account-footer > button.primary {
+  background: #496c5c !important;
+  border-color: #496c5c !important;
+  color: #fffdf7 !important;
+}
+.account-panel.account-action-dialog :is(button, input):focus-visible {
+  outline: 2px solid #77937a;
+  outline-offset: 3px;
+}
+.account-panel.account-security-dialog .account-body label {
+  font-size: 13px !important;
+  margin-bottom: 14px;
+}
+.account-panel.account-security-dialog .account-body input {
+  font-size: 14px !important;
+  border-radius: 4px !important;
+}
+.account-panel.account-security-dialog .account-header > div::after {
+  display: none;
+}
+html[data-user-theme='dark'] body .account-backdrop .account-panel.account-action-dialog {
+  --surface: #242722;
+  --wash: #1f221e;
+  --ink: #ebe8de;
+  --muted: #a9ae9f;
+  --line: #454b3f;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-user-theme='system'] body .account-backdrop .account-panel.account-action-dialog {
+    --surface: #242722;
+    --wash: #1f221e;
+    --ink: #ebe8de;
+    --muted: #a9ae9f;
+    --line: #454b3f;
+  }
+}
+@media (max-width: 420px) {
+  .account-panel.account-action-dialog .account-header {
+    padding: 18px 20px 14px !important;
+  }
+  .account-panel.account-action-dialog .account-body {
+    padding: 8px 20px 22px;
+  }
+  body .account-backdrop .account-panel.account-action-dialog > .account-footer {
+    padding: 14px 20px 17px !important;
+  }
+}
+.account-panel.settings-paper-dialog .account-setting-row small,
+.account-panel.settings-paper-dialog .account-body :is(input, select, option),
+.account-panel.settings-paper-dialog .settings-image-card button {
+  font-weight: 400 !important;
+}
+.account-panel.settings-paper-dialog > .account-session-actions button svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.5;
+}
+html[data-user-theme='dark']
+  .account-panel.settings-paper-dialog
+  > .account-session-actions
+  button {
+  color: var(--muted);
+}
+html[data-user-theme='dark']
+  .account-panel.settings-paper-dialog
+  > .account-session-actions
+  button:last-child {
+  color: #cf9788;
+}
+body
+  .account-backdrop
+  .account-panel.settings-paper-dialog
+  .account-setting-row:is([data-setting='defaultModel'], [data-setting='imageModel'])
+  select {
+  width: 210px;
+  max-width: 58%;
+}
+
+.account-panel.settings-paper-dialog .account-model-retry {
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+}

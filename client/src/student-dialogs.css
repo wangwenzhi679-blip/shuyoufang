@@ -1,0 +1,669 @@
+/* User workspace dialogs share the settings paper, typography and controls. */
+body :is(.modal-backdrop, .image-editor-backdrop):has(.student-paper-dialog, .student-paper-frame) {
+  inset: 0;
+  padding: 20px !important;
+  background: rgba(32, 38, 30, 0.34) !important;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body .student-paper-dialog,
+body .student-paper-frame {
+  --surface: #fdfbf6;
+  --wash: #f0f0e8;
+  --ink: #272d27;
+  --muted: #85887b;
+  --line: #deded3;
+  --accent: #496c5c;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  background:
+    radial-gradient(ellipse at 0 100%, #e4e9dd50, transparent 48%),
+    linear-gradient(115deg, #ffffff90, transparent), var(--surface) !important;
+  box-shadow: 0 20px 65px #282c222b !important;
+  font: 400 14px/1.7 var(--atelier-serif, 'SimSun', serif) !important;
+  text-align: left;
+  box-sizing: border-box;
+}
+body .modal-backdrop .student-paper-dialog {
+  --dialog-width: 480px;
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: none;
+  gap: 0 !important;
+  width: min(var(--dialog-width), calc(100vw - 40px)) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: calc(100dvh - 40px) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  outline: none;
+}
+body .modal-backdrop .student-paper-dialog :is(button, input, textarea, select) {
+  font-family: inherit !important;
+  font-weight: 400 !important;
+  letter-spacing: 0;
+  box-sizing: border-box;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex: none;
+  margin: 0 !important;
+  padding: 22px 26px 18px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header::after {
+  content: '研习';
+  position: absolute;
+  right: 68px;
+  top: 26px;
+  writing-mode: vertical-rl;
+  border: 1px solid #ad4c3e;
+  border-radius: 2px;
+  color: #ad4c3e;
+  padding: 3px 1px;
+  font:
+    10px/1.1 'SimSun',
+    serif;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header > div {
+  min-width: 0;
+  flex: 1;
+  padding-right: 20px;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header :is(h2, h3) {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: var(--ink) !important;
+  font: 600 24px/1.4 var(--atelier-serif, 'SimSun', serif) !important;
+  letter-spacing: 0.04em !important;
+  max-width: calc(100% - 20px);
+  overflow-wrap: anywhere;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header :is(h2, h3)::after {
+  display: none !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header .eyebrow {
+  display: none !important;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-header
+  :is(small, .source-chapter-badge, .question-chapter-badge) {
+  display: block;
+  font: 400 12px/1.7 var(--atelier-serif, 'SimSun', serif) !important;
+  color: var(--muted) !important;
+  margin: 7px 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header > button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+  font: 400 23px/1 sans-serif !important;
+  transform: none !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-header > button:hover:not(:disabled) {
+  background: var(--wash) !important;
+  color: var(--ink) !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 20px 26px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #bfc8b6 transparent;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-body > :first-child {
+  margin-top: 0 !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-body > :last-child {
+  margin-bottom: 0 !important;
+}
+body .modal-backdrop .student-paper-dialog :is(label, legend) {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.6;
+  color: var(--ink) !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-body > label,
+body .modal-backdrop .student-paper-dialog .student-dialog-body > form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 18px !important;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  :is(input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 !important;
+  padding: 8px 11px !important;
+  border: 1px solid #cbd2c5 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+  font: 400 14px/1.6 var(--atelier-serif, 'SimSun', serif) !important;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  :is(input:not([type='checkbox']):not([type='radio']):not([type='file']), select) {
+  height: 39px !important;
+  min-height: 39px !important;
+}
+body .modal-backdrop .student-paper-dialog textarea {
+  height: 126px !important;
+  min-height: 100px !important;
+  max-height: 45dvh;
+  resize: vertical;
+}
+body .modal-backdrop .student-paper-dialog :is(input, textarea)::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+body .modal-backdrop .student-paper-dialog :is(input[type='checkbox'], input[type='radio']) {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  margin: 0 7px 0 0;
+  flex: none;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  :is(button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid #77937a !important;
+  outline-offset: 3px !important;
+}
+body .modal-backdrop .student-paper-dialog :is(p, pre, blockquote) {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+body .modal-backdrop .student-paper-dialog small {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+body .modal-backdrop .student-paper-dialog button {
+  transition:
+    background 0.15s,
+    color 0.15s;
+  transform: none !important;
+  box-shadow: none !important;
+}
+body .modal-backdrop .student-paper-dialog button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-actions,
+body .modal-backdrop .student-paper-dialog .student-dialog-body form > footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap;
+  flex: none;
+  gap: 10px !important;
+  padding: 15px 26px 18px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-actions > button,
+body .modal-backdrop .student-paper-dialog .student-dialog-actions > div > button,
+body .modal-backdrop .student-paper-dialog .student-dialog-body form > footer > button {
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 88px !important;
+  max-width: 100%;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 15px !important;
+  border: 1px solid #bdc8b8 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  font: 400 13px/1.4 var(--atelier-serif, 'SimSun', serif) !important;
+  white-space: nowrap;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-actions
+  button:is(.primary, .create-course),
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-actions
+  > button:last-child:not(:first-child),
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-body
+  form
+  > footer
+  > button:last-child:not(:first-child) {
+  background: #496c5c !important;
+  border-color: #496c5c !important;
+  color: #fffdf7 !important;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-actions
+  > button:is(.confirm-danger, .danger):last-child {
+  background: #9a5044 !important;
+  border-color: #9a5044 !important;
+  color: #fffdf7 !important;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-actions button:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+body .modal-backdrop .student-paper-dialog .form-error {
+  margin: 12px 0 0;
+  padding: 9px 12px;
+  border: 1px solid #ad4c3e30;
+  border-radius: 4px;
+  background: #ad4c3e08;
+  color: #a1493c !important;
+  font-size: 12px !important;
+}
+/* Content determines width; large reading editors keep their useful working area. */
+body .modal-backdrop .student-paper-dialog.confirm-action-modal {
+  --dialog-width: 400px;
+}
+body .modal-backdrop .student-paper-dialog.chapter-source-editor {
+  --dialog-width: 740px;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog:is(
+    .library-dialog,
+    .material-preview,
+    .chapter-content-modal,
+    .question-preview-modal
+  ) {
+  --dialog-width: 960px;
+}
+body .modal-backdrop .student-paper-dialog:is(.chapter-draft-preview, .plan-dialog) {
+  --dialog-width: 740px;
+}
+body .modal-backdrop .student-paper-dialog:is(.question-settings-modal, .review-schedule-dialog) {
+  --dialog-width: 580px;
+}
+
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-body
+  > :is(.library-dialog-body, .plan-dialog-body, .question-preview-body, .scholar-dialog-body) {
+  padding: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+body .modal-backdrop .student-paper-dialog pre {
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+body .modal-backdrop .student-paper-dialog .requirement-tags-row {
+  display: block;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+body .modal-backdrop .student-paper-dialog .requirement-tags-label {
+  display: block;
+  margin: 0 0 9px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+}
+body .modal-backdrop .student-paper-dialog :is(.requirement-tags, .note-ai-presets) {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+body .modal-backdrop .student-paper-dialog :is(.requirement-tag-chip, .note-ai-presets button) {
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  background: var(--wash) !important;
+  color: #526854 !important;
+  padding: 6px 10px !important;
+  min-height: 30px !important;
+  font-size: 12px !important;
+}
+body .modal-backdrop .student-paper-dialog .source-editor-help {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 11px 13px;
+  margin: 0 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+body .modal-backdrop .student-paper-dialog .source-editor-help svg {
+  flex: none;
+  margin-top: 3px;
+}
+body .modal-backdrop .student-paper-dialog .source-editor-help > span {
+  flex: 1;
+  min-width: 180px;
+}
+body .modal-backdrop .student-paper-dialog .source-editor-help button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+}
+body .modal-backdrop .student-paper-dialog .source-version-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+body .modal-backdrop .student-paper-dialog .source-history-buttons {
+  display: flex;
+  gap: 8px;
+}
+body .modal-backdrop .student-paper-dialog .source-history-buttons button {
+  min-height: 30px;
+  padding: 4px 9px;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+}
+body .modal-backdrop .student-paper-dialog.chapter-source-editor textarea {
+  height: 300px !important;
+  min-height: 220px !important;
+  line-height: 1.9 !important;
+}
+body .student-paper-dialog .source-confirm-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #20261e57;
+  backdrop-filter: blur(3px);
+}
+body .modal-backdrop .student-paper-dialog.source-confirm {
+  --dialog-width: 420px;
+}
+body .modal-backdrop .student-paper-dialog .practice-template-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+body .modal-backdrop .student-paper-dialog .practice-template-list > button {
+  margin: 0;
+  padding: 13px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  text-align: left;
+  min-width: 0;
+}
+body .modal-backdrop .student-paper-dialog .practice-template-list > button.selected {
+  border-color: #819b7d !important;
+  background: #e8ede2 !important;
+}
+body .modal-backdrop .student-paper-dialog .template-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+body .modal-backdrop .student-paper-dialog .template-card-top strong {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+body .modal-backdrop .student-paper-dialog .template-pill {
+  font-size: 11px !important;
+  color: var(--muted);
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+body .modal-backdrop .student-paper-dialog .template-desc {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px !important;
+}
+body .modal-backdrop .student-paper-dialog .question-summary-bar {
+  padding: 12px 0;
+  margin: 12px 0;
+  border-block: 1px solid var(--line);
+  background: transparent;
+  border-radius: 0;
+}
+body .modal-backdrop .student-paper-dialog .question-summary-bar p {
+  margin: 0;
+  font-size: 13px !important;
+}
+body .modal-backdrop .student-paper-dialog .question-summary-meta {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+body .modal-backdrop .student-paper-dialog .question-type-grid input {
+  height: 34px !important;
+  min-height: 34px !important;
+}
+body .modal-backdrop .student-paper-dialog .reading-bookmark-list article {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  gap: 8px;
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-actions > div {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+/* Illustration managers already have a left return button and retain their preview layout. */
+body .image-editor-backdrop .student-paper-frame {
+  max-height: calc(100dvh - 40px) !important;
+}
+body .image-editor-backdrop .student-paper-frame .image-dialog-header {
+  background: transparent !important;
+  border-color: var(--line) !important;
+}
+body .image-editor-backdrop .student-paper-frame .image-dialog-header h2 {
+  font: 600 24px/1.4 var(--atelier-serif, 'SimSun', serif) !important;
+  letter-spacing: 0.04em;
+}
+body .image-editor-backdrop .student-paper-frame :is(input, textarea, select) {
+  font-family: var(--atelier-serif, 'SimSun', serif) !important;
+  font-weight: 400;
+}
+body dialog.student-paper-frame.shelf-help::backdrop {
+  background: #20261e57;
+  backdrop-filter: blur(5px);
+}
+html[data-user-theme='dark'] body :is(.student-paper-dialog, .student-paper-frame) {
+  --surface: #242722;
+  --wash: #1f221e;
+  --ink: #ebe8de;
+  --muted: #a9ae9f;
+  --line: #454b3f;
+  --accent: #9cb9a2;
+}
+html[data-user-theme='dark']
+  body
+  .student-paper-dialog
+  :is(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+  border-color: var(--line) !important;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-user-theme='system'] body :is(.student-paper-dialog, .student-paper-frame) {
+    --surface: #242722;
+    --wash: #1f221e;
+    --ink: #ebe8de;
+    --muted: #a9ae9f;
+    --line: #454b3f;
+    --accent: #9cb9a2;
+  }
+}
+@media (max-width: 600px) {
+  body
+    :is(.modal-backdrop, .image-editor-backdrop):has(.student-paper-dialog, .student-paper-frame) {
+    padding: 14px !important;
+  }
+  body .modal-backdrop .student-paper-dialog {
+    width: calc(100vw - 28px) !important;
+    max-height: calc(100dvh - 28px) !important;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-header {
+    padding: 18px 20px 15px !important;
+    gap: 16px;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-header::after {
+    top: 22px;
+    right: 59px;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-header :is(h2, h3) {
+    font-size: 22px !important;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-body {
+    padding: 18px 20px 22px;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-actions {
+    padding: 13px 20px 16px !important;
+    gap: 8px !important;
+  }
+  body .modal-backdrop .student-paper-dialog .student-dialog-actions > button {
+    min-width: 80px !important;
+    flex: 0 1 auto !important;
+  }
+  body .modal-backdrop .student-paper-dialog .plan-fields,
+  body .modal-backdrop .student-paper-dialog .plan-preview-fields {
+    grid-template-columns: 1fr !important;
+  }
+  body .modal-backdrop .student-paper-dialog .source-version-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  body .modal-backdrop .student-paper-dialog.chapter-source-editor textarea {
+    height: 250px !important;
+    min-height: 180px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .student-paper-dialog * {
+    transition: none !important;
+  }
+}
+
+/* Keep optional field labels on the same line as their names. */
+body .modal-backdrop .student-paper-dialog .student-dialog-body > label,
+body .modal-backdrop .student-paper-dialog .student-dialog-body > form > label {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px 6px;
+}
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-body
+  > label
+  > :is(input, select, textarea),
+body
+  .modal-backdrop
+  .student-paper-dialog
+  .student-dialog-body
+  > form
+  > label
+  > :is(input, select, textarea) {
+  grid-column: 1/-1;
+}
+body .modal-backdrop .student-paper-dialog .student-confirm-description {
+  margin: 0;
+  font-size: 14px !important;
+  line-height: 1.85;
+}
+body .modal-backdrop .student-paper-dialog .library-title-row > div > p {
+  display: none;
+}
+body .modal-backdrop .student-paper-dialog .library-symbol {
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--wash);
+}
+body .modal-backdrop .student-paper-dialog .student-dialog-actions,
+body .modal-backdrop .student-paper-dialog .student-dialog-body form > footer {
+  flex-direction: row !important;
+}
+
+/* Short confirmations and forms do not inherit the width of result previews. */
+body .modal-backdrop .student-paper-dialog.student-dialog-form {
+  --dialog-width: 480px;
+}
+body .modal-backdrop .student-paper-dialog.student-dialog-wide {
+  --dialog-width: 740px;
+}
+body .modal-backdrop .student-paper-dialog.student-dialog-confirm {
+  --dialog-width: 400px;
+}

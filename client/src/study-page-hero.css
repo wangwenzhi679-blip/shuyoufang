@@ -1,0 +1,128 @@
+/* Course and plan mastheads share the home page's ink landscape proportions. */
+body .workspace .course-shelf > .shelf-hero,
+body .workspace .learning-plans.plan-garden > header.plan-hero {
+  min-height: 210px !important;
+  height: 210px !important;
+  padding: 28px 10px !important;
+  margin: 0 0 20px !important;
+  overflow: hidden;
+  isolation: isolate;
+  align-items: center;
+}
+body .workspace .course-shelf > .shelf-hero::before {
+  display: none !important;
+}
+body .workspace .course-shelf .shelf-hero > div,
+body .workspace .plan-garden .plan-hero-copy {
+  max-width: 55%;
+  z-index: 2;
+}
+body .workspace .course-shelf .shelf-kicker,
+body .workspace .learning-plans.plan-garden > header.plan-hero .plan-eyebrow {
+  margin: 0 0 16px !important;
+  font-size: 16px !important;
+  line-height: 1.5;
+  letter-spacing: 0.15em !important;
+  color: var(--ink-soft, #565a50) !important;
+}
+body .workspace .course-shelf .shelf-kicker span {
+  display: none;
+}
+body .workspace .course-shelf .shelf-hero h1,
+body .workspace .learning-plans.plan-garden > header.plan-hero h1 {
+  font-size: 44px !important;
+  font-weight: 650 !important;
+  line-height: 1.28 !important;
+  letter-spacing: 0.05em !important;
+  margin: 0 0 10px !important;
+}
+body .workspace .course-shelf .shelf-hero h1::after {
+  display: none !important;
+}
+body .workspace .course-shelf .shelf-intro,
+body .workspace .learning-plans.plan-garden > header.plan-hero .plan-hero-sub {
+  font-size: 20px !important;
+  line-height: 1.65;
+  letter-spacing: 0.08em;
+  margin: 0 !important;
+}
+body .workspace .course-shelf .shelf-hero > img,
+body .workspace .plan-garden .plan-hero-art {
+  position: absolute;
+  left: auto;
+  top: auto;
+  right: -12px;
+  bottom: 0;
+  width: min(54%, 720px);
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: contain;
+  object-position: right bottom;
+  opacity: 0.86;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 94%, transparent 100%);
+  mask-composite: add;
+}
+body .workspace .plan-garden .plan-hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right bottom;
+}
+body .workspace .plan-garden .plan-hero-actions {
+  position: absolute;
+  right: 10px;
+  top: 22px;
+  z-index: 3;
+}
+body .workspace .learning-plans.plan-garden .plan-hero-actions .plan-ai-btn {
+  min-height: 38px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+}
+html[data-user-theme='dark'] body .workspace .course-shelf .shelf-hero > img,
+html[data-user-theme='dark'] body .workspace .plan-garden .plan-hero-art {
+  mix-blend-mode: screen;
+  opacity: 0.28;
+}
+@media (max-width: 760px) {
+  .workspace .course-shelf > .shelf-hero,
+  .workspace .learning-plans.plan-garden > header.plan-hero {
+    height: auto;
+    min-height: 180px;
+    padding: 26px 2px !important;
+  }
+  .workspace .course-shelf .shelf-hero > div,
+  .workspace .plan-garden .plan-hero-copy {
+    max-width: 100%;
+  }
+  .workspace .course-shelf .shelf-hero h1,
+  .workspace .learning-plans.plan-garden > header.plan-hero h1 {
+    font-size: 28px !important;
+  }
+  .workspace .course-shelf .shelf-kicker,
+  .workspace .learning-plans.plan-garden > header.plan-hero .plan-eyebrow {
+    font-size: 12px !important;
+    margin-bottom: 14px !important;
+  }
+  .workspace .course-shelf .shelf-intro,
+  .workspace .learning-plans.plan-garden > header.plan-hero .plan-hero-sub {
+    font-size: 14px !important;
+  }
+  .workspace .course-shelf .shelf-hero > img,
+  .workspace .plan-garden .plan-hero-art {
+    width: 75%;
+    opacity: 0.18;
+  }
+  .workspace .learning-plans.plan-garden > header.plan-hero {
+    padding-bottom: 72px !important;
+  }
+  .workspace .plan-garden .plan-hero-actions {
+    top: auto;
+    bottom: 18px;
+    left: 2px;
+    right: auto;
+  }
+}

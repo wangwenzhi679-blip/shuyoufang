@@ -1,0 +1,2364 @@
+/* Decorative artwork only. Text and form are independent interactive DOM. */
+.auth-inkwash-page.auth-refined {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100dvh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 17.4vw 20px !important;
+  background: #fafaf4 !important;
+  isolation: isolate;
+  position: relative !important;
+  overflow-x: clip !important;
+}
+.auth-inkwash-page .auth-ink-background {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  position: relative;
+  z-index: 1;
+  display: flex !important;
+  align-items: center !important;
+  padding: 28px 0 22px !important;
+  border-bottom: 1px solid rgba(91, 94, 73, 0.16) !important;
+  margin: 0 !important;
+}
+.auth-inkwash-page .auth-editorial-nav .brand {
+  display: block !important;
+  padding: 0 !important;
+}
+.auth-inkwash-page .auth-editorial-nav .brand-logo-editorial {
+  display: block !important;
+  white-space: nowrap !important;
+  font:
+    600 30px 'STXingkai',
+    'KaiTi',
+    serif !important;
+  background: none !important;
+  color: #25251f !important;
+  width: auto !important;
+  height: auto !important;
+}
+.auth-inkwash-page .auth-editorial-nav .brand-badge-editorial {
+  display: none !important;
+}
+.auth-inkwash-page .auth-nav-caption {
+  font:
+    12px 'KaiTi',
+    serif !important;
+  color: #626357 !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  position: relative;
+  z-index: 1;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 31.5%) !important;
+  gap: 10.7vw !important;
+  align-items: start !important;
+  padding: 62px 6vw 32px 0 !important;
+  flex: 1 0 auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+.auth-inkwash-page .auth-ink-intro {
+  padding: 0 !important;
+  text-align: left !important;
+}
+.auth-inkwash-page .auth-motto {
+  font:
+    15px 'KaiTi',
+    serif !important;
+  letter-spacing: 4px !important;
+  margin: 0 0 16px !important;
+  color: #414638 !important;
+  white-space: nowrap;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-family: 'STXingkai', 'KaiTi', 'STKaiti', serif !important;
+  font-size: clamp(42px, 4.3vw, 72px) !important;
+  line-height: 1.27 !important;
+  letter-spacing: 2px !important;
+  color: #fafaf4 !important;
+  -webkit-text-stroke: 1.2px #25281f !important;
+  font-weight: 400 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: max-content !important;
+  position: relative !important;
+}
+.auth-inkwash-page .auth-hollow-headline .line-2 {
+  padding-left: 4.2vw !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: -20px !important;
+  top: 48px !important;
+  width: 17px !important;
+  height: 43px !important;
+  font-size: 9px !important;
+  border-radius: 45% !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.auth-inkwash-page .auth-form-card.auth-form-ink {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+.auth-inkwash-page .auth-form-eyebrow {
+  font:
+    15px 'KaiTi',
+    serif !important;
+  letter-spacing: 3px !important;
+  margin: 0 0 50px !important;
+  color: #535548 !important;
+  white-space: nowrap;
+}
+.auth-inkwash-page .auth-form-title {
+  font:
+    500 25px/1.4 'KaiTi',
+    serif !important;
+  margin: 0 0 8px !important;
+}
+.auth-inkwash-page .auth-form-description {
+  font:
+    12px/1.7 'Microsoft YaHei',
+    sans-serif !important;
+  margin: 0 0 30px !important;
+  color: #5e6156 !important;
+}
+.auth-inkwash-page .auth-ink-tabs {
+  border: 0 !important;
+  gap: 20px !important;
+  margin-bottom: 22px !important;
+}
+.auth-inkwash-page .auth-ink-tabs button {
+  font:
+    16px 'KaiTi',
+    serif !important;
+  letter-spacing: 1px !important;
+}
+.auth-inkwash-page .auth-form-card > form {
+  gap: 16px !important;
+}
+.auth-inkwash-page .auth-form-card > form > label {
+  font:
+    13px 'Microsoft YaHei',
+    sans-serif !important;
+  color: #55594d !important;
+  gap: 5px !important;
+}
+.auth-inkwash-page .auth-form-card input,
+.auth-inkwash-page .auth-form-card select {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid #777b70 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 38px !important;
+  padding: 4px 2px !important;
+}
+.auth-inkwash-page .auth-form-card input:focus,
+.auth-inkwash-page .auth-form-card select:focus {
+  border-bottom: 2px solid #30392d !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+.auth-inkwash-page .editorial-btn-primary {
+  clip-path: polygon(
+    1% 12%,
+    5% 6%,
+    13% 8%,
+    21% 3%,
+    31% 7%,
+    44% 4%,
+    54% 6%,
+    65% 3%,
+    77% 7%,
+    90% 4%,
+    97% 11%,
+    95% 18%,
+    100% 28%,
+    98% 42%,
+    100% 59%,
+    96% 71%,
+    98% 84%,
+    92% 91%,
+    80% 94%,
+    68% 90%,
+    55% 95%,
+    43% 92%,
+    31% 97%,
+    20% 92%,
+    9% 96%,
+    3% 87%,
+    0 69%,
+    2% 54%,
+    0 37%,
+    3% 24%
+  ) !important;
+  border-radius: 0 !important;
+  background: #20231c !important;
+  box-shadow: none !important;
+  min-height: 46px !important;
+  height: 46px !important;
+  color: #fafaf3 !important;
+  font:
+    15px 'KaiTi',
+    serif !important;
+}
+.auth-inkwash-page .editorial-btn-primary:focus-visible {
+  clip-path: none !important;
+  outline: 2px solid #565e4b !important;
+  outline-offset: 3px !important;
+}
+.auth-inkwash-page .auth-links {
+  margin-top: 16px !important;
+}
+.auth-inkwash-page .auth-links button {
+  font:
+    12px 'Microsoft YaHei',
+    sans-serif !important;
+  color: #555b4e !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  position: relative;
+  z-index: 1;
+  justify-content: flex-end !important;
+  gap: 25px !important;
+  border: 0 !important;
+  padding: 26px 0 0 !important;
+  margin: 0 -12vw 0 0 !important;
+}
+.auth-inkwash-page .inscription-quote {
+  font:
+    26px 'KaiTi',
+    serif !important;
+  letter-spacing: 2px !important;
+}
+.auth-inkwash-page .inscription-author {
+  font:
+    13px 'KaiTi',
+    serif !important;
+  align-self: flex-end;
+}
+.auth-inkwash-page .auth-almanac-card {
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 7px !important;
+  box-shadow: none !important;
+  border: 3px double #858779 !important;
+}
+.auth-inkwash-page .almanac-term {
+  font:
+    26px 'KaiTi',
+    serif !important;
+  letter-spacing: 5px !important;
+}
+@media (max-width: 1100px) {
+  .auth-inkwash-page.auth-refined {
+    padding-left: 10vw !important;
+    padding-right: 10vw !important;
+  }
+  .auth-inkwash-page .auth-editorial-container {
+    gap: 6vw !important;
+    padding-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-ink-footer {
+    margin-right: 0 !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page.auth-refined {
+    padding: 0 24px 24px !important;
+  }
+  .auth-inkwash-page .auth-editorial-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 30px !important;
+    padding: 32px 0 !important;
+    max-width: 380px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  .auth-inkwash-page .auth-ink-intro {
+    text-align: center !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 38px !important;
+    margin: auto !important;
+  }
+  .auth-inkwash-page .auth-motto {
+    font-size: 12px !important;
+    letter-spacing: 2px !important;
+  }
+  .auth-inkwash-page .auth-form-eyebrow {
+    margin-bottom: 20px !important;
+  }
+  .auth-inkwash-page .auth-form-card.auth-form-ink {
+    padding: 18px !important;
+    background: rgba(250, 250, 244, 0.94) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .auth-inkwash-page .auth-almanac-card {
+    display: none !important;
+  }
+  .auth-inkwash-page .auth-ink-footer {
+    justify-content: center !important;
+    margin: 0 !important;
+  }
+  .auth-inkwash-page .inscription-quote {
+    font-size: 20px !important;
+  }
+  .auth-inkwash-page .auth-ink-background {
+    opacity: 0.5 !important;
+  }
+  .auth-inkwash-page .auth-ink-tabs {
+    justify-content: flex-start !important;
+  }
+}
+/* Independently positioned transparent artwork; no full-page image. */
+.auth-inkwash-page .auth-ink-background img {
+  position: absolute !important;
+  object-fit: contain !important;
+  mix-blend-mode: normal !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  mask-image: none !important;
+  max-width: none !important;
+}
+.auth-inkwash-page .ink-art-bamboo {
+  left: -3vw !important;
+  bottom: -2vh !important;
+  width: 26vw !important;
+  height: 70vh !important;
+  opacity: 0.92 !important;
+  object-position: left bottom !important;
+}
+.auth-inkwash-page .ink-art-lake {
+  left: 12vw !important;
+  bottom: 7vh !important;
+  width: 46vw !important;
+  height: 44vh !important;
+  opacity: 0.56 !important;
+}
+.auth-inkwash-page .ink-art-cloud {
+  right: 12vw !important;
+  top: 28vh !important;
+  width: 18vw !important;
+  height: 16vh !important;
+  opacity: 0.46 !important;
+}
+.auth-inkwash-page .ink-art-plum {
+  right: -3vw !important;
+  bottom: 8vh !important;
+  width: 29vw !important;
+  height: 40vh !important;
+  opacity: 0.83 !important;
+}
+.auth-inkwash-page.auth-refined {
+  background-color: #fafaf4 !important;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(140, 145, 112, 0.035), transparent 65%),
+    repeating-linear-gradient(
+      87deg,
+      rgba(112, 106, 80, 0.015) 0px,
+      rgba(112, 106, 80, 0.015) 1px,
+      transparent 1px,
+      transparent 4px
+    ) !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .ink-art-bamboo {
+    width: 45vw !important;
+    height: 55vh !important;
+    opacity: 0.5 !important;
+  }
+  .auth-inkwash-page .ink-art-lake {
+    left: 15vw !important;
+    width: 85vw !important;
+    height: 35vh !important;
+    opacity: 0.3 !important;
+  }
+  .auth-inkwash-page .ink-art-cloud,
+  .auth-inkwash-page .ink-art-plum {
+    display: none !important;
+  }
+}
+.auth-inkwash-page .auth-form-card::before,
+.auth-inkwash-page .auth-introduction::after {
+  content: none !important;
+  display: none !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  grid-template-columns: minmax(0, 1fr) 280px !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  margin-top: auto !important;
+  min-height: 0 !important;
+}
+.auth-inkwash-page .auth-form-card {
+  height: auto !important;
+  min-height: 0 !important;
+}
+.auth-inkwash-page .auth-ink-tabs {
+  justify-content: flex-start !important;
+}
+.auth-inkwash-page .auth-form-card::after {
+  content: none !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-editorial-container {
+    display: flex !important;
+  }
+}
+.auth-inkwash-page .auth-introduction::before,
+.auth-inkwash-page .auth-introduction::after {
+  content: none !important;
+  display: none !important;
+}
+.auth-inkwash-page .auth-form-card.auth-form-ink {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.auth-inkwash-page .auth-ink-tabs button:focus:not(:focus-visible) {
+  outline: none !important;
+}
+.auth-inkwash-page .ink-art-bamboo {
+  height: 75vh !important;
+  width: 26vw !important;
+}
+.auth-inkwash-page .ink-art-lake {
+  bottom: 14vh !important;
+  height: 42vh !important;
+  width: 46vw !important;
+}
+.auth-inkwash-page input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fafaf4 inset !important;
+  -webkit-text-fill-color: #242621 !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  position: absolute !important;
+  left: 37.4% !important;
+  top: 53% !important;
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  gap: 7px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1 !important;
+  color: #484a3e !important;
+  font:
+    16px/1.5 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 3px !important;
+  pointer-events: none !important;
+}
+.auth-inkwash-page .auth-ink-couplet span {
+  writing-mode: vertical-rl !important;
+  text-orientation: upright !important;
+  display: block !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-couplet {
+    display: none !important;
+  }
+}
+.auth-inkwash-page .cover-studies {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-inkwash-page.auth-refined {
+  min-height: max(768px, 100dvh) !important;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  padding-top: 30px !important;
+  padding-bottom: 24px !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  grid-template-columns: minmax(0, 1fr) 280px !important;
+  padding: 62px 5vw 24px 0 !important;
+  gap: 9vw !important;
+}
+.auth-inkwash-page .auth-form-card.auth-form-ink {
+  max-width: 280px !important;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-size: clamp(42px, 4.1vw, 64px) !important;
+  letter-spacing: 1px !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: -15px !important;
+  top: 45px !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  left: 37.5% !important;
+  top: 53% !important;
+  font-size: 15px !important;
+  gap: 6px !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  padding-top: 22px !important;
+  padding-bottom: 0 !important;
+  margin-right: -12vw !important;
+}
+.auth-inkwash-page .auth-almanac-card {
+  align-self: flex-start !important;
+  margin-top: -65px !important;
+}
+.auth-inkwash-page .ink-art-bamboo {
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 24vw !important;
+  height: 67% !important;
+}
+.auth-inkwash-page .ink-art-lake {
+  left: 13% !important;
+  bottom: 20% !important;
+  width: 44% !important;
+  height: 35% !important;
+  opacity: 0.46 !important;
+}
+.auth-inkwash-page .ink-art-plum {
+  right: -1% !important;
+  bottom: 10% !important;
+  width: 25% !important;
+  height: 34% !important;
+}
+.auth-inkwash-page .ink-art-cloud {
+  right: 10% !important;
+  top: 30% !important;
+  width: 19% !important;
+  height: 15% !important;
+  opacity: 0.58 !important;
+}
+.auth-inkwash-page .auth-ink-tabs {
+  gap: 20px !important;
+  border-bottom: 0 !important;
+}
+.auth-inkwash-page .auth-ink-tabs button {
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  padding: 0 0 8px !important;
+}
+.auth-inkwash-page .auth-ink-tabs button.active::after {
+  right: 0 !important;
+  left: 0 !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-content {
+  display: flex;
+  gap: 8px;
+}
+.auth-inkwash-page .almanac-seal {
+  display: none !important;
+}
+.auth-inkwash-page .almanac-term {
+  font-size: 29px !important;
+}
+.auth-inkwash-page .seal-mini-badge {
+  font-size: 9px !important;
+  width: 14px !important;
+  height: 14px !important;
+  line-height: 14px !important;
+}
+.auth-inkwash-page .auth-form-card input {
+  font-size: 15px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page.auth-refined {
+    min-height: 100dvh !important;
+  }
+  .auth-inkwash-page .cover-studies {
+    display: none;
+  }
+  .auth-inkwash-page .auth-editorial-container {
+    padding: 28px 0 !important;
+    gap: 24px !important;
+  }
+  .auth-inkwash-page .auth-form-card.auth-form-ink {
+    max-width: none !important;
+  }
+  .auth-inkwash-page .auth-ink-footer {
+    margin-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-almanac-card {
+    display: none !important;
+  }
+  .auth-inkwash-page .ink-art-bamboo {
+    width: 44% !important;
+    height: 50% !important;
+  }
+  .auth-inkwash-page .ink-art-lake {
+    width: 85% !important;
+    height: 30% !important;
+    bottom: 0 !important;
+  }
+}
+.auth-inkwash-page .auth-ink-couplet {
+  writing-mode: horizontal-tb !important;
+  flex-direction: row-reverse !important;
+  align-items: flex-start !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  padding-top: 80px !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: 32px !important;
+  top: 48px !important;
+}
+.auth-inkwash-page .ink-art-bamboo {
+  height: 75% !important;
+}
+.auth-inkwash-page .ink-art-lake {
+  bottom: 8% !important;
+  opacity: 0.5 !important;
+}
+.auth-inkwash-page .auth-inscription {
+  margin-right: 95px !important;
+}
+.auth-inkwash-page .auth-ink-tabs {
+  border: 0 !important;
+}
+.auth-inkwash-page .auth-hollow-headline .line-2 {
+  padding-left: 4.2vw !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-editorial-container {
+    padding-top: 28px !important;
+  }
+  .auth-inkwash-page .auth-inscription {
+    margin-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    right: -22px !important;
+    top: 25px !important;
+  }
+}
+.auth-inkwash-page.auth-refined {
+  background-color: #fafaf4 !important;
+  background-image:
+    url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%27200%27%3E%3Cfilter id=%27p%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.7%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix type=%27saturate%27 values=%270%27/%3E%3C/filter%3E%3Cpath fill=%27%23666%27 opacity=%27.065%27 filter=%27url(%23p)%27 d=%27M0 0h200v200H0z%27/%3E%3C/svg%3E'),
+    radial-gradient(ellipse at 35% 58%, rgba(120, 129, 100, 0.045), transparent 65%) !important;
+}
+.auth-inkwash-page .ink-art-lake {
+  opacity: 0.4 !important;
+  filter: blur(0.45px) !important;
+  mask-image: radial-gradient(ellipse at center, black 38%, transparent 73%) !important;
+}
+.auth-inkwash-page .ink-art-cloud {
+  opacity: 0.48 !important;
+  mix-blend-mode: multiply !important;
+  filter: blur(0.4px) !important;
+  mask-image: radial-gradient(ellipse at center, black 32%, transparent 73%) !important;
+}
+.auth-inkwash-page .cover-studies {
+  opacity: 0.8;
+}
+.auth-inkwash-page .editorial-btn-primary {
+  filter: url(#study-pencil) !important;
+  letter-spacing: 2px !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  color: #656758 !important;
+}
+.auth-inkwash-page .ink-art-plum {
+  opacity: 0.78 !important;
+}
+.auth-inkwash-page .editorial-btn-primary {
+  clip-path: none !important;
+  border: 0 !important;
+  background-color: transparent !important;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 400 60%27 preserveAspectRatio=%27none%27%3E%3Cpath fill=%27%231c2118%27 d=%27M8 12Q3 8 18 9L68 7 108 9 162 6 211 8 278 7 342 9 379 10 392 15 382 18 398 21 388 25 400 29 390 33 397 36 386 40 394 43 380 48 335 51 276 49 218 53 157 51 103 54 47 51 14 49 5 45 11 42 2 38 6 34 0 30 6 26 2 21 9 17Z%27/%3E%3Cpath fill=%27%235b6052%27 opacity=%27.5%27 d=%27M20 6l80 1 28-2 96 2 82-1 66 4-57-1-116 1-81-1-55 1Z M25 52l70 3 83-2 87 2 96-3-73 4-76-1-77 2-81-2Z%27/%3E%3C/svg%3E') !important;
+  background-size: 100% 100% !important;
+  filter: none !important;
+}
+.auth-inkwash-page .editorial-btn-primary:hover {
+  opacity: 0.85 !important;
+  background-color: transparent !important;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-size: clamp(42px, 4.3vw, 68px) !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: 22px !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  position: absolute !important;
+  left: 4% !important;
+  top: 32% !important;
+  width: 55% !important;
+  height: 63% !important;
+  object-fit: fill !important;
+  opacity: 0.9 !important;
+  mix-blend-mode: multiply !important;
+  filter: none !important;
+  mask-image: none !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  left: 37.6% !important;
+  top: 53% !important;
+  font-size: 16px !important;
+  z-index: 2 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+  z-index: 1 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-plum {
+  z-index: 1 !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+    left: 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 36% !important;
+    opacity: 0.25 !important;
+  }
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  width: 57.5% !important;
+  opacity: 0.72 !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  color: #3f4537 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+  opacity: 0.88 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-plum {
+  right: -3% !important;
+  width: 28% !important;
+  bottom: 10% !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+    width: 100% !important;
+    opacity: 0.25 !important;
+  }
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  display: inline-block !important;
+  font-size: 0.55em !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  vertical-align: baseline !important;
+  position: relative;
+  left: -0.08em;
+  bottom: -0.025em;
+  -webkit-text-stroke: 0.8px #25281f !important;
+}
+/* Alignment against the 1376 × 768 reference. */
+.auth-inkwash-page .auth-editorial-container {
+  padding-right: 4vw !important;
+}
+.auth-inkwash-page .auth-form-card > form {
+  gap: 22px !important;
+}
+.auth-inkwash-page .auth-form-card .editorial-btn-primary {
+  margin-top: 2px !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-cloud {
+  top: 26% !important;
+  right: 10% !important;
+}
+.auth-inkwash-page .auth-inscription {
+  margin-right: 125px !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  opacity: 0.63 !important;
+  mask-image: radial-gradient(
+    ellipse at 54% 57%,
+    black 42%,
+    rgba(0, 0, 0, 0.9) 68%,
+    transparent 100%
+  ) !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+  height: 69% !important;
+  width: 24.5% !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-plum {
+  right: -3% !important;
+  bottom: 10% !important;
+  width: 27% !important;
+}
+.auth-inkwash-page .auth-almanac-card {
+  margin-top: -85px !important;
+}
+.auth-inkwash-page .auth-editorial-nav .brand-logo-editorial {
+  font-size: 27px !important;
+  letter-spacing: 0 !important;
+}
+.auth-inkwash-page .auth-form-card input {
+  background: transparent !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-editorial-container {
+    padding-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-inscription {
+    margin-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+    width: 44% !important;
+    height: 50% !important;
+  }
+  .auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+    opacity: 0.25 !important;
+  }
+}
+
+/* Fine composition: seal frame, inscription and paper tone. */
+.auth-inkwash-page.auth-refined {
+  background-color: #fbfbf5 !important;
+}
+.auth-inkwash-page .auth-almanac-card {
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  margin-top: -95px !important;
+  overflow: visible !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-content {
+  align-items: center !important;
+  gap: 12px !important;
+}
+.auth-inkwash-page .almanac-term {
+  display: block !important;
+  box-sizing: border-box !important;
+  border: 3px double #8b8e7e !important;
+  padding: 13px 9px !important;
+  min-height: 120px !important;
+  font:
+    30px/1.4 'KaiTi',
+    serif !important;
+  letter-spacing: 7px !important;
+  writing-mode: vertical-rl !important;
+}
+.auth-inkwash-page .almanac-sub {
+  font:
+    12px/1.5 'KaiTi',
+    serif !important;
+  letter-spacing: 2px !important;
+  writing-mode: vertical-rl !important;
+  color: #686d5e !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  margin-right: -12.4vw !important;
+}
+.auth-inkwash-page .auth-inscription {
+  margin-right: 112px !important;
+}
+.auth-inkwash-page .inscription-quote {
+  font-size: 27px !important;
+  letter-spacing: 1.5px !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  background: rgba(241, 233, 220, 0.2) !important;
+  border-color: #927664 !important;
+  color: #876352 !important;
+  width: 15px !important;
+  height: 40px !important;
+  top: 54px !important;
+}
+.auth-inkwash-page .auth-editorial-nav .brand-logo-editorial {
+  font-size: 26px !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  font-size: 0.48em !important;
+  left: -0.02em !important;
+  -webkit-text-stroke: 0.65px #25281f !important;
+}
+.auth-inkwash-page .auth-form-card input:focus-visible {
+  border-bottom: 2px solid #585f4e !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-footer {
+    margin-right: 0 !important;
+  }
+  .auth-inkwash-page .auth-inscription {
+    margin-right: 0 !important;
+  }
+  .auth-inkwash-page .inscription-quote {
+    font-size: 20px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    top: 28px !important;
+  }
+}
+
+.auth-inkwash-page .editorial-btn-primary:not(:disabled),
+.auth-inkwash-page .editorial-btn-primary:hover:not(:disabled),
+.auth-inkwash-page .editorial-btn-primary:active:not(:disabled) {
+  opacity: 1 !important;
+  transform: none !important;
+  translate: none !important;
+  scale: 1 !important;
+  background-color: transparent !important;
+  color: #fafaf3 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border: 0 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.auth-inkwash-page .auth-form-card .editorial-btn-primary,
+.auth-inkwash-page .auth-form-card .editorial-btn-primary:hover:not(:disabled),
+.auth-inkwash-page .auth-form-card .editorial-btn-primary:active:not(:disabled) {
+  background: transparent
+    url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 400 60%27 preserveAspectRatio=%27none%27%3E%3Cpath fill=%27%231c2118%27 d=%27M8 12Q3 8 18 9L68 7 108 9 162 6 211 8 278 7 342 9 379 10 392 15 382 18 398 21 388 25 400 29 390 33 397 36 386 40 394 43 380 48 335 51 276 49 218 53 157 51 103 54 47 51 14 49 5 45 11 42 2 38 6 34 0 30 6 26 2 21 9 17Z%27/%3E%3Cpath fill=%27%235b6052%27 opacity=%27.5%27 d=%27M20 6l80 1 28-2 96 2 82-1 66 4-57-1-116 1-81-1-55 1Z M25 52l70 3 83-2 87 2 96-3-73 4-76-1-77 2-81-2Z%27/%3E%3C/svg%3E')
+    center/100% 100% no-repeat !important;
+  opacity: 1 !important;
+  color: #fafaf3 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.auth-inkwash-page .auth-form-card .editorial-btn-primary span,
+.auth-inkwash-page .auth-form-card .editorial-btn-primary:hover span {
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #fafaf3 !important;
+  transform: none !important;
+}
+/* Compact registration form at normal browser zoom. */
+.auth-inkwash-page .auth-register .auth-form-eyebrow {
+  margin-bottom: 14px !important;
+}
+.auth-inkwash-page .auth-register .auth-form-title {
+  font-size: 23px !important;
+  margin-bottom: 4px !important;
+}
+.auth-inkwash-page .auth-register .auth-form-description {
+  font-size: 11px !important;
+  margin-bottom: 12px !important;
+  line-height: 1.5 !important;
+}
+.auth-inkwash-page .auth-register > form {
+  gap: 7px !important;
+}
+.auth-inkwash-page .auth-register > form > label {
+  gap: 1px !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+.auth-inkwash-page .auth-register input,
+.auth-inkwash-page .auth-register select {
+  height: 29px !important;
+  padding: 3px 2px !important;
+  font-size: 13px !important;
+}
+.auth-inkwash-page .auth-register .editorial-btn-primary {
+  height: 40px !important;
+  min-height: 40px !important;
+  margin-top: 5px !important;
+  font-size: 13px !important;
+  letter-spacing: 0 !important;
+}
+.auth-inkwash-page .auth-register .auth-links {
+  margin-top: 10px !important;
+}
+@media (min-width: 761px) and (max-height: 750px) {
+  .auth-inkwash-page:has(.auth-register) {
+    min-height: 100dvh !important;
+  }
+  .auth-inkwash-page:has(.auth-register) .auth-editorial-container {
+    padding-top: 28px !important;
+    padding-bottom: 10px !important;
+  }
+  .auth-inkwash-page:has(.auth-register) .auth-ink-footer {
+    padding-top: 8px !important;
+  }
+  .auth-inkwash-page:has(.auth-register) .inscription-quote {
+    font-size: 21px !important;
+  }
+}
+
+/* Seasonal inscription: framed term, separate vertical side note. */
+.auth-inkwash-page .auth-almanac-card {
+  position: absolute !important;
+  right: -12.2vw !important;
+  bottom: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  display: block !important;
+  width: 95px !important;
+  height: 124px !important;
+  transform: none !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-content {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  height: 100% !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-term {
+  box-sizing: border-box !important;
+  width: 58px !important;
+  min-width: 58px !important;
+  height: 124px !important;
+  min-height: 124px !important;
+  padding: 14px 10px !important;
+  border: 3px double #858778 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  font:
+    34px/1.1 'KaiTi',
+    'STKaiti',
+    serif !important;
+  writing-mode: vertical-rl !important;
+  text-orientation: upright !important;
+  letter-spacing: 9px !important;
+  color: #292d24 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-sub {
+  writing-mode: vertical-rl !important;
+  text-orientation: upright !important;
+  white-space: nowrap !important;
+  font:
+    13px/1.4 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 2px !important;
+  color: #4f5547 !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-seal {
+  display: none !important;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .auth-inkwash-page .auth-almanac-card {
+    right: 0 !important;
+  }
+  .auth-inkwash-page .auth-inscription {
+    margin-right: 120px !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-almanac-card {
+    display: none !important;
+  }
+}
+
+.auth-inkwash-page .auth-ink-footer .auth-almanac-card {
+  right: 0 !important;
+}
+.auth-inkwash-page .auth-almanac-card {
+  width: 94px !important;
+  height: 124px !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-term {
+  position: relative !important;
+  writing-mode: horizontal-tb !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 2px !important;
+  box-sizing: border-box !important;
+  width: 61px !important;
+  min-width: 61px !important;
+  height: 124px !important;
+  padding: 8px 4px !important;
+  border: 1px solid #737668 !important;
+  outline: 1px solid #909183 !important;
+  outline-offset: -5px !important;
+  font:
+    43px/1.12 'STXingkai',
+    'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 0 !important;
+}
+.auth-inkwash-page .almanac-term > span {
+  display: block !important;
+  line-height: 1.12 !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-content {
+  gap: 14px !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-sub {
+  writing-mode: horizontal-tb !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font:
+    15px/1.18 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 0 !important;
+}
+.auth-inkwash-page .almanac-sub > span:not(.almanac-dot) {
+  writing-mode: vertical-rl !important;
+  letter-spacing: 1px !important;
+}
+.auth-inkwash-page .almanac-dot {
+  line-height: 0.7 !important;
+  font-size: 19px !important;
+}
+.auth-inkwash-page .auth-almanac-card,
+.auth-inkwash-page .auth-almanac-card .almanac-content,
+.auth-inkwash-page .auth-almanac-card .almanac-sub,
+.auth-inkwash-page .auth-almanac-card .almanac-sub > span {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.auth-inkwash-page .auth-almanac-card::before,
+.auth-inkwash-page .auth-almanac-card::after,
+.auth-inkwash-page .almanac-content::before,
+.auth-inkwash-page .almanac-content::after,
+.auth-inkwash-page .almanac-sub::before,
+.auth-inkwash-page .almanac-sub::after {
+  content: none !important;
+  display: none !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-term {
+  border: 1px solid #737668 !important;
+  outline: 1px solid #909183 !important;
+  outline-offset: -5px !important;
+}
+.auth-inkwash-page .auth-almanac-card .almanac-term > span {
+  border: 0 !important;
+  outline: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+.auth-inkwash-page:has(.auth-register) .auth-editorial-container {
+  grid-template-columns: minmax(0, 1fr) 320px !important;
+}
+.auth-inkwash-page .auth-form-card.auth-register {
+  max-width: 320px !important;
+}
+.auth-inkwash-page .auth-register .auth-form-eyebrow {
+  margin-bottom: 18px !important;
+}
+.auth-inkwash-page .auth-register > form {
+  gap: 13px !important;
+}
+.auth-inkwash-page .auth-register > form > label {
+  gap: 4px !important;
+  font-size: 13px !important;
+}
+.auth-inkwash-page .auth-register input {
+  height: 35px !important;
+  font-size: 14px !important;
+}
+.auth-inkwash-page .auth-register .editorial-btn-primary {
+  height: 44px !important;
+  min-height: 44px !important;
+  font-size: 14px !important;
+}
+.auth-inkwash-page .auth-register .auth-links {
+  margin-top: 14px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-form-card.auth-register {
+    max-width: none !important;
+  }
+}
+/* Right-hand composition proportions from the supplied detail reference. */
+.auth-inkwash-page .auth-form-card.auth-login,
+.auth-inkwash-page .auth-form-card.auth-loginCode {
+  width: 280px !important;
+  max-width: 280px !important;
+}
+.auth-inkwash-page .auth-login .auth-form-eyebrow,
+.auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+  font-size: 16px !important;
+  letter-spacing: 3px !important;
+  margin-bottom: 48px !important;
+}
+.auth-inkwash-page .auth-login .auth-form-title,
+.auth-inkwash-page .auth-loginCode .auth-form-title {
+  font:
+    600 25px/1.35 'KaiTi',
+    'STKaiti',
+    serif !important;
+  margin-bottom: 9px !important;
+}
+.auth-inkwash-page .auth-login .auth-form-description,
+.auth-inkwash-page .auth-loginCode .auth-form-description {
+  font:
+    12px/1.6 'Microsoft YaHei',
+    sans-serif !important;
+  margin-bottom: 28px !important;
+}
+.auth-inkwash-page .auth-login .auth-ink-tabs,
+.auth-inkwash-page .auth-loginCode .auth-ink-tabs {
+  gap: 19px !important;
+  margin-bottom: 20px !important;
+}
+.auth-inkwash-page .auth-login .auth-ink-tabs button,
+.auth-inkwash-page .auth-loginCode .auth-ink-tabs button {
+  font:
+    600 16px/1.4 'KaiTi',
+    serif !important;
+  padding-bottom: 8px !important;
+  letter-spacing: 0.5px !important;
+}
+.auth-inkwash-page .auth-login .auth-ink-tabs button:not(.active),
+.auth-inkwash-page .auth-loginCode .auth-ink-tabs button:not(.active) {
+  font-weight: 400 !important;
+  color: #5b6053 !important;
+}
+.auth-inkwash-page .auth-login > form,
+.auth-inkwash-page .auth-loginCode > form {
+  gap: 21px !important;
+}
+.auth-inkwash-page .auth-login input,
+.auth-inkwash-page .auth-loginCode input {
+  height: 39px !important;
+  border-bottom: 1px solid #73786b !important;
+}
+.auth-inkwash-page .auth-login .editorial-btn-primary,
+.auth-inkwash-page .auth-loginCode .editorial-btn-primary {
+  height: 44px !important;
+  min-height: 44px !important;
+  margin-top: 0 !important;
+}
+.auth-inkwash-page .auth-login .auth-links,
+.auth-inkwash-page .auth-loginCode .auth-links {
+  margin-top: 14px !important;
+}
+.auth-inkwash-page .inscription-quote {
+  font-size: 28px !important;
+  line-height: 1.35 !important;
+  letter-spacing: 1px !important;
+}
+.auth-inkwash-page .inscription-author {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-cloud {
+  right: 10.2% !important;
+  top: 29% !important;
+  width: 19% !important;
+  height: 15% !important;
+  opacity: 0.58 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-art-plum {
+  right: -2.5% !important;
+  bottom: 10.5% !important;
+  width: 27% !important;
+  height: 35% !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-form-card.auth-login,
+  .auth-inkwash-page .auth-form-card.auth-loginCode {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .auth-inkwash-page .auth-login .auth-form-eyebrow,
+  .auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+    margin-bottom: 20px !important;
+  }
+  .auth-inkwash-page .inscription-quote {
+    font-size: 20px !important;
+  }
+  .auth-inkwash-page .inscription-author {
+    font-size: 12px !important;
+  }
+}
+
+.auth-inkwash-page .auth-login .auth-form-eyebrow,
+.auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+  font:
+    500 18px/1.5 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 3.5px !important;
+  margin-bottom: 43px !important;
+  color: #4b5142 !important;
+}
+.auth-inkwash-page .auth-register .auth-form-eyebrow {
+  font-size: 16px !important;
+  letter-spacing: 2px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-login .auth-form-eyebrow,
+  .auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+    font-size: 16px !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 22px !important;
+  }
+}
+/* Reference pass 1: upper-left brand, rule and calligraphy. */
+.auth-inkwash-page .auth-cover-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  color: #20241c;
+  user-select: text;
+}
+.auth-inkwash-page .auth-cover-brand strong {
+  font:
+    700 27px/1.1 'STKaiti',
+    'KaiTi',
+    'SimSun',
+    serif;
+  letter-spacing: -1px;
+  white-space: nowrap;
+}
+.auth-inkwash-page .auth-cover-brand strong > span {
+  font-size: 18px;
+  padding-left: 2px;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font:
+    9px/1.2 'KaiTi',
+    serif;
+  letter-spacing: 0.6px;
+  color: #4a4e41;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  align-items: center !important;
+  padding-top: 29px !important;
+  padding-bottom: 25px !important;
+  min-height: 0 !important;
+}
+.auth-inkwash-page .auth-editorial-container {
+  padding-top: 65px !important;
+}
+.auth-inkwash-page .auth-motto {
+  font:
+    16px/1.5 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 2.5px !important;
+  margin-bottom: 16px !important;
+  color: #3d4334 !important;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-size: clamp(42px, 4.06vw, 65px) !important;
+  line-height: 1.29 !important;
+  letter-spacing: 1px !important;
+}
+.auth-inkwash-page .auth-hollow-headline .line-2 {
+  padding-left: 4vw !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  font-size: 0.58em !important;
+  bottom: -0.02em !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: 12px !important;
+  top: 49px !important;
+  height: 37px !important;
+  width: 15px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-editorial-container {
+    padding-top: 28px !important;
+  }
+  .auth-inkwash-page .auth-motto {
+    font-size: 12px !important;
+    letter-spacing: 2px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 38px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    right: -20px !important;
+    top: 25px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 25px;
+  }
+}
+
+.auth-inkwash-page .auth-editorial-nav {
+  box-sizing: border-box !important;
+  height: 101px !important;
+  flex: 0 0 101px !important;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  line-height: 1.29 !important;
+}
+/* Reference pass 2: left lower painting and vertical inscription. */
+.auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+  left: -0.6% !important;
+  bottom: -0.5% !important;
+  width: 24% !important;
+  height: 67% !important;
+  opacity: 0.92 !important;
+  object-position: left bottom !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  left: 2.8% !important;
+  top: 30.2% !important;
+  width: 59% !important;
+  height: 65% !important;
+  opacity: 0.72 !important;
+  mask-image: radial-gradient(
+    ellipse at 53% 55%,
+    black 49%,
+    rgba(0, 0, 0, 0.92) 75%,
+    transparent 100%
+  ) !important;
+}
+.auth-inkwash-page .auth-ink-couplet {
+  left: 37.5% !important;
+  top: 53.2% !important;
+  gap: 7px !important;
+  font:
+    16px/1.25 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 1px !important;
+  color: #4c5142 !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+}
+.auth-inkwash-page .auth-ink-couplet span {
+  line-height: 1.25 !important;
+  writing-mode: vertical-rl !important;
+  text-orientation: upright !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-background .ink-art-bamboo {
+    width: 44% !important;
+    height: 50% !important;
+    opacity: 0.5 !important;
+  }
+  .auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+    left: 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 36% !important;
+    opacity: 0.25 !important;
+  }
+  .auth-inkwash-page .auth-ink-couplet {
+    display: none !important;
+  }
+}
+
+@font-face {
+  font-family: 'CoverCalligraphy';
+  src: local('华文行楷'), local('STXingkai');
+  font-display: swap;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-family: 'CoverCalligraphy', 'STKaiti', 'KaiTi', serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-size: clamp(44px, 4.55vw, 70px) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -1.5px !important;
+  color: #fbfbf5 !important;
+  -webkit-text-stroke: 0.95px #252a20 !important;
+  text-shadow: none !important;
+  font-synthesis: none !important;
+  transform: scaleX(0.94) !important;
+  transform-origin: left top !important;
+}
+.auth-inkwash-page .auth-hollow-headline .line-2 {
+  padding-left: 4.4vw !important;
+  margin-top: 7px !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  font-family: 'CoverCalligraphy', 'KaiTi', serif !important;
+  font-size: 0.53em !important;
+  -webkit-text-stroke: 0.7px #252a20 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  right: 13px !important;
+  top: 50px !important;
+  transform: scaleX(1.06) !important;
+  font-family: 'KaiTi', serif !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 41px !important;
+    letter-spacing: -1px !important;
+    transform: none !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline .line-2 {
+    padding-left: 22px !important;
+    margin-top: 5px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    right: -20px !important;
+    top: 28px !important;
+  }
+}
+
+/* Pale ink within live calligraphy text, with restrained soft edges. */
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-image:
+    url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27220%27 height=%27100%27%3E%3Cfilter id=%27ink%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.045 .16%27 numOctaves=%273%27 seed=%2713%27/%3E%3CfeColorMatrix type=%27saturate%27 values=%270%27/%3E%3C/filter%3E%3Cpath fill=%27%236c7164%27 opacity=%27.22%27 filter=%27url(%23ink)%27 d=%27M0 0h220v100H0z%27/%3E%3C/svg%3E'),
+    radial-gradient(ellipse at 34% 62%, rgba(115, 122, 104, 0.23), transparent 57%),
+    linear-gradient(173deg, #f8f8ee 0%, #eeefe4 36%, #fbfbf5 52%, #e3e7d9 71%, #fafaf1 100%) !important;
+  background-size:
+    220px 100px,
+    100% 100%,
+    100% 100% !important;
+  background-position: center !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 0.85px #31362b !important;
+  text-shadow: 0.25px 0.4px 0.7px rgba(72, 78, 60, 0.18) !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-position:
+    38px 12px,
+    center,
+    center !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  -webkit-text-fill-color: #eef0e5 !important;
+  -webkit-text-stroke: 0.65px #31362b !important;
+  text-shadow: none !important;
+}
+
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-image:
+    radial-gradient(ellipse at 28% 76%, rgba(106, 116, 94, 0.07) 0%, transparent 24%),
+    radial-gradient(ellipse at 67% 44%, rgba(106, 116, 94, 0.045) 0%, transparent 20%),
+    linear-gradient(#fbfbf5, #fbfbf5) !important;
+  background-size: 100% 100% !important;
+  -webkit-text-stroke: 1px #30362a !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  -webkit-text-fill-color: #fbfbf5 !important;
+}
+/* Sparse pale wash; outline remains the dominant calligraphy mark. */
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-image:
+    radial-gradient(ellipse at 18% 83%, rgba(100, 113, 91, 0.065), transparent 17%),
+    radial-gradient(ellipse at 57% 71%, rgba(100, 113, 91, 0.045), transparent 14%),
+    linear-gradient(174deg, #fbfbf5 0%, #fbfbf5 58%, #f5f6ed 65%, #fbfbf5 73%, #fbfbf5 100%) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  background-position: center !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 0.9px #292e24 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-position:
+    12px 2px,
+    0 0,
+    0 0 !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  -webkit-text-fill-color: #fbfbf5 !important;
+  -webkit-text-stroke: 0.65px #292e24 !important;
+  background: none !important;
+  text-shadow: none !important;
+}
+
+@font-face {
+  font-family: 'ShuyoufangReference';
+  src: url('/assets/fonts/shuyoufang-reference-v1.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+5B66, U+800C, U+6709, U+65B9, U+601D, U+5F97;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-family: 'ShuyoufangReference', 'KaiTi', serif !important;
+  font-size: 70px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: -2.8px !important;
+  transform: none !important;
+  font-synthesis: none !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  font-family: 'ShuyoufangReference', 'KaiTi', serif !important;
+  background: none !important;
+  -webkit-text-fill-color: #292e24 !important;
+  color: #292e24 !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+  filter: none !important;
+  line-height: 1 !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  font-feature-settings: 'ss01' 1 !important;
+  padding-left: 55px !important;
+  margin-top: 0 !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  font-family: 'KaiTi', serif !important;
+  font-size: 29px !important;
+  letter-spacing: 0 !important;
+  -webkit-text-fill-color: #fbfbf5 !important;
+  -webkit-text-stroke: 0.8px #292e24 !important;
+  vertical-align: baseline !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  top: 49px !important;
+  right: 0 !important;
+}
+@media (min-width: 1600px) {
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 76px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline > .line-2 {
+    padding-left: 60px !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 49px !important;
+    letter-spacing: -1.5px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline > .line-2 {
+    padding-left: 32px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+    font-size: 21px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    right: -20px !important;
+    top: 26px !important;
+  }
+}
+
+/* Restore outlined calligraphy, enlarge the title and retain the red seal. */
+.auth-inkwash-page .auth-hollow-headline {
+  font-family: 'CoverCalligraphy', 'STXingkai', 'STKaiti', 'KaiTi', serif !important;
+  font-size: clamp(48px, 4.9vw, 78px) !important;
+  line-height: 1.16 !important;
+  letter-spacing: 0 !important;
+  transform: none !important;
+  font-feature-settings: normal !important;
+  font-weight: 400 !important;
+  color: #fbfbf5 !important;
+  -webkit-text-stroke: 1px #292e24 !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  font-family: 'CoverCalligraphy', 'STXingkai', 'STKaiti', 'KaiTi', serif !important;
+  font-feature-settings: normal !important;
+  background: none !important;
+  color: #fbfbf5 !important;
+  -webkit-text-fill-color: #fbfbf5 !important;
+  -webkit-text-stroke: 1px #292e24 !important;
+  line-height: 1.16 !important;
+  text-shadow: none !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  padding-left: 58px !important;
+  margin-top: 3px !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  font-family: 'KaiTi', serif !important;
+  font-size: 0.48em !important;
+  -webkit-text-fill-color: #fbfbf5 !important;
+  -webkit-text-stroke: 0.75px #292e24 !important;
+  letter-spacing: 0 !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  color: #a04632 !important;
+  border: 1px solid #a04632 !important;
+  background: rgba(165, 68, 45, 0.04) !important;
+  right: -14px !important;
+  top: 55px !important;
+  width: 18px !important;
+  height: 43px !important;
+  font-size: 11px !important;
+  transform: none !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 46px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline > .line-2 {
+    padding-left: 32px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    right: -22px !important;
+    top: 30px !important;
+    width: 16px !important;
+    height: 38px !important;
+    font-size: 10px !important;
+  }
+}
+
+/* Local ink pools inside the outlined strokes, with broad paper-white gaps. */
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-image:
+    radial-gradient(
+      ellipse at 12% 78%,
+      rgba(35, 42, 31, 0.3) 0%,
+      rgba(56, 65, 46, 0.12) 9%,
+      transparent 20%
+    ),
+    radial-gradient(
+      ellipse at 48% 60%,
+      rgba(41, 49, 35, 0.2) 0%,
+      rgba(63, 72, 53, 0.08) 10%,
+      transparent 19%
+    ),
+    radial-gradient(ellipse at 79% 29%, rgba(45, 54, 37, 0.17) 0%, transparent 14%),
+    linear-gradient(#fbfbf5, #fbfbf5) !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 1px #292e24 !important;
+  text-shadow: none !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  background-position:
+    25px 7px,
+    -12px 2px,
+    10px 0,
+    0 0 !important;
+}
+.auth-inkwash-page .auth-hollow-headline .calligraphy-punctuation {
+  -webkit-text-fill-color: #fbfbf5 !important;
+  background: none !important;
+}
+
+/* Enlarge and open the complete left-side heading group. */
+.auth-inkwash-page .auth-motto {
+  font:
+    500 18px/1.5 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 4px !important;
+  margin-bottom: 20px !important;
+  white-space: nowrap !important;
+}
+.auth-inkwash-page .auth-hollow-headline {
+  font-size: clamp(54px, 5.45vw, 86px) !important;
+  letter-spacing: 1px !important;
+  line-height: 1.18 !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-1,
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  letter-spacing: 1px !important;
+  line-height: 1.18 !important;
+}
+.auth-inkwash-page .auth-hollow-headline > .line-2 {
+  padding-left: 64px !important;
+  margin-top: 4px !important;
+}
+.auth-inkwash-page .auth-mini-seal {
+  top: 62px !important;
+  right: -21px !important;
+  width: 19px !important;
+  height: 46px !important;
+  font-size: 11px !important;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .auth-inkwash-page .auth-motto {
+    font-size: 16px !important;
+    letter-spacing: 3px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 60px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline > .line-2 {
+    padding-left: 45px !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-motto {
+    font-size: 14px !important;
+    letter-spacing: 2.5px !important;
+    margin-bottom: 16px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline {
+    font-size: 48px !important;
+  }
+  .auth-inkwash-page .auth-hollow-headline > .line-2 {
+    padding-left: 34px !important;
+    margin-top: 3px !important;
+  }
+  .auth-inkwash-page .auth-mini-seal {
+    top: 33px !important;
+    right: -20px !important;
+    width: 16px !important;
+    height: 38px !important;
+    font-size: 10px !important;
+  }
+}
+
+.auth-inkwash-page .auth-introduction.auth-ink-intro {
+  position: relative !important;
+  left: -8.6vw !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    left: -3vw !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    left: 0 !important;
+  }
+}
+.auth-inkwash-page .auth-introduction.auth-ink-intro {
+  top: -18px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    top: -6px !important;
+  }
+}
+.auth-inkwash-page .auth-cover-brand strong {
+  font-family: 'CoverCalligraphy', 'STXingkai', 'STKaiti', 'KaiTi', serif !important;
+  font-size: 31px !important;
+  line-height: 1.12 !important;
+  font-weight: 400 !important;
+  letter-spacing: -1px !important;
+  color: #252b21 !important;
+  font-synthesis: none !important;
+}
+.auth-inkwash-page .auth-cover-brand strong > span {
+  font-family: 'KaiTi', serif !important;
+  font-size: 16px !important;
+  padding-left: 2px !important;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font:
+    10px/1.25 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 0.8px !important;
+  color: #656a59 !important;
+}
+.auth-inkwash-page .auth-cover-brand {
+  gap: 4px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 28px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand small {
+    font-size: 9px !important;
+  }
+}
+/* Approved richer ink cover: no feature-entry row. */
+.auth-inkwash-page .auth-ink-background .ink-rich-mountains {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+  opacity: 0.36 !important;
+  z-index: -1 !important;
+  mix-blend-mode: multiply !important;
+  pointer-events: none !important;
+}
+.auth-inkwash-page .auth-ink-background {
+  z-index: 0 !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  opacity: 0.66 !important;
+}
+.auth-inkwash-page .auth-cover-brand strong {
+  font-size: 33px !important;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font-size: 11px !important;
+  letter-spacing: 1px !important;
+  color: #454b3c !important;
+}
+.auth-inkwash-page .auth-nav-caption {
+  font:
+    14px/1.5 'KaiTi',
+    serif !important;
+  letter-spacing: 1.5px !important;
+  color: #343d2c !important;
+}
+.auth-inkwash-page .auth-paper-signature {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex: none;
+  min-height: 26px;
+  margin: 12px auto 0;
+  width: min(580px, 100%);
+  font:
+    14px/1.4 'KaiTi',
+    serif;
+  color: #414a36;
+  z-index: 1;
+}
+.auth-inkwash-page .auth-paper-signature::before,
+.auth-inkwash-page .auth-paper-signature::after {
+  content: '';
+  height: 1px;
+  background: rgba(74, 83, 59, 0.3);
+  flex: 1;
+}
+.auth-inkwash-page .auth-paper-signature > span {
+  white-space: nowrap;
+}
+.auth-inkwash-page .auth-ink-footer {
+  padding-top: 12px !important;
+}
+.auth-inkwash-page .auth-password-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.auth-inkwash-page .auth-password-row > input {
+  padding-right: 30px !important;
+  width: 100% !important;
+}
+.auth-inkwash-page .auth-password-row .auth-eye-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 0 !important;
+  padding: 5px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #525b46 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+}
+.auth-inkwash-page .auth-eye-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.auth-inkwash-page .auth-eye-toggle:focus-visible {
+  outline: 1px solid #596449 !important;
+  outline-offset: 2px;
+}
+.auth-inkwash-page .auth-form-card.auth-login .auth-password-row > input {
+  height: 39px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-background .ink-rich-mountains {
+    opacity: 0.17 !important;
+  }
+  .auth-inkwash-page .auth-nav-caption {
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 28px !important;
+  }
+  .auth-inkwash-page .auth-paper-signature {
+    font-size: 12px;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .auth-inkwash-page .auth-cover-brand small {
+    font-size: 9px !important;
+  }
+}
+
+/* Approved mockup places the motto and title beneath the brand column. */
+.auth-inkwash-page .auth-introduction.auth-ink-intro {
+  left: 0 !important;
+  top: -14px !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  margin-top: auto !important;
+}
+.auth-inkwash-page .auth-paper-signature {
+  width: min(680px, 100%) !important;
+}
+.auth-inkwash-page .auth-password-row .auth-eye-toggle:hover,
+.auth-inkwash-page .auth-password-row .auth-eye-toggle:active {
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  transform: translateY(-50%) !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    left: 0 !important;
+    top: 0 !important;
+  }
+  .auth-inkwash-page .auth-paper-signature {
+    width: 100% !important;
+  }
+}
+
+/* Brand hierarchy and spacing for the approved login cover. */
+.auth-inkwash-page .auth-editorial-nav {
+  align-items: center !important;
+  padding: 23px 0 20px !important;
+}
+.auth-inkwash-page .auth-cover-brand {
+  position: relative;
+  left: -2px;
+  top: -1px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  width: max-content;
+  flex: none;
+}
+.auth-inkwash-page .auth-cover-brand strong {
+  font:
+    400 37px/1.08 'CoverCalligraphy',
+    'STXingkai',
+    'KaiTi',
+    serif !important;
+  letter-spacing: 1px !important;
+  color: #222a1d !important;
+  white-space: nowrap !important;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font:
+    10px/1.3 'KaiTi',
+    'STKaiti',
+    serif !important;
+  letter-spacing: 2px !important;
+  color: #646c59 !important;
+  padding-left: 4px !important;
+  white-space: nowrap;
+}
+.auth-inkwash-page .auth-nav-caption {
+  font-size: 13px !important;
+  letter-spacing: 1px !important;
+  white-space: nowrap !important;
+  align-self: center !important;
+  opacity: 0.85;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  border-bottom-color: rgba(78, 90, 64, 0.2) !important;
+}
+.auth-inkwash-page .auth-form-title {
+  letter-spacing: 0.5px !important;
+}
+.auth-inkwash-page .auth-links button {
+  line-height: 1.5 !important;
+}
+.auth-inkwash-page .auth-form-card .auth-eye-toggle {
+  transition: none !important;
+}
+@media (min-width: 1600px) {
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 40px !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-editorial-nav {
+    height: 88px !important;
+    flex-basis: 88px !important;
+    padding-top: 19px !important;
+    padding-bottom: 16px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 30px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand small {
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+  }
+  .auth-inkwash-page .auth-nav-caption {
+    font-size: 11px !important;
+    letter-spacing: 0 !important;
+  }
+  .auth-inkwash-page .auth-cover-brand {
+    left: 0 !important;
+    top: 0 !important;
+    gap: 4px !important;
+  }
+}
+
+/* Pale ink atmosphere above the brand, without obscuring the header. */
+.auth-inkwash-page::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 250px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  background:
+    radial-gradient(ellipse at 4% 25%, rgba(124, 139, 106, 0.085), transparent 40%),
+    radial-gradient(ellipse at 96% 30%, rgba(124, 139, 106, 0.07), transparent 39%),
+    linear-gradient(to bottom, rgba(233, 235, 222, 0.24), transparent) !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-rich-mountains {
+  opacity: 0.47 !important;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, black 30%, black 100%) !important;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  background: transparent !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page::before {
+    height: 160px !important;
+    opacity: 0.65 !important;
+  }
+  .auth-inkwash-page .auth-ink-background .ink-rich-mountains {
+    opacity: 0.23 !important;
+  }
+}
+
+/* Tighter lower composition, keeping the scenery as the visual footer. */
+.auth-inkwash-page.auth-refined {
+  padding-bottom: 10px !important;
+}
+.auth-inkwash-page .auth-ink-footer {
+  margin-top: 24px !important;
+  padding-top: 10px !important;
+  padding-bottom: 0 !important;
+}
+.auth-inkwash-page .auth-paper-signature {
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+  min-height: 22px !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-rich-mountains {
+  height: 105% !important;
+  top: -1% !important;
+  bottom: auto !important;
+  object-position: center bottom !important;
+}
+.auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+  top: 31% !important;
+  height: 67% !important;
+}
+@media (min-height: 850px) and (min-width: 761px) {
+  .auth-inkwash-page .auth-editorial-container {
+    padding-top: 85px !important;
+  }
+  .auth-inkwash-page .auth-ink-footer {
+    margin-top: 40px !important;
+  }
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-ink-footer {
+    margin-top: 16px !important;
+  }
+  .auth-inkwash-page .auth-paper-signature {
+    margin-top: 12px !important;
+  }
+  .auth-inkwash-page .auth-ink-background .ink-study-ensemble {
+    top: auto !important;
+    bottom: 0 !important;
+    height: 36% !important;
+  }
+}
+
+.auth-inkwash-page .auth-ink-footer {
+  margin-top: auto !important;
+}
+.auth-inkwash-page .auth-paper-signature {
+  padding-bottom: 0 !important;
+}
+/* Balance the actual login region vertically rather than stretching empty margins. */
+@media (min-width: 761px) {
+  .auth-inkwash-page.auth-refined {
+    min-height: 100dvh !important;
+  }
+  .auth-inkwash-page .auth-editorial-container {
+    flex: 1 0 auto !important;
+    align-content: center !important;
+    align-items: start !important;
+    grid-template-columns: minmax(0, 1fr) 320px !important;
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+    min-height: 0 !important;
+  }
+  .auth-inkwash-page .auth-form-card.auth-login,
+  .auth-inkwash-page .auth-form-card.auth-loginCode {
+    width: 320px !important;
+    max-width: 320px !important;
+  }
+  .auth-inkwash-page .auth-login .auth-form-eyebrow,
+  .auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+    font-size: 19px !important;
+    margin-bottom: 30px !important;
+  }
+  .auth-inkwash-page .auth-login .auth-form-title,
+  .auth-inkwash-page .auth-loginCode .auth-form-title {
+    font-size: 28px !important;
+  }
+  .auth-inkwash-page .auth-login .auth-form-description,
+  .auth-inkwash-page .auth-loginCode .auth-form-description {
+    font-size: 13px !important;
+    margin-bottom: 24px !important;
+  }
+  .auth-inkwash-page .auth-login .auth-ink-tabs button,
+  .auth-inkwash-page .auth-loginCode .auth-ink-tabs button {
+    font-size: 18px !important;
+  }
+  .auth-inkwash-page .auth-login > form,
+  .auth-inkwash-page .auth-loginCode > form {
+    gap: 24px !important;
+  }
+  .auth-inkwash-page .auth-login input,
+  .auth-inkwash-page .auth-loginCode input,
+  .auth-inkwash-page .auth-form-card.auth-login .auth-password-row > input {
+    height: 45px !important;
+    font-size: 16px !important;
+  }
+  .auth-inkwash-page .auth-login .editorial-btn-primary,
+  .auth-inkwash-page .auth-loginCode .editorial-btn-primary {
+    height: 49px !important;
+    min-height: 49px !important;
+    font-size: 17px !important;
+  }
+  .auth-inkwash-page .auth-ink-footer {
+    flex: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    top: 0 !important;
+  }
+}
+@media (min-width: 761px) and (max-height: 720px) {
+  .auth-inkwash-page .auth-editorial-container {
+    padding-top: 20px !important;
+    padding-bottom: 16px !important;
+  }
+  .auth-inkwash-page .auth-login .auth-form-eyebrow,
+  .auth-inkwash-page .auth-loginCode .auth-form-eyebrow {
+    margin-bottom: 20px !important;
+  }
+  .auth-inkwash-page .auth-login input,
+  .auth-inkwash-page .auth-loginCode input,
+  .auth-inkwash-page .auth-form-card.auth-login .auth-password-row > input {
+    height: 38px !important;
+  }
+  .auth-inkwash-page .auth-login > form,
+  .auth-inkwash-page .auth-loginCode > form {
+    gap: 17px !important;
+  }
+}
+
+.auth-inkwash-page .auth-cover-brand strong {
+  font-size: 44px !important;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font-size: 13px !important;
+  letter-spacing: 2px !important;
+}
+.auth-inkwash-page .auth-cover-brand {
+  gap: 5px !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 35px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand small {
+    font-size: 11px !important;
+  }
+}
+@media (min-width: 761px) {
+  .auth-inkwash-page .auth-introduction.auth-ink-intro {
+    top: -64px !important;
+  }
+  .auth-inkwash-page .auth-form-card.auth-form-ink {
+    position: relative !important;
+    top: -50px !important;
+  }
+}
+.auth-inkwash-page .auth-cover-brand strong {
+  font-size: 49px !important;
+}
+.auth-inkwash-page .auth-cover-brand small {
+  font-size: 15px !important;
+}
+.auth-inkwash-page .auth-cover-brand {
+  top: 19px !important;
+}
+.auth-inkwash-page .auth-nav-caption {
+  position: relative !important;
+  top: 20px !important;
+  font-size: 16px !important;
+}
+.auth-inkwash-page .auth-editorial-nav {
+  border-bottom-color: transparent !important;
+}
+@media (max-width: 760px) {
+  .auth-inkwash-page .auth-cover-brand strong {
+    font-size: 38px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand small {
+    font-size: 12px !important;
+  }
+  .auth-inkwash-page .auth-nav-caption {
+    font-size: 12px !important;
+  }
+  .auth-inkwash-page .auth-cover-brand {
+    top: 20px !important;
+  }
+}
+.auth-inkwash-page .auth-editorial-nav::after {
+  content: '' !important;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  height: 1px;
+  background: rgba(78, 90, 64, 0.2);
+  pointer-events: none;
+}

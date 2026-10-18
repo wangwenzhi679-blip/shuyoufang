@@ -1,0 +1,13 @@
+**/node_modules/
+.npm-cache*/
+**/dist/
+**/dist-check/
+server/storage/
+startup-logs/
+**/*.log
+**/.env
+**/.env.*
+docs/qa/
+package-lock.json
+**/package-lock.json
+client/public/
