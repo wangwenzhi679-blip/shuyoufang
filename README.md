@@ -243,6 +243,8 @@ PDF 原页阅读需要 Poppler。后端优先使用 `PDFINFO_PATH`、`PDFTOPPM_P
 
 ## 相关说明
 
+- [开发过程与版本依据](docs/development-evidence/README.md)
+
 - [启动网站](docs/启动网站.md)
 - [产品规划](docs/product-plan.md)
 - [用户信息与设置](docs/用户信息与设置规划.md)

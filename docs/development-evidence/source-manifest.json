@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "collectedAt": "2026-10-19 01:50:00 +08:00",
+  "purpose": "当前整理的开发过程辅助依据，不是对早期 Git 历史的恢复。",
+  "sourceGroups": {
+    "local-staging": "开发暂存目录中的历史组件与快照；原件本机保留。",
+    "antigravity-artifact": "反重力开发工具生成的项目设计文档；原件本机保留。"
+  },
+  "sources": [
+    {
+      "id": "S01",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "service-settings-stage.js",
+      "description": "AI 与邮件服务配置模块阶段文件",
+      "bytes": 17067,
+      "sha256": "7d900e409fc180b1020b635a46dcde8560ce39bfad395e6c496a78154233f1fb",
+      "observedModifiedAt": "2026-10-10 20:48:22 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 12,
+        "endLine": 18
+      }
+    },
+    {
+      "id": "S02",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "CoverStudies.jsx",
+      "description": "课程封面组件阶段文件",
+      "bytes": 2487,
+      "sha256": "ee3e219c0e496584b182b10bc56d10b15d3714d4cd7bcea625d2ab7e15bd405e",
+      "observedModifiedAt": "2026-10-12 21:42:39 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    },
+    {
+      "id": "S03",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "AdminInkLogin.jsx",
+      "description": "管理端水墨登录组件阶段文件",
+      "bytes": 2548,
+      "sha256": "714e2ad1ebfba4095a4072298fb3447ab0438c305ce3605a0782b9e6547ba3f8",
+      "observedModifiedAt": "2026-10-13 23:36:34 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    },
+    {
+      "id": "S04",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "claude-course-preview.css",
+      "description": "课程页面样式试作文件",
+      "bytes": 7184,
+      "sha256": "18e5d33a1d13b8d803b982dea555bb87fda6e590547f9fd2ea4270756b6e568b",
+      "observedModifiedAt": "2026-10-14 14:26:32 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    },
+    {
+      "id": "S05",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "main-before-assistant.jsx",
+      "description": "学习助手改造前的前端入口快照",
+      "bytes": 118808,
+      "sha256": "259637d5cf88853a2fad36bcd75d6fc441a803268b76b0ea7ea9d42d34fc70ee",
+      "observedModifiedAt": "2026-10-16 21:47:44 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 46,
+        "endLine": 57
+      }
+    },
+    {
+      "id": "S06",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "assistant-sessions.js",
+      "description": "独立对话模块阶段文件",
+      "bytes": 26975,
+      "sha256": "bcae319b2092d6dad2184176e4c0cc18b359d0b9faa329d9a6ce3b8030354f8f",
+      "observedModifiedAt": "2026-10-16 23:13:39 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 13,
+        "endLine": 21
+      }
+    },
+    {
+      "id": "S07",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "AssistantWorkspace.jsx",
+      "description": "学习助手工作区阶段文件",
+      "bytes": 8942,
+      "sha256": "8efbc08e4db637cc8bf43c1d6ed4ffd7e44c89a67ff3d66403be8cf6f7a284e3",
+      "observedModifiedAt": "2026-10-16 21:44:51 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 23,
+        "endLine": 33
+      }
+    },
+    {
+      "id": "S08",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "before-ui-v3-main.jsx",
+      "description": "下一轮界面改造前的前端入口快照",
+      "bytes": 110562,
+      "sha256": "e7c318020b313d788300827e97918775267d25266be46d508dc848b3b9171c29",
+      "observedModifiedAt": "2026-10-16 23:42:05 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    },
+    {
+      "id": "S09",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "review-rhythm.mjs",
+      "description": "间隔复习节奏模块阶段文件",
+      "bytes": 1079,
+      "sha256": "1511306b08ca88c8e5993467441271f48cfce9bde6af1f9b318102d90e4e1109",
+      "observedModifiedAt": "2026-10-17 14:11:47 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 1,
+        "endLine": 1
+      }
+    },
+    {
+      "id": "S10",
+      "sourceGroup": "local-staging",
+      "originalRelativeName": "AdminDialog.jsx",
+      "description": "统一管理弹窗组件阶段文件",
+      "bytes": 3324,
+      "sha256": "ca632eabb5492860cb2925f0b6ca6b05a50b8a2795985dd08154fd21943e8099",
+      "observedModifiedAt": "2026-10-18 09:04:14 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。",
+      "excerpt": {
+        "startLine": 7,
+        "endLine": 21
+      }
+    },
+    {
+      "id": "D01",
+      "sourceGroup": "antigravity-artifact",
+      "originalRelativeName": "e7118912-0e05-4bc6-8707-668adec4901b/shuyoufang_scifi_blueprint.md",
+      "description": "早期视觉探索文档，非最终采用方案",
+      "bytes": 3380,
+      "sha256": "666111f757b5df84845174aab74dc1bceb50ef9ef92b798467df3e7c78438c00",
+      "observedModifiedAt": "2026-10-11 00:55:55 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    },
+    {
+      "id": "D02",
+      "sourceGroup": "antigravity-artifact",
+      "originalRelativeName": "3e17b9fe-f153-4fd3-a96f-d5dc8cc9990f/study_plan_design_proposal.md",
+      "description": "学习计划页面设计方案",
+      "bytes": 2921,
+      "sha256": "8266cb37d8db4ef1017651c0f015d5d0fe596919e763e2b6d9704a9347802a70",
+      "observedModifiedAt": "2026-10-17 16:05:11 +08:00",
+      "timestampMeaning": "本次读取到的文件修改时间，不是 Git 提交时间，也不单独证明首次创建时间。"
+    }
+  ],
+  "sessionSummary": {
+    "originalFileName": "rollout-2026-09-28T00-17-33-01a0e3a8-4d61-75e3-b245-204c14e81c21.jsonl",
+    "bytes": 1116975029,
+    "sha256": "8243a8e86841bc5b313cd9b54879c2a699f9e5e077f3bcf96d7c95216053f360",
+    "firstObservedLogTime": "2026-09-28 00:17:33 +08:00",
+    "lastObservedLogTime": "2026-10-19 01:49:49 +08:00",
+    "parsedRecords": 37345,
+    "pathReferenceRule": "仅统计 response_item/function_call 且 arguments 包含 math-auth-app 或 AI-Course-Learning-Platform 的记录；不包含所有开发操作，也不证明命令执行成功。",
+    "projectPathReferencedDays": [
+      {
+        "date": "2026-09-28",
+        "firstReferencedCallAt": "2026-09-28 00:19:39 +08:00",
+        "referencedToolCallCount": 38
+      },
+      {
+        "date": "2026-10-05",
+        "firstReferencedCallAt": "2026-10-05 03:08:04 +08:00",
+        "referencedToolCallCount": 1
+      },
+      {
+        "date": "2026-10-07",
+        "firstReferencedCallAt": "2026-10-07 19:50:26 +08:00",
+        "referencedToolCallCount": 2
+      },
+      {
+        "date": "2026-10-16",
+        "firstReferencedCallAt": "2026-10-16 00:13:07 +08:00",
+        "referencedToolCallCount": 1
+      }
+    ],
+    "rawContentIncluded": false
+  },
+  "gitCommitsAtCollection": [
+    {
+      "commit": "b9966e77db2da71cb8ae9a3226373bc25be6b624",
+      "authorDate": "2026-10-18T22:36:06+08:00",
+      "subject": "初始化数有方课程学习平台"
+    },
+    {
+      "commit": "b4f5fd487cea3d6fb6615d38fac3d346720025c3",
+      "authorDate": "2026-10-18T22:53:00+08:00",
+      "subject": "补充环境配置模板与安装说明"
+    },
+    {
+      "commit": "d683cb6c600d5b68fe3a768bdb8c1fa3143401f1",
+      "authorDate": "2026-10-18T23:03:42+08:00",
+      "subject": "更新团队成员信息"
+    },
+    {
+      "commit": "034936eb7ef54c11b9cc04ad2721d76e555812e9",
+      "authorDate": "2026-10-19T00:16:43+08:00",
+      "subject": "完善新环境安装说明和管理员初始化"
+    },
+    {
+      "commit": "5abd85ef1ef7d847f4a339348a3f017f26522b89",
+      "authorDate": "2026-10-19T00:39:14+08:00",
+      "subject": "更新 source-map-js 修复依赖漏洞"
+    },
+    {
+      "commit": "1c9583f44fd6f75a5f5adf2a0ffe376752948699",
+      "authorDate": "2026-10-19T01:17:18+08:00",
+      "subject": "优化管理端刷新加载效果"
+    }
+  ]
+}
