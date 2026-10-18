@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "node src.js",
     "start": "node src.js",
+    "init:admin": "node init-admin.mjs",
     "test": "node --test --test-concurrency=1"
   },
   "dependencies": {

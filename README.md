@@ -108,7 +108,55 @@ CLIENT_ORIGIN=http://127.0.0.1:5173
 ```
 
 5. 按前述方式启动前后端，检查网页能否正常打开。
-6. 使用已有管理员账号进入管理端，在「服务状态」中配置文字 AI、邮件及生图服务。注册、验证码登录和找回密码需要邮件服务可用。新数据库中的管理员账号需要单独初始化；项目不提供公开的默认管理员密码。
+6. 新数据库首次使用时，在项目根目录运行以下命令，按提示设置管理员账号、昵称与密码：
+
+```powershell
+npm --prefix server run init:admin
+```
+
+密码输入不显示，也不需要写进命令或提交到仓库。命令只创建首位管理员；数据库已有管理员或账号已占用时会拒绝，不用于重置密码或提升学习账号权限。请先导入数据库结构；本项目没有公开的默认管理员密码。
+
+7. 登录管理端，在「服务状态」中配置文字 AI、邮件及生图服务。注册、验证码登录和找回密码需要邮件服务可用。
+
+### 下载代码与安装依赖
+
+以下命令适用于已安装 Git、Node.js 和 npm 的新环境：
+
+```powershell
+git clone https://github.com/wangwenzhi679-blip/shuyoufang.git
+cd shuyoufang
+npm --prefix server ci
+npm --prefix client ci
+```
+
+`npm ci` 根据各目录的锁文件安装依赖。数据库初始化可在 MySQL 客户端中执行：
+
+```sql
+SOURCE C:/项目所在路径/shuyoufang/database/schema.sql;
+```
+
+将路径替换为实际位置，建议使用正斜杠。脚本默认创建并使用 `math_path` 数据库；自行改名时需同时调整脚本和 `.env`，不要对重要数据执行未经核对的初始化。
+
+在新的交互式 PowerShell 中启动时，可使用通用命令：
+
+```powershell
+# 第一个窗口，在项目根目录运行
+npm --prefix server start
+```
+
+```powershell
+# 第二个窗口，在项目根目录运行
+npm --prefix client run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+后端需要在 `server` 目录加载 `.env`；通过上述 npm 命令启动会自动使用正确的工作目录。Windows 一键脚本与已有实例共用端口，新环境验证应避免和原网站同时运行。
+
+### 文档处理依赖
+
+- PDF 原页渲染使用 Poppler，配置方式见下方代码维护说明。
+- Office 预览和笔记 PDF 导出需要可用的浏览器。Puppeteer 安装过程通常会下载配套浏览器；下载失败或环境不提供浏览器时，可在 `server` 目录运行 `npx puppeteer browsers install chrome`，也可通过 `PDF_RENDERER_EXECUTABLE` 指定已安装浏览器的可执行文件。
+- Linux 环境还需要浏览器所需的系统库；仅安装 Node.js 依赖不代表文档转换已经可用。
+- 配置后用一份 PDF 和一份 DOCX 实际检查导入、原页阅读与预览，再检查笔记导出。AI、邮件和生图连接需分别验证，不以网页能打开代替全部验收。
 
 `JWT_SECRET` 同时用于相关服务密钥的加密，已有环境不要随意更换。`.env` 中的实际密码和服务密钥应私下保存，不写入 README 或公开仓库。
 
