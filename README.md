@@ -44,10 +44,10 @@ AI 整理、问答和生图需要相应服务可用。普通课程管理与已�
 
 ## 日常启动：一键方式
 
-当前本机项目目录：
+项目文件夹统一命名为 `shuyoufang`，以下以此目录为例（请按实际存放位置调整路径）：
 
 ```text
-E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app
+E:\CodexProjects\shuyoufang
 ```
 
 1. 确认 MySQL 服务已经启动。
@@ -65,14 +65,14 @@ E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app
 第一个窗口启动后端：
 
 ```powershell
-cd "E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app\server"
+cd "E:\CodexProjects\shuyoufang\server"
 & D:\node.exe src.js
 ```
 
 第二个窗口启动前端：
 
 ```powershell
-cd "E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app\client"
+cd "E:\CodexProjects\shuyoufang\client"
 & D:\npm.cmd run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
