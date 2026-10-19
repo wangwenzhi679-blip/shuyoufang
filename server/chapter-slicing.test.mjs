@@ -1,11 +1,5 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-const source = fs.readFileSync(new URL('./src.js', import.meta.url), 'utf8');
-const code = source.slice(
-  source.indexOf('function normalizeChapterTitle'),
-  source.indexOf('function extractQuestionBlocks'),
-);
-const slice = new Function(code + ';return sliceChapterText;')();
+import { sliceChapterText as slice } from './chapter-text.mjs';
 const first = '第1章 学习内容',
   second = '第2章 学习内容';
 const text =
