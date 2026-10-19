@@ -45,5 +45,6 @@ jobs:
           server/first-admin.test.mjs server/request-schemas.test.mjs
           server/chapter-slicing.test.mjs server/material-text.test.mjs
           server/course-routes.test.mjs
+          server/route-modules.test.mjs
       - name: Build frontend
         run: npm --prefix client run build

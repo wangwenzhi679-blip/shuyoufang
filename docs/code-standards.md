@@ -15,10 +15,14 @@
 - `server/chapter-text.mjs`：章节标题定位与原文切分；直接使用纯函数测试目录排除和章节边界，不通过动态执行源码测试。
 - `server/material-text.mjs`：资料文本清理、题块提取与章节相关题目筛选；保留来源信息，与上传、OCR 和存储逻辑分离。
 - `server/course-routes.js`：课程修改、删除和章节增删改及排序接口；在入口的既有鉴权与内容控制中间件之后注册。
+- `server/auth-routes.js`、`assistant-routes.js`、`practice-routes.js`、`course-query-routes.js`：分别注册账号认证、助手问答、练习与课程查询接口。
+- `server/material-routes.js`、`material-reading-routes.js`、`reading-adapters.js`：资料上传与预览、章节原文读取，以及阅读和笔记服务适配。
+- `server/chapter-generation-routes.js`、`generation-runner.js`：章节生成接口与后台生成任务编排。
+- `server/account-service.js`、`course-data.js`、`practice-data.js`、`material-service.js`：账号服务、课程归属与查询、练习数据、资料处理；运行依赖由入口显式传入，便于隔离测试。
 - `shared/`：前后端共享的纯逻辑，避免相同规则在两端重复实现。
 - `database/`：数据库基础结构；`docs/`：安装、产品与维护说明。
 
-新增功能优先放入对应业务模块，避免继续扩张入口文件。现有入口文件仍较大，后续拆分应随具体业务修改进行，并通过对应回归测试。
+新增功能优先放入对应业务模块，避免继续扩张入口文件。前端入口负责加载与挂载，后端入口负责运行配置、中间件顺序、模块注册及初始化。部分业务组件仍较大，进一步拆分应随具体业务修改进行，并通过对应回归测试。
 
 ## 格式与命名
 
@@ -43,7 +47,7 @@ React 组件使用 PascalCase，普通函数与变量使用 camelCase，固定�
 ```powershell
 npm.cmd run format:check
 npm.cmd --prefix client run build
-node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs
+node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs server/route-modules.test.mjs
 git diff --check
 ```
 
