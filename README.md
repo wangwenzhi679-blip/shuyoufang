@@ -167,7 +167,7 @@ npm --prefix client run dev -- --host 127.0.0.1 --port 5173 --strictPort
 | 前端       | React、Vite、CSS、Tiptap 富文本编辑器                |
 | 后端       | Node.js、Express、Zod                                |
 | 数据与鉴权 | MySQL、JWT、bcrypt                                   |
-| AI 服务    | 可配置的文字 AI 接口，以及火山引擎 Seedream 配图服务 |
+| AI 服务    | DeepSeek（文字生成与智能问答）、火山引擎 Seedream（配图生成） |
 | 文档处理   | OfficeParser、PDF 处理与浏览器渲染工具               |
 
 ```text
