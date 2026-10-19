@@ -6,6 +6,7 @@
 - `server/`：Express 接口与业务模块；`src.js` 为服务入口，账号、课程、学习、生成任务与管理功能按业务文件维护。
 - `server/request-schemas.mjs`：账号、课程、章节与练习等接口的输入校验，以及生成结果的结构约束；可独立导入测试，无需启动服务。
 - `server/chapter-text.mjs`：章节标题定位与原文切分；直接使用纯函数测试目录排除和章节边界，不通过动态执行源码测试。
+- `server/material-text.mjs`：资料文本清理、题块提取与章节相关题目筛选；保留来源信息，与上传、OCR 和存储逻辑分离。
 - `shared/`：前后端共享的纯逻辑，避免相同规则在两端重复实现。
 - `database/`：数据库基础结构；`docs/`：安装、产品与维护说明。
 
@@ -34,7 +35,7 @@ React 组件使用 PascalCase，普通函数与变量使用 camelCase，固定�
 ```powershell
 npm.cmd run format:check
 npm.cmd --prefix client run build
-node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs
+node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs
 git diff --check
 ```
 
