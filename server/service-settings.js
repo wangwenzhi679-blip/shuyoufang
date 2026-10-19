@@ -101,6 +101,7 @@ export class ServiceSettings {
     };
   }
   encrypt(value) {
+    // 每次加密使用独立 IV；持久化格式依次为 12 字节 IV、16 字节认证标签和密文。
     const iv = crypto.randomBytes(12),
       cipher = crypto.createCipheriv('aes-256-gcm', this.key, iv);
     const bytes = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);

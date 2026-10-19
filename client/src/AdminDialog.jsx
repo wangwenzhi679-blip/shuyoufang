@@ -43,6 +43,7 @@ export default function AdminDialog({
   latest.current = { locked, discard, requestClose, resumeEditing };
   useEffect(() => {
     const opener = document.activeElement;
+    // 多层弹窗共享滚动锁，最后一层关闭时才恢复页面滚动。
     if (openCount++ === 0) {
       previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
@@ -52,6 +53,7 @@ export default function AdminDialog({
       const dialogs = [...document.querySelectorAll('[role="dialog"]')].filter(
         (el) => el.getClientRects().length,
       );
+      // 仅让最上层弹窗处理 Escape 和 Tab，避免底层弹窗同时响应。
       if (dialogs.at(-1) !== root.current) return;
       const state = latest.current;
       if (event.key === 'Escape') {

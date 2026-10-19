@@ -37,7 +37,7 @@ export async function ensureAdmin(db) {
     );
 }
 
-// Read current account state: old tokens cannot bypass a suspension or role change.
+// 每次请求读取当前账号状态，避免有效期内的旧令牌绕过停用、注销或角色变更。
 export function sessionAuth(db, secret) {
   return async (req, res, next) => {
     let claims;
@@ -58,6 +58,7 @@ export function sessionAuth(db, secret) {
         return res.status(403).json({
           message: user.status === 'cancelled' ? '账号已注销' : '账号已停用，请联系管理员',
         });
+      // 改密或退出后递增版本号，使此前签发但尚未过期的令牌立即失效。
       if (Number(claims.version || 0) !== Number(user.status_version))
         return res.status(401).json({ message: '请先登录' });
       req.user = {

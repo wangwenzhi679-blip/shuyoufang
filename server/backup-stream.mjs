@@ -23,6 +23,7 @@ const canonical = (value) =>
 const hash = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const mask = (1n << 256n) - 1n;
 function accumulator() {
+  // 数据库未保证行顺序；累加规范化行摘要，再结合行数校验，避免仅因读取顺序不同而误报。
   let count = 0,
     sum = 0n;
   return {
@@ -80,6 +81,7 @@ export async function writeStreamingBackup(store, value) {
   const manifest = { format: 2, createdAt: new Date().toISOString(), tables: [], files: [] },
     known = new Set();
   try {
+    // 所有表在同一连接的一致性快照内读取；外部文件另做复制前后的摘要校验。
     await connection.query('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
     await connection.query('START TRANSACTION WITH CONSISTENT SNAPSHOT');
     const [tables] = await connection.query('SHOW FULL TABLES');

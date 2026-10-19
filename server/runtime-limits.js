@@ -83,6 +83,7 @@ export class RuntimeLimits {
     return new Promise((resolve, reject) => {
       const waiting = { resolve, signal };
       waiting.abort = () => {
+        // 取消仍在排队的请求时，只移除等待项；它尚未占用 active 并发名额。
         const index = this.queue.indexOf(waiting);
         if (index < 0) return;
         this.queue.splice(index, 1);
@@ -100,6 +101,7 @@ export class RuntimeLimits {
       signal?.throwIfAborted();
       return await task();
     } finally {
+      // 成功、失败或取消均需归还名额，避免后续请求一直等待。
       this.active--;
       this.pump();
     }
