@@ -4,6 +4,7 @@
 
 - `client/src/`：React 页面、组件、交互与接口请求；通用请求逻辑集中在 `api-client.mjs`，接口地址由 `api-base.mjs` 管理。
 - `client/src/AuthScreen.jsx`：登录、注册、邮箱验证及找回密码表单；入口保留登录状态和接口调用编排。
+- `client/src/CourseDialogs.jsx`：确认操作、课程与章节改名、新增章节及资料改名弹窗；数据提交与列表刷新由工作区传入的回调负责。
 - `server/`：Express 接口与业务模块；`src.js` 为服务入口，账号、课程、学习、生成任务与管理功能按业务文件维护。
 - `server/request-schemas.mjs`：账号、课程、章节与练习等接口的输入校验，以及生成结果的结构约束；可独立导入测试，无需启动服务。
 - `server/chapter-text.mjs`：章节标题定位与原文切分；直接使用纯函数测试目录排除和章节边界，不通过动态执行源码测试。
