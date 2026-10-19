@@ -47,7 +47,7 @@ AI 整理、问答和生图需要相应服务可用。普通课程管理与已�
 项目文件夹统一命名为 `shuyoufang`，以下以此目录为例（请按实际存放位置调整路径）：
 
 ```text
-E:\CodexProjects\shuyoufang
+E:\developing\shuyoufang
 ```
 
 1. 确认 MySQL 服务已经启动。
@@ -65,14 +65,14 @@ E:\CodexProjects\shuyoufang
 第一个窗口启动后端：
 
 ```powershell
-cd "E:\CodexProjects\shuyoufang\server"
+cd "E:\developing\shuyoufang\server"
 & D:\node.exe src.js
 ```
 
 第二个窗口启动前端：
 
 ```powershell
-cd "E:\CodexProjects\shuyoufang\client"
+cd "E:\developing\shuyoufang\client"
 & D:\npm.cmd run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
@@ -171,7 +171,7 @@ npm --prefix client run dev -- --host 127.0.0.1 --port 5173 --strictPort
 | 文档处理   | OfficeParser、PDF 处理与浏览器渲染工具               |
 
 ```text
-math-auth-app/
+shuyoufang/
 ├─ client/              前端页面、组件和样式
 ├─ server/              后端接口、任务与服务配置
 │  ├─ .env              本机配置，不公开

@@ -8,7 +8,7 @@
 
 - 产品定位：基于 AI 的课程学习与智能练习平台，面向个人自主学习者。
 - 保留“数有方”登录界面；主学习空间采用蓝色、白色和浅灰色，弱化棕色装饰。
-- 项目路径：`E:\CodexProjects\AI-Course-Learning-Platform\math-auth-app`。
+- 项目路径示例：`E:\developing\shuyoufang`。
 - 前端：React、Vite、原生 CSS；主要入口 `client/src/main.jsx`、样式 `client/src/style.css`。
 - 后端：Node.js、Express、MySQL、JWT；主要入口 `server/src.js`。
 - 本地前端地址：`http://127.0.0.1:5173/`；后端地址：`http://127.0.0.1:8005/`。地址是开发环境配置，不代表服务始终运行。
