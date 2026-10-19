@@ -5,6 +5,11 @@
 - `client/src/`：React 页面、组件、交互与接口请求；通用请求逻辑集中在 `api-client.mjs`，接口地址由 `api-base.mjs` 管理。
 - `client/src/AuthScreen.jsx`：登录、注册、邮箱验证及找回密码表单；入口保留登录状态和接口调用编排。
 - `client/src/CourseDialogs.jsx`：确认操作、课程与章节改名、新增章节及资料改名弹窗；数据提交与列表刷新由工作区传入的回调负责。
+- `client/src/main.jsx`：样式加载与应用挂载入口；保留原模块加载顺序以维持样式层叠，不再包含业务组件实现。
+- `client/src/StudentApp.jsx`、`AccountWorkspace.jsx`、`CourseWorkspace.jsx`：分别负责登录会话、账号设置加载与学习工作区编排。
+- `client/src/PracticeWorkspace.jsx`：练习列表、答题、题目生成设置、预览与编辑；`ChapterPanels.jsx`：章节草稿、总结与生成设置。
+- `client/src/CourseDetail.jsx`：课程详情；`MaterialContent.jsx`：原资料页、章节内容与笔记摘录；`ShelfLibraryModal.jsx`：资料库弹窗。
+- `client/src/student-api.mjs`：资料上传及用户端接口基础地址；`StudentContent.jsx` 与 `Brand.jsx`：助手内容和品牌展示组件。
 - `server/`：Express 接口与业务模块；`src.js` 为服务入口，账号、课程、学习、生成任务与管理功能按业务文件维护。
 - `server/request-schemas.mjs`：账号、课程、章节与练习等接口的输入校验，以及生成结果的结构约束；可独立导入测试，无需启动服务。
 - `server/chapter-text.mjs`：章节标题定位与原文切分；直接使用纯函数测试目录排除和章节边界，不通过动态执行源码测试。
