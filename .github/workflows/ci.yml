@@ -1,0 +1,48 @@
+name: Code checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Format, unit tests and frontend build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+            server/package-lock.json
+      - name: Install formatting tools
+        run: npm ci
+      - name: Install frontend dependencies
+        run: npm --prefix client ci
+      - name: Install backend dependencies
+        run: npm --prefix server ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Run independent unit tests
+        run: >-
+          node --test client/src/*.test.mjs shared/*.test.mjs
+          server/first-admin.test.mjs server/request-schemas.test.mjs
+          server/chapter-slicing.test.mjs server/material-text.test.mjs
+      - name: Build frontend
+        run: npm --prefix client run build
