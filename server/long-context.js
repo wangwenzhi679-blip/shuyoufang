@@ -25,7 +25,26 @@ export function splitContext(text, size = 12000) {
 }
 
 async function summarizePart(ask, messages, signal) {
-  let result = await ask(messages, signal);
+  let result;
+  try {
+    result = await ask(messages, signal, { maxOutputTokens: 2048 });
+  } catch (error) {
+    if (error.code !== 'AI_OUTPUT_LIMIT') throw error;
+    signal?.throwIfAborted();
+    // 接口明确标记截断时丢弃不完整返回，从原片段重新整理，最多补偿一次。
+    result = await ask(
+      [
+        ...messages,
+        {
+          role: 'user',
+          content:
+            '请重新精简整理，只保留章节主题和关键知识范围，不展开计算过程，控制在1200字以内，必须覆盖片段末尾。',
+        },
+      ],
+      signal,
+      { maxOutputTokens: 4096 },
+    );
+  }
   signal?.throwIfAborted();
   if (typeof result !== 'string' || !result.trim())
     throw new Error('长章节分段整理结果无效，请重试');
@@ -42,12 +61,14 @@ async function summarizePart(ask, messages, signal) {
         },
       ],
       signal,
+      { maxOutputTokens: 1536 },
     );
     signal?.throwIfAborted();
   }
   if (typeof result !== 'string' || !result.trim())
     throw new Error('长章节分段整理结果无效，请重试');
-  if (result.length > 6000)
+  // 单段较长但整轮有效缩短时交给下一轮合并，不能把 6000 字软目标当作失败条件。
+  if (result.length > 60000)
     throw new Error('AI 返回的资料整理仍过长，请减少单次资料范围或调整模型后重试');
   return result;
 }
@@ -59,7 +80,7 @@ export async function prepareLongContext(text, ask, signal, options = {}) {
   const { db, courseId, chapterId, onProgress } = options;
   const purpose = options.purpose === 'outline' ? 'outline' : 'knowledge';
   const hash = createHash('sha256')
-    .update('chapter-context-v3:' + purpose + ':' + (options.model || 'deepseek-chat') + ':' + text)
+    .update('chapter-context-v4:' + purpose + ':' + (options.model || 'deepseek-chat') + ':' + text)
     .digest('hex');
   if (db && courseId) {
     const [cached] = chapterId

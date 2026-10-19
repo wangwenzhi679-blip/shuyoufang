@@ -82,7 +82,7 @@ export function registerPracticeRoutes(
         .json({ message: '暂未找到当前章节资料，请调整章节名称或补充资料后出题' });
     const context = await prepareLongContext(
       chapterSources.map((item) => `【${item.name}】\n${item.content}`).join('\n\n'),
-      (messages, partSignal) => askDeepSeek(messages, undefined, partSignal),
+      (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
       signal,
       {
         db,

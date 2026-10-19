@@ -167,7 +167,7 @@ export class ServiceSettings {
       tls: { rejectUnauthorized: true },
     });
   }
-  async ask(messages, model, signal) {
+  async ask(messages, model, signal, options = {}) {
     const config = this.snapshot('ai');
     if (!this.configured('ai'))
       throw fail(config.enabled ? '尚未配置 AI 服务' : 'AI 服务已暂停', 503);
@@ -186,6 +186,11 @@ export class ServiceSettings {
             ? config.model
             : model,
         temperature: 0.35,
+        ...(Number.isInteger(options.maxOutputTokens) &&
+        options.maxOutputTokens >= 128 &&
+        options.maxOutputTokens <= 8192
+          ? { max_tokens: options.maxOutputTokens }
+          : {}),
         messages,
       }),
     });
@@ -199,6 +204,11 @@ export class ServiceSettings {
             : 'AI 服务暂时无法回答',
         502,
       );
+    if (options.maxOutputTokens && result?.choices?.[0]?.finish_reason === 'length') {
+      const error = fail('AI 资料整理输出达到长度上限，请重试', 502);
+      error.code = 'AI_OUTPUT_LIMIT';
+      throw error;
+    }
     const content = result?.choices?.[0]?.message?.content?.trim();
     if (!content) throw fail('AI 服务未返回有效内容', 502);
     return content;

@@ -73,7 +73,7 @@ export function registerChapterGenerationRoutes(
     const sources = [...new Set(sections.map((section) => section.name))];
     const context = await prepareLongContext(
       sections.map((section) => `【${section.name}】\n${section.content}`).join('\n\n'),
-      (messages, partSignal) => askDeepSeek(messages, undefined, partSignal),
+      (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
       signal,
       {
         db,
@@ -162,7 +162,7 @@ export function registerChapterGenerationRoutes(
             `【${item.original_name}】\n${item.extracted_text || '（未识别到可复制文字，请结合资料页面图片整理）'}`,
         )
         .join('\n\n'),
-      (messages, partSignal) => askDeepSeek(messages, undefined, partSignal),
+      (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
       signal,
       {
         db,

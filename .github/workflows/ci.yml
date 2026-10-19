@@ -47,5 +47,6 @@ jobs:
           server/course-routes.test.mjs
           server/route-modules.test.mjs
           server/long-context.test.mjs server/long-context-retry.test.mjs
+          server/ai-output-budget.test.mjs
       - name: Build frontend
         run: npm --prefix client run build

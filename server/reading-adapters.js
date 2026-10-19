@@ -73,13 +73,14 @@ export function registerReadingAdapters(
     db,
     auth,
     asyncRoute,
-    (messages, signal) =>
+    (messages, signal, options) =>
       askDeepSeek(
         messages,
         'deepseek-chat',
         signal
           ? AbortSignal.any([signal, AbortSignal.timeout(180000)])
           : AbortSignal.timeout(180000),
+        options,
       ),
     async (courseId, chapterId) => {
       const [chapters] = await db.execute(

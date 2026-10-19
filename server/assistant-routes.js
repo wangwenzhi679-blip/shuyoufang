@@ -74,7 +74,8 @@ export function registerAssistantRoutes(
         materials
           .map((item) => `【${item.original_name}】\n${item.extracted_text || '（未识别到文字）'}`)
           .join('\n\n'),
-        (messages, partSignal) => askDeepSeek(messages, parsed.data.model, partSignal),
+        (messages, partSignal, options) =>
+          askDeepSeek(messages, parsed.data.model, partSignal, options),
         signal,
         {
           db,

@@ -216,8 +216,8 @@ function generationSignal(req, res) {
   return AbortSignal.any([controller.signal, AbortSignal.timeout(180000)]);
 }
 
-async function askDeepSeek(messages, model, signal) {
-  return runtime.run(() => serviceSettings.ask(messages, model, signal), signal);
+async function askDeepSeek(messages, model, signal, options) {
+  return runtime.run(() => serviceSettings.ask(messages, model, signal, options), signal);
 }
 
 registerAuthRoutes(app, {

@@ -23,17 +23,44 @@ test('分段返回超长时完整保留返回并压缩一次，成功后继续�
   assert.ok(result.includes('片段末尾要点'));
 });
 
-test('持续超长时有限失败，不截断后伪装成功', async () => {
+test('持续扩写时有限失败，不截断后伪装成功', async () => {
   let calls = 0;
   await assert.rejects(
     () =>
       prepareLongContext(text, async () => {
         calls++;
-        return '资料说明'.repeat(1600);
+        return '资料说明'.repeat(4000);
       }),
-    /仍过长/,
+    /未能缩减/,
   );
   assert.ok(calls <= 4, `调用次数应受两个并发片段及单次重试约束：${calls}`);
+});
+
+test('超过六千字但已有效压缩的片段可参与后续整理', async () => {
+  const result = await prepareLongContext(text, async (_messages, _signal, options) => {
+    assert.ok(options.maxOutputTokens > 0);
+    return '资料要点'.repeat(1600);
+  });
+  assert.ok(result.includes('资料要点'));
+  assert.ok(result.length < text.length);
+});
+
+test('接口截断时从原资料重试，不将不完整回答加入上下文', async () => {
+  let initial = 0;
+  const result = await prepareLongContext(text, async (messages, _signal, options) => {
+    if (options.maxOutputTokens === 2048) {
+      initial++;
+      throw Object.assign(new Error('truncated'), { code: 'AI_OUTPUT_LIMIT' });
+    }
+    assert.equal(options.maxOutputTokens, 4096);
+    assert.equal(
+      messages.some((message) => message.role === 'assistant'),
+      false,
+    );
+    return '完整片段要点';
+  });
+  assert.ok(initial > 0);
+  assert.ok(result.includes('完整片段要点'));
 });
 
 test('取消在压缩重试前生效，不继续请求模型', async () => {

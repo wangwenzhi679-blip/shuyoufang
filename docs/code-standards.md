@@ -47,7 +47,7 @@ React 组件使用 PascalCase，普通函数与变量使用 camelCase，固定�
 ```powershell
 npm.cmd run format:check
 npm.cmd --prefix client run build
-node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs server/route-modules.test.mjs
+node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs server/route-modules.test.mjs server/long-context.test.mjs server/long-context-retry.test.mjs server/ai-output-budget.test.mjs
 git diff --check
 ```
 
