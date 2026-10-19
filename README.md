@@ -162,13 +162,23 @@ npm --prefix client run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
 ## 技术与目录
 
-| 部分       | 技术 / 用途                                          |
-| ---------- | ---------------------------------------------------- |
-| 前端       | React、Vite、CSS、Tiptap 富文本编辑器                |
-| 后端       | Node.js、Express、Zod                                |
-| 数据与鉴权 | MySQL、JWT、bcrypt                                   |
-| AI 服务    | DeepSeek（文字生成与智能问答）、火山引擎 Seedream（配图生成） |
-| 文档处理   | OfficeParser、PDF 处理与浏览器渲染工具               |
+| 部分 | 已使用的技术与实现 |
+| --- | --- |
+| 前端界面 | React、React DOM、Vite、原生 CSS、Lucide 图标；用户端与管理端组件、按需加载及统一弹窗交互 |
+| 富文本笔记 | Tiptap 及图片、占位提示、唯一标识等扩展；笔记编辑、图片插入与内容保存 |
+| 后端接口 | Node.js、Express、ES Modules、Zod；按课程、学习、账号及管理功能拆分接口，统一处理参数校验与错误响应 |
+| 数据存储 | MySQL、mysql2 连接池、参数化查询与事务；存储课程、章节、笔记、练习、计划和任务记录，文件资料存放于后端存储目录 |
+| 身份认证与权限 | JWT、bcryptjs 密码哈希、管理员与学习用户角色校验、账号状态检查；通过登录状态版本使旧令牌失效，提供首位管理员初始化流程 |
+| 服务配置与密钥 | dotenv 环境配置、AES-256-GCM 服务密钥加密；管理端配置与检测文字 AI、邮件和配图服务 |
+| AI 文字服务 | DeepSeek；课程章节整理、总结、智能问答与练习生成，结合课程资料组织上下文，支持流式回答与请求取消 |
+| AI 配图服务 | 火山引擎 Seedream；课程封面及章节配图的生成、编辑与管理 |
+| 生成任务管理 | MySQL 保存任务状态与结果，配合 AbortController、运行限制及管理端操作，实现进度查看、取消、重试与任务诊断 |
+| 资料与文档处理 | Multer 文件上传、OfficeParser 内容解析、Poppler PDF 信息读取与页面渲染、Puppeteer 浏览器渲染；用于资料导入、原页阅读、Office 预览及笔记 PDF 导出 |
+| 邮件与账号流程 | Nodemailer；邮件验证码、邮箱验证与密码找回 |
+| 备份与维护 | Archiver ZIP 打包、SHA-256 内容校验、存储核查与管理操作日志；支持备份管理和问题排查 |
+| 工程与验证 | Git、Prettier、EditorConfig、Node.js 内置测试工具、Vite 生产构建，以及 PowerShell / CMD 本机启动脚本 |
+
+以上按代码中的实际使用情况整理；依赖清单见 `client/package.json` 与 `server/package.json`。外部 AI、邮件、文档渲染等能力仍需相应服务配置与运行环境，具体验收范围见安装说明和产品规划。
 
 ```text
 shuyoufang/
