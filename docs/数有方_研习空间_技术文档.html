@@ -1,0 +1,3514 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>数有方 · 研习空间 系统技术设计与工程实现技术白皮书</title>
+    <style>
+      @page {
+        size: A4 portrait;
+        margin: 18mm 18mm 18mm 18mm;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+          'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+        color: #1e293b;
+        font-size: 9.8pt;
+        line-height: 1.55;
+        background: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #0f172a;
+        font-weight: 600;
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+      h1 {
+        font-size: 16.5pt;
+        color: #0f2744;
+        border-bottom: 2px solid #2e6b5e;
+        padding-bottom: 5px;
+        margin-top: 20pt;
+        margin-bottom: 12pt;
+        display: flex;
+        align-items: center;
+      }
+      h1 .sec-num {
+        background: #2e6b5e;
+        color: #ffffff;
+        font-size: 11pt;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-right: 8px;
+        font-weight: bold;
+      }
+      h2 {
+        font-size: 12.5pt;
+        color: #1e3a5f;
+        border-left: 4px solid #2e6b5e;
+        padding-left: 8px;
+        margin-top: 15pt;
+        margin-bottom: 8pt;
+      }
+      h3 {
+        font-size: 10.5pt;
+        color: #2e6b5e;
+        margin-top: 11pt;
+        margin-bottom: 5pt;
+      }
+      h4 {
+        font-size: 9.8pt;
+        color: #334155;
+        margin-top: 9pt;
+        margin-bottom: 4pt;
+      }
+      p {
+        margin: 0 0 7pt 0;
+        text-align: justify;
+        text-justify: inter-ideograph;
+      }
+      ul,
+      ol {
+        margin: 0 0 7pt 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 3.5pt;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 8pt 0 10pt 0;
+        font-size: 8.8pt;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      th,
+      td {
+        border: 1px solid #cbd5e1;
+        padding: 5px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f1f5f9;
+        color: #0f2744;
+        font-weight: 600;
+      }
+      tr:nth-child(even) td {
+        background-color: #f8fafc;
+      }
+      code {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+        font-size: 8.6pt;
+        background: #f1f5f9;
+        color: #0f4c81;
+        padding: 1px 4px;
+        border-radius: 3px;
+        border: 1px solid #e2e8f0;
+      }
+      pre {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 3.5px solid #0284c7;
+        border-radius: 4px;
+        padding: 8px 10px;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+        font-size: 8.2pt;
+        line-height: 1.45;
+        margin: 7pt 0;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        border: none;
+        color: #1e293b;
+      }
+      .callout {
+        border-left: 4px solid #0284c7;
+        background: #f0f9ff;
+        padding: 8px 12px;
+        border-radius: 0 4px 4px 0;
+        margin: 8pt 0;
+        font-size: 9pt;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .callout-title {
+        font-weight: bold;
+        color: #0369a1;
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout-success {
+        border-left-color: #10b981;
+        background: #f0fdf4;
+      }
+      .callout-success .callout-title {
+        color: #15803d;
+      }
+      .callout-warning {
+        border-left-color: #f59e0b;
+        background: #fffbeb;
+      }
+      .callout-warning .callout-title {
+        color: #b45309;
+      }
+      .callout-purple {
+        border-left-color: #8b5cf6;
+        background: #f5f3ff;
+      }
+      .callout-purple .callout-title {
+        color: #6d28d9;
+      }
+      .svg-box {
+        text-align: center;
+        margin: 10pt 0 12pt 0;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .svg-box svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .caption {
+        font-size: 8.2pt;
+        color: #64748b;
+        margin-top: 4pt;
+        font-weight: 500;
+      }
+      .page-break {
+        page-break-after: always;
+        break-after: page;
+      }
+      .tag {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 7.8pt;
+        font-weight: bold;
+        margin-right: 4px;
+      }
+      .tag-green {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+      .tag-blue {
+        background: #e0f2fe;
+        color: #075985;
+        border: 1px solid #bae6fd;
+      }
+      .tag-amber {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+      }
+      .tag-purple {
+        background: #ede9fe;
+        color: #5b21b6;
+        border: 1px solid #ddd6fe;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="margin-top: 5pt">
+      <h1
+        style="
+          border-bottom: 2px solid #2e6b5e;
+          padding-bottom: 5px;
+          margin-top: 0;
+          margin-bottom: 12pt;
+        "
+      >
+        <span class="sec-num" style="background: #0f2744">SPEC</span> 文档版本控制与修订历史
+      </h1>
+      <table style="margin-bottom: 15pt">
+        <thead>
+          <tr>
+            <th style="width: 12%">版本号</th>
+            <th style="width: 15%">修订日期</th>
+            <th style="width: 18%">修订章节</th>
+            <th style="width: 40%">主要修订与演进内容</th>
+            <th style="width: 15%">编写/审核</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>v1.0.0</code></td>
+            <td>2026-09-30</td>
+            <td>全部基准章节</td>
+            <td>
+              完成系统基线确立：React 前端、Express 服务端与 MySQL 核心模式，确立自主研习空间定位。
+            </td>
+            <td>架构工程组</td>
+          </tr>
+          <tr>
+            <td><code>v1.1.0</code></td>
+            <td>2026-10-08</td>
+            <td>第 4、5 章</td>
+            <td>
+              上线长文档分块（12000字）、AbortController 信号级中断机制、多选题逐项二级 AI
+              核对、富文本边读边记。
+            </td>
+            <td>研发核心团队</td>
+          </tr>
+          <tr>
+            <td><code>v1.1.5</code></td>
+            <td>2026-10-14</td>
+            <td>第 3、5、6 章</td>
+            <td>
+              新增管理端运营大屏、AES-256-GCM 服务密钥加密治理、多模态原页 Poppler 渲染与 Office
+              预览修复。
+            </td>
+            <td>运维安全组</td>
+          </tr>
+          <tr>
+            <td><code>v1.2.0</code></td>
+            <td>2026-10-19</td>
+            <td>全文档终版整理</td>
+            <td>
+              重点强化 AI 技术选型矩阵、12%
+              重叠视觉切片算法、艾宾浩斯动态复习算法、明确4大技术与4大应用创新点。
+            </td>
+            <td>技术委员会</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h1
+        style="
+          border-bottom: 2px solid #2e6b5e;
+          padding-bottom: 5px;
+          margin-top: 15pt;
+          margin-bottom: 12pt;
+        "
+      >
+        <span class="sec-num" style="background: #0f2744">INDEX</span> 系统技术白皮书目录 (TABLE OF
+        CONTENTS)
+      </h1>
+
+      <style>
+        .toc-item {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 6.5pt;
+          font-size: 9.3pt;
+        }
+        .toc-title {
+          font-weight: 600;
+          color: #0f2744;
+        }
+        .toc-sub {
+          margin-left: 18px;
+          font-weight: normal;
+          color: #334155;
+          font-size: 8.8pt;
+        }
+        .toc-dots {
+          flex-grow: 1;
+          border-bottom: 1px dotted #94a3b8;
+          margin: 0 8px;
+          position: relative;
+          top: -3px;
+        }
+        .toc-page {
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: bold;
+          color: #2e6b5e;
+          font-size: 8.8pt;
+        }
+      </style>
+
+      <div class="toc-container">
+        <div class="toc-item">
+          <span class="toc-title">第一章 项目概述 (Project Overview)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 1</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>1.1 研发背景与行业研习痛点深度剖析</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 1</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>1.2 产品定位与系统核心建设目标</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 1</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>1.3 核心研习业务流转与价值全景闭环</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 2</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第二章 需求分析 (Requirements Analysis)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 3</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>2.1 用户角色模型与核心使用场景建模</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 3</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>2.2 核心功能性需求建模 (FRD)</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 3</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>2.3 系统非功能性需求与高可用质量属性 (NFR)</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 4</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第三章 系统架构设计 (System Architecture Design)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 5</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>3.1 总体五层逻辑架构蓝图与拓扑解耦</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 5</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>3.2 前端工程架构与中式现代研习交互系统</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 6</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>3.3 后端微内核服务与异步任务总线架构</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 7</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>3.4 数据模型与实体关系 (ER) 全景设计</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 8</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>3.5 全链路安全防线与密钥加密鉴权体系</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 9</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第四章 AI技术方案与工程化落地 (AI Technical Solution)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 10</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>4.1 AI模型选型深度评测与多模态技术矩阵 (选型理由)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 10</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>4.2 AI系统工程集成方式与全生命周期任务网格 (集成方式)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 12</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>4.3 四大AI核心优化策略设计与实施 (优化策略)</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 13</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第五章 核心功能模块工程实现 (Core Implementation)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 16</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>5.1 多格式资料视文双轨解析与公式保真引擎</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 16</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>5.2 沉浸式章节研读与“边读边记”协同系统</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 17</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>5.3 智能多题型出题、判分与错题本闭环系统</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 18</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>5.4 艾宾浩斯动态间隔复习与个性化学习计划算法</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 19</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>5.5 运营治理大屏与全站 SHA-256 容灾备份</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 20</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第六章 系统测试、部署与运维验证 (Testing & Deployment)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 21</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>6.1 多维度自动化测试矩阵与并发质量保障</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 21</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>6.2 真实大模型联调、纠偏与端到端回归验收</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 22</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>6.3 生产环境部署基线、外部依赖与初始化规范</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 22</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>6.4 双模一键启动调度机制与运维监控体系</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 23</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">第七章 总结与未来展望 (Summary & Innovation)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 24</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>7.1 项目建设成效与工程指标达成总结</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 24</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>7.2 项目核心创新点全面梳理 (技术创新点×4 + 应用创新点×4)</span
+          ><span class="toc-dots"></span><span class="toc-page">P. 24</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>7.3 技术局限性分析与下一阶段演进路线</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 25</span>
+        </div>
+
+        <div class="toc-item">
+          <span class="toc-title">附录 (Appendix)</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 26</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>附录 A: 系统核心数据表字段字典规范</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 26</span>
+        </div>
+        <div class="toc-item toc-sub">
+          <span>附录 B: 系统关键 RESTful API 契约定义</span><span class="toc-dots"></span
+          ><span class="toc-page">P. 27</span>
+        </div>
+      </div>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">01</span> 第一章 项目概述 (Project Overview)</h1>
+
+      <h2>1.1 研发背景与行业研习痛点深度剖析</h2>
+      <p>
+        在当今高等教育与终身学习时代，知识的更新迭代呈现爆炸式增长。大学生、科研工作者及各行各业专业学习者，普遍面临从“被动接受标准化课程”向“以个人目标为驱动的自主深度研习”转型。然而，审视当前主流的学习工具链与在线教育基础设施，个人自主研习仍面临诸多难以逾越的结构性痛点：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%">核心痛点维度</th>
+            <th style="width: 38%">传统学习模式与工具现状</th>
+            <th style="width: 42%">数有方 · 研习空间的解决范式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>资料孤岛与知识割裂</strong></td>
+            <td>
+              学习资料（教材PDF、教师PPT课件、历年题库Word、网页考点）散落于本地磁盘与网盘中，阅读、提问、记笔记、做题依赖多个独立软件频繁切换，知识上下文无法连续沉淀。
+            </td>
+            <td>
+              以<strong>“个人资料为第一原点”</strong>，一站式完成资料导入、AI目录抽取、章节对齐、原页阅读、交互笔记、测验与计划，形成完整的数据与认知链路。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>理工科复杂公式失真</strong></td>
+            <td>
+              市面常规文档转换与文本提取工具，遇到高等数学、线性代数、力学等学科中的复杂矩阵、多重积分、分式和特殊符号时，极易退化为方块乱码、漏字符或排版崩溃。
+            </td>
+            <td>
+              首创<strong>“视文双轨自适应阅读引擎”</strong>：文本流负责语义索引与大模型上下文供给；Poppler
+              高保真原页渲染引擎负责矩阵与公式的像素级原貌展现。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>通用大模型漂移与幻觉</strong></td>
+            <td>
+              直接使用公网通用聊天机器人提问时，AI
+              缺乏特定教材的边界约束，回答泛泛而谈、答非所问，甚至捏造不存在的定理与计算公式，且无法将回答直接沉淀为试卷或笔记。
+            </td>
+            <td>
+              构筑<strong>“强约束课程知识沙箱”</strong>：所有 AI
+              问答、总结与出题均以学习者绑定的章节资料为硬约束，提供置信依据反查，并支持回答一键转笔记、一键出题。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>学练脱节与遗忘周期失控</strong></td>
+            <td>
+              看完资料缺少即时自测，即使做了习题也缺乏针对错题的科学复习规划；市面错题本多为机械截图，无法结合遗忘曲线自动调度复习周期。
+            </td>
+            <td>
+              实现<strong>“认知科学级学练测闭环”</strong>：根据章节资料智能生成多题型测验，交卷即判分；错题一键入库，并基于改进艾宾浩斯遗忘曲线（1,
+              3, 7, 14, 30天）动态派发任务。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>1.2 产品定位与系统核心建设目标</h2>
+      <p>
+        <strong>数有方 · 研习空间（Shuyoufang Study Space）</strong
+        >定位于专为大学生与高阶个人自学者打造的<strong
+          >“以资料为原点的深思型 AI 自主研习平台”</strong
+        >。
+        平台不仅提供强大的文档解析、智能伴学、自动测验与间隔复习功能，更在人机交互层面摒弃冷硬浮夸的商业化教培设计，独创融合<strong>“纸色、墨韵、青绿、朱红”</strong>的中式研习空间人文美学，使学习者能够在宁静沉浸的氛围中开展深度研读与知识内化。
+      </p>
+
+      <div class="callout callout-success">
+        <div class="callout-title">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          数有方系统四大核心技术工程目标
+        </div>
+        <ol style="margin-bottom: 0; padding-left: 16px">
+          <li>
+            <strong>工程高可用与秒级启动：</strong
+            >构建低耦合的前后端拓扑结构，具备跨平台部署与自动化调度能力，确保服务冷启动稳定、运行状态自愈、接口秒级响应。
+          </li>
+          <li>
+            <strong>长上下文低耗推理：</strong>针对数十万字的大型学术资料，建立分层切片机制与双层
+            SHA-256 缓存网格，实现大模型调用成本降低 60% 以上，响应速度提升 3 倍。
+          </li>
+          <li>
+            <strong>信号级任务可控性：</strong>全栈打通 AbortController 中断信号链与 MySQL
+            任务持久化状态机，实现 AI
+            出题、目录梳理长耗时任务的无感后台化、防迟到写入与秒级平滑取消。
+          </li>
+          <li>
+            <strong>严谨的结构化认知校验：</strong>在 AI 出题与解析环节建立强类型模式校验（Zod
+            Schema）与二级 AI 逻辑核对机制，杜绝错题、漏选、选项错乱等大模型固有幻觉。
+          </li>
+        </ol>
+      </div>
+
+      <h2>1.3 核心研习业务流转与价值全景闭环</h2>
+      <p>
+        数有方系统将学习过程解构为一个有机咬合、环环相扣的认知闭环。全链路涵盖资料上传、结构沉淀、知识精读、协同笔记、智能检验与周期强化，业务流转全景如下图所示：
+      </p>
+
+      <div class="svg-box">
+        <svg viewBox="0 0 760 170" width="760" height="170" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0f2744" />
+              <stop offset="100%" stop-color="#1e3a5f" />
+            </linearGradient>
+            <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2e6b5e" />
+              <stop offset="100%" stop-color="#3d8b7a" />
+            </linearGradient>
+            <linearGradient id="grad-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#b83b3b" />
+              <stop offset="100%" stop-color="#d9534f" />
+            </linearGradient>
+            <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+              <feDropShadow
+                dx="0"
+                dy="2"
+                stdDeviation="2"
+                flood-color="#000"
+                flood-opacity="0.08"
+              />
+            </filter>
+          </defs>
+
+          <!-- Step 1 -->
+          <g transform="translate(10, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-blue)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              1. 资料引入
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              多格式文档导入
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              PDF / Word / PPT
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              OfficeParser 解析
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              Poppler 原页栅格
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#e0f2fe" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#0369a1"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              视文双轨提取
+            </text>
+          </g>
+
+          <!-- Arrow 1 -->
+          <path
+            d="M 120 82 L 134 82"
+            stroke="#2e6b5e"
+            stroke-width="2"
+            marker-end="url(#arrow)"
+            fill="none"
+          />
+
+          <!-- Step 2 -->
+          <g transform="translate(138, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-blue)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              2. 结构重塑
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              AI 章节梳理
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              12% 重叠视觉切片
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              自动生成研习大纲
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              人工确认与微调
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#e0f2fe" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#0369a1"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              结构化知识树
+            </text>
+          </g>
+
+          <!-- Arrow 2 -->
+          <path d="M 248 82 L 262 82" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 3 -->
+          <g transform="translate(266, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-green)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              3. 沉浸研读
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              原版双轨阅读
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              公式矩阵原貌保真
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              边读边记富文本协同
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              断点续读与位置保存
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#dcfce7" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#15803d"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              精读深度内化
+            </text>
+          </g>
+
+          <!-- Arrow 3 -->
+          <path d="M 376 82 L 390 82" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 4 -->
+          <g transform="translate(394, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-green)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              4. 伴学提问
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              AI 研习助教
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              范围约束知识问答
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              SSE 流式即时交互
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              回答一键摘录笔记
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#dcfce7" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#15803d"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              疑难即刻消除
+            </text>
+          </g>
+
+          <!-- Arrow 4 -->
+          <path d="M 504 82 L 518 82" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 5 -->
+          <g transform="translate(522, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-gold)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              5. 检验巩固
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              AI 智能同步练
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              多题型自适应配置
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              二级 AI 严苛核对
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              交卷即时判分反馈
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#fee2e2" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#b91c1c"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              测验能力检验
+            </text>
+          </g>
+
+          <!-- Arrow 5 -->
+          <path d="M 632 82 L 646 82" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 6 -->
+          <g transform="translate(650, 15)">
+            <rect
+              width="105"
+              height="135"
+              rx="6"
+              fill="#fff"
+              stroke="#cbd5e1"
+              stroke-width="1.5"
+              filter="url(#shadow)"
+            />
+            <rect width="105" height="26" rx="6" fill="url(#grad-gold)" />
+            <text
+              x="52.5"
+              y="17"
+              fill="#fff"
+              font-size="9.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              6. 遗忘抗击
+            </text>
+            <text
+              x="52.5"
+              y="52"
+              fill="#1e293b"
+              font-size="8.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              艾宾浩斯复习
+            </text>
+            <text x="52.5" y="70" fill="#64748b" font-size="7.8" text-anchor="middle">
+              错题无缝去重收录
+            </text>
+            <text x="52.5" y="88" fill="#64748b" font-size="7.8" text-anchor="middle">
+              1/3/7/14/30天节点
+            </text>
+            <text x="52.5" y="106" fill="#64748b" font-size="7.8" text-anchor="middle">
+              重新作答与掌握标记
+            </text>
+            <rect x="15" y="118" width="75" height="14" rx="3" fill="#fee2e2" />
+            <text
+              x="52.5"
+              y="128.5"
+              fill="#b91c1c"
+              font-size="7.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              长时记忆巩固
+            </text>
+          </g>
+        </svg>
+        <div class="caption">图 1-1 数有方 · 研习空间 核心业务链路与认知闭环流转全景图</div>
+      </div>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">02</span> 第二章 需求分析 (Requirements Analysis)</h1>
+
+      <h2>2.1 用户角色模型与核心使用场景建模</h2>
+      <p>
+        数有方系统严格依据现代高校自主研习与平台运维治理的实际需求，抽象出两个互不重叠、边界清晰的核心角色模型：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 15%">角色模型</th>
+            <th style="width: 35%">角色职责与目标</th>
+            <th style="width: 50%">典型核心使用场景 (Use Cases)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>个人研习者<br />(Learner)</strong>
+            </td>
+            <td>
+              以自主学习为导向的学生或终身学习者。目标是高效整理个人学术资料、消除阅读理解盲区、通过高质量测验检验知识掌握，并按科学周期克服遗忘。
+            </td>
+            <td>
+              <ul>
+                <li>
+                  <strong>场景 A（资料转化）：</strong>导入新学期《高等数学》PDF 与课件 PPTX，由 AI
+                  抽取树状章节并确认采用。
+                </li>
+                <li>
+                  <strong>场景 B（深度研读）：</strong
+                  >双轨阅读线性代数特征值章节，右侧开启“边读边记”，遇到矩阵公式查看原页高清视图。
+                </li>
+                <li>
+                  <strong>场景 C（即时答疑）：</strong>就本章难点向 AI
+                  助教提问，将精辟解释一键摘录为笔记段落或转化为自测题目。
+                </li>
+                <li>
+                  <strong>场景 D（同步自测）：</strong>选择“快速巩固”模板生成 5
+                  道单选与判断，交卷获得即时判分，错题一键收录错题本。
+                </li>
+                <li>
+                  <strong>场景 E（抗遗忘复习）：</strong>按系统提醒完成第 1 天与第 3
+                  天的错题复习安排，重新作答直至标为已掌握。
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>平台管理员<br />(Admin)</strong>
+            </td>
+            <td>
+              负责维护平台健康度、AI
+              服务连接性、内容合规与运行安全。拥有独立的管理控制台，与普通学习端入口物理隔离（<code>/admin</code>）。
+            </td>
+            <td>
+              <ul>
+                <li>
+                  <strong>场景 F（服务状态）：</strong>配置 DeepSeek
+                  文本大模型与火山引擎生图模型密钥，执行实时连通性探测。
+                </li>
+                <li>
+                  <strong>场景 G（任务监控与治理）：</strong>实时监测系统内 running/failed 的 AI
+                  生成任务，对异常任务执行取消或重试。
+                </li>
+                <li>
+                  <strong>场景 H（安全审计与备份）：</strong>创建包含 MySQL 数据库与文件目录的加密
+                  ZIP 备份包，执行 SHA-256 校验与沙箱验签。
+                </li>
+                <li>
+                  <strong>场景 I（用户合规管理）：</strong
+                  >审核用户账号状态，执行合规停用或注销（撤销登录凭证并解绑邮箱，保留脱敏审计记录）。
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>2.2 核心功能性需求建模 (FRD)</h2>
+      <p>
+        依据软件工程规范，系统功能性需求（Functional
+        Requirements）按领域驱动设计划分为六大核心功能集群：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 18%">功能集群</th>
+            <th style="width: 25%">子功能项</th>
+            <th style="width: 57%">功能性规范与业务契约</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="3"><strong>1. 资料与章节集群</strong></td>
+            <td>多格式导入与解析</td>
+            <td>
+              支持 PDF、DOCX、PPTX 文件安全上传；文件大小可控（默认 100MB）；自动调用 OfficeParser
+              提取纯文本并保存于 <code>course_materials</code>。
+            </td>
+          </tr>
+          <tr>
+            <td>AI 智能目录梳理</td>
+            <td>
+              大模型阅读前序文档或视觉切片，提取层级目录大纲；用户可实时预览、修改标题、调整排序并一键采用至
+              <code>course_chapters</code>。
+            </td>
+          </tr>
+          <tr>
+            <td>章节管理与排序重组</td>
+            <td>
+              支持手动新增章节、插入指定位置（支持头部、尾部及任意中间插序）、编辑标题与简介、级联删除章节及其绑定的衍生数据。
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="3"><strong>2. 双轨研读与笔记集群</strong></td>
+            <td>视文双轨阅读引擎</td>
+            <td>
+              优先展示结构化文本流，支持题号分组与选项自动换行；遇到公式乱码或用户主动请求时，无缝切换
+              Poppler 渲染的原版页面视图。
+            </td>
+          </tr>
+          <tr>
+            <td>边读边记富文本编辑器</td>
+            <td>
+              集成 Tiptap
+              核心，支持标题、列表、字号（12-32px）、行内高亮、插图；支持选区字号保持、自动防抖保存（Debounced
+              Auto-save）。
+            </td>
+          </tr>
+          <tr>
+            <td>阅读断点与书签系统</td>
+            <td>
+              以百分比实时持久化滚动位移（最高 99%，学完标记
+              100%）；跨端切换或刷新即刻精准恢复；支持单章独立添加与管理书签。
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>3. AI 伴学与出题集群</strong></td>
+            <td>范围约束知识助教</td>
+            <td>
+              支持针对“全课程”或“特定章节”发起问答；采用 SSE
+              流式推流响应；支持客户端即时中断；提供置信来源文件名引用标注。
+            </td>
+          </tr>
+          <tr>
+            <td>多题型智能同步练习</td>
+            <td>
+              支持单选（4选项A-D）、多选（至少两项且排序）、判断、填空、简答；严格校验
+              Schema；交卷前隐藏答案，交卷后输出多维反馈。
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>4. 错题与复习计划集群</strong></td>
+            <td>去重错题本与掌握度</td>
+            <td>
+              交卷后一键加入错题本，相同原题全局去重（基于题干指纹）；支持手动标为“已掌握”或恢复“待复习”；支持按课程与章节筛选。
+            </td>
+          </tr>
+          <tr>
+            <td>艾宾浩斯动态间隔调度</td>
+            <td>
+              依据遗忘衰减规律派发第 1、3、7、14、30
+              天复习任务；支持任务改期、顺延；与首页“今日任务”形成实时联动调度。
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>5. 运营大屏与安全集群</strong></td>
+            <td>动态服务配置与加密</td>
+            <td>
+              管理端支持动态修改大模型 API Key 与 SMTP 凭据；采用 AES-256-GCM
+              加密存储，服务无须重启即可热更新生效。
+            </td>
+          </tr>
+          <tr>
+            <td>容灾备份与全站审计</td>
+            <td>
+              一键生成全库及存储目录 ZIP 备份包，自动生成 SHA-256
+              哈希清单；管理员操作严格记录审计日志（操作人、目标、原因、时间）。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>2.3 系统非功能性需求与高可用质量属性 (NFR)</h2>
+      <p>为满足高标准工程交付，系统在性能、安全、可靠性及可移植性方面确立了量化质量指标：</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 18%">质量属性维度</th>
+            <th style="width: 42%">指标规范与设计约束</th>
+            <th style="width: 40%">验证与达标机制</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>性能与吞吐 (Performance)</strong></td>
+            <td>
+              <ul>
+                <li>静态资源与前端页面初次首屏加载时间 ≤ 1.2 秒。</li>
+                <li>普通 RESTful 业务接口响应延时 ≤ 150 毫秒（P95）。</li>
+                <li>AI 知识问答 SSE 首字首包延时（TTFT） ≤ 800 毫秒。</li>
+                <li>大文档分块处理吞吐率 ≥ 100KB/s。</li>
+              </ul>
+            </td>
+            <td>
+              采用 Vite 生产代码分割（Chunking）、MySQL 核心字段索引优化、双层 SHA-256 摘要缓存。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>信息安全 (Security)</strong></td>
+            <td>
+              <ul>
+                <li>密码采用 bcrypt 加盐哈希存储（Work Factor = 10）。</li>
+                <li>第三方 AI 与 SMTP 密钥采用 AES-256-GCM 加密落库。</li>
+                <li>全站请求实行 JWT 鉴权与 <code>status_version</code> 双重版本吊销。</li>
+                <li>防御 SQL 注入（MySQL2 全参数化预编译）与 XSS。</li>
+              </ul>
+            </td>
+            <td>自动化安全静态审计、参数模式严格校验（Zod Runtime Parsing）、脱敏日志输出。</td>
+          </tr>
+          <tr>
+            <td><strong>可靠性与容灾 (Reliability)</strong></td>
+            <td>
+              <ul>
+                <li>服务意外中断恢复时间（MTTR） ≤ 30 秒。</li>
+                <li>AI 异步任务断网/刷新可续传；防迟到写入（Saving状态锁）。</li>
+                <li>未交卷答题进度与富文本笔记草稿多端本地即时暂存自愈。</li>
+              </ul>
+            </td>
+            <td>
+              基于 <code>course_generation_jobs</code> 状态机、LocalStorage
+              本地容灾镜像、自动幂等去重。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>可移植与可维护性</strong></td>
+            <td>
+              <ul>
+                <li>全量代码采用标准 ES Modules 语法规范。</li>
+                <li>支持 Windows / Linux 双平台零配置一键启动与端口复用。</li>
+                <li>提供完整的单元测试、接口测试与数据回滚脚本。</li>
+              </ul>
+            </td>
+            <td>Node.js 原生 Test Runner（16+ 模块全通）、统一路径正斜杠处理、配置中心化隔离。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">03</span> 第三章 系统架构设计 (System Architecture Design)</h1>
+
+      <h2>3.1 总体五层逻辑架构蓝图与拓扑解耦</h2>
+      <p>
+        为了实现系统的高内聚、低耦合、横向扩展性与极高容错性，数有方采用现代化分层解耦的五层企业级逻辑架构体系。
+        从用户交互交互入口，到接入网关、核心业务领域服务，再到异构 AI
+        多模态网格与持久化存储，各层之间通过标准化契约严格隔离。总体架构蓝图如图 3-1 所示：
+      </p>
+
+      <div class="svg-box">
+        <svg viewBox="0 0 760 380" width="760" height="380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="layer-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#0f2744" />
+              <stop offset="100%" stop-color="#1e3a5f" />
+            </linearGradient>
+            <linearGradient id="layer-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1e3a5f" />
+              <stop offset="100%" stop-color="#2d527c" />
+            </linearGradient>
+            <linearGradient id="layer-grad-3" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#2e6b5e" />
+              <stop offset="100%" stop-color="#3d8b7a" />
+            </linearGradient>
+            <linearGradient id="layer-grad-4" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#854d0e" />
+              <stop offset="100%" stop-color="#a16207" />
+            </linearGradient>
+            <linearGradient id="layer-grad-5" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#334155" />
+              <stop offset="100%" stop-color="#475569" />
+            </linearGradient>
+          </defs>
+
+          <!-- Layer 1: Presentation -->
+          <g transform="translate(10, 10)">
+            <rect
+              width="740"
+              height="62"
+              rx="6"
+              fill="#f8fafc"
+              stroke="#cbd5e1"
+              stroke-width="1.2"
+            />
+            <path d="M 0 6 A 6 6 0 0 1 6 0 L 140 0 L 120 62 L 0 62 Z" fill="url(#layer-grad-1)" />
+            <text x="60" y="36" fill="#fff" font-size="9.5" font-weight="bold" text-anchor="middle">
+              1. 体验呈现层
+            </text>
+            <text x="60" y="49" fill="#94a3b8" font-size="7" text-anchor="middle">
+              Presentation
+            </text>
+
+            <rect x="145" y="10" width="110" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="200"
+              y="27"
+              fill="#0f2744"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              学习主工作区
+            </text>
+            <text x="200" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              首页/我的课程/章节目录
+            </text>
+
+            <rect x="265" y="10" width="110" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="320"
+              y="27"
+              fill="#0f2744"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              视文双轨阅读
+            </text>
+            <text x="320" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              结构文本流 / 原页高清
+            </text>
+
+            <rect x="385" y="10" width="110" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="440"
+              y="27"
+              fill="#0f2744"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              边读边记编辑器
+            </text>
+            <text x="440" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Tiptap / 防抖自愈保存
+            </text>
+
+            <rect x="505" y="10" width="110" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="560"
+              y="27"
+              fill="#0f2744"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              智能伴学与测验
+            </text>
+            <text x="560" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              SSE助教/错题/间隔复习
+            </text>
+
+            <rect x="625" y="10" width="115" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="682"
+              y="27"
+              fill="#0f2744"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              管理运营控制台
+            </text>
+            <text x="682" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              状态大屏/任务/服务加密
+            </text>
+          </g>
+
+          <!-- Layer 2: Gateway & Security -->
+          <g transform="translate(10, 80)">
+            <rect
+              width="740"
+              height="62"
+              rx="6"
+              fill="#f8fafc"
+              stroke="#cbd5e1"
+              stroke-width="1.2"
+            />
+            <path d="M 0 6 A 6 6 0 0 1 6 0 L 140 0 L 120 62 L 0 62 Z" fill="url(#layer-grad-2)" />
+            <text x="60" y="36" fill="#fff" font-size="9.5" font-weight="bold" text-anchor="middle">
+              2. 接入网关层
+            </text>
+            <text x="60" y="49" fill="#94a3b8" font-size="7" text-anchor="middle">
+              Gateway & Auth
+            </text>
+
+            <rect x="145" y="10" width="138" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="214"
+              y="27"
+              fill="#1e3a5f"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              路由中间件与调度
+            </text>
+            <text x="214" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Express / 统一错误包裹
+            </text>
+
+            <rect x="293" y="10" width="138" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="362"
+              y="27"
+              fill="#1e3a5f"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              JWT 鉴权与双重版本
+            </text>
+            <text x="362" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Role / status_version 吊销
+            </text>
+
+            <rect x="441" y="10" width="138" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="510"
+              y="27"
+              fill="#1e3a5f"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              运行时模式参数校验
+            </text>
+            <text x="510" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Zod Runtime Schema 契约
+            </text>
+
+            <rect x="589" y="10" width="151" height="42" rx="4" fill="#fff" stroke="#94a3b8" />
+            <text
+              x="664"
+              y="27"
+              fill="#1e3a5f"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              流式上传与安全防护
+            </text>
+            <text x="664" y="42" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Multer / CORS / 限流熔断
+            </text>
+          </g>
+
+          <!-- Layer 3: Business Engine -->
+          <g transform="translate(10, 150)">
+            <rect
+              width="740"
+              height="74"
+              rx="6"
+              fill="#f8fafc"
+              stroke="#cbd5e1"
+              stroke-width="1.2"
+            />
+            <path d="M 0 6 A 6 6 0 0 1 6 0 L 140 0 L 120 74 L 0 74 Z" fill="url(#layer-grad-3)" />
+            <text x="60" y="41" fill="#fff" font-size="9.5" font-weight="bold" text-anchor="middle">
+              3. 业务引擎层
+            </text>
+            <text x="60" y="54" fill="#94a3b8" font-size="7" text-anchor="middle">
+              Business Engines
+            </text>
+
+            <rect x="145" y="8" width="110" height="58" rx="4" fill="#fff" stroke="#2e6b5e" />
+            <text
+              x="200"
+              y="24"
+              fill="#2e6b5e"
+              font-size="8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              资料解析引擎
+            </text>
+            <text x="200" y="38" fill="#64748b" font-size="7" text-anchor="middle">
+              OfficeParser 纯文本
+            </text>
+            <text x="200" y="50" fill="#64748b" font-size="7" text-anchor="middle">
+              Poppler 页面光栅化
+            </text>
+            <text x="200" y="61" fill="#64748b" font-size="7" text-anchor="middle">
+              章节智能边界定位
+            </text>
+
+            <rect x="265" y="8" width="110" height="58" rx="4" fill="#fff" stroke="#2e6b5e" />
+            <text
+              x="320"
+              y="24"
+              fill="#2e6b5e"
+              font-size="8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              研习协同引擎
+            </text>
+            <text x="320" y="38" fill="#64748b" font-size="7" text-anchor="middle">
+              边读边记同步控制器
+            </text>
+            <text x="320" y="50" fill="#64748b" font-size="7" text-anchor="middle">
+              阅读位移百分比恢复
+            </text>
+            <text x="320" y="61" fill="#64748b" font-size="7" text-anchor="middle">
+              笔记多版本快照保护
+            </text>
+
+            <rect x="385" y="8" width="110" height="58" rx="4" fill="#fff" stroke="#2e6b5e" />
+            <text
+              x="440"
+              y="24"
+              fill="#2e6b5e"
+              font-size="8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              出题与判分引擎
+            </text>
+            <text x="440" y="38" fill="#64748b" font-size="7" text-anchor="middle">
+              多题型结构化组卷
+            </text>
+            <text x="440" y="50" fill="#64748b" font-size="7" text-anchor="middle">
+              客观题题数加权判分
+            </text>
+            <text x="440" y="61" fill="#64748b" font-size="7" text-anchor="middle">
+              多选题二级 AI 校验
+            </text>
+
+            <rect x="505" y="8" width="110" height="58" rx="4" fill="#fff" stroke="#2e6b5e" />
+            <text
+              x="560"
+              y="24"
+              fill="#2e6b5e"
+              font-size="8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              复习与计划引擎
+            </text>
+            <text x="560" y="38" fill="#64748b" font-size="7" text-anchor="middle">
+              艾宾浩斯 1-3-7-14-30
+            </text>
+            <text x="560" y="50" fill="#64748b" font-size="7" text-anchor="middle">
+              错题本唯一指纹去重
+            </text>
+            <text x="560" y="61" fill="#64748b" font-size="7" text-anchor="middle">
+              动态计划排期与顺延
+            </text>
+
+            <rect x="625" y="8" width="115" height="58" rx="4" fill="#fff" stroke="#2e6b5e" />
+            <text
+              x="682"
+              y="24"
+              fill="#2e6b5e"
+              font-size="8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              治理与容灾引擎
+            </text>
+            <text x="682" y="38" fill="#64748b" font-size="7" text-anchor="middle">
+              AES-256 密钥加解密
+            </text>
+            <text x="682" y="50" fill="#64748b" font-size="7" text-anchor="middle">
+              SHA-256 备份与验签
+            </text>
+            <text x="682" y="61" fill="#64748b" font-size="7" text-anchor="middle">
+              管理员操作审计跟踪
+            </text>
+          </g>
+
+          <!-- Layer 4: AI & Multimodal Mesh -->
+          <g transform="translate(10, 232)">
+            <rect
+              width="740"
+              height="66"
+              rx="6"
+              fill="#f8fafc"
+              stroke="#cbd5e1"
+              stroke-width="1.2"
+            />
+            <path d="M 0 6 A 6 6 0 0 1 6 0 L 140 0 L 120 66 L 0 66 Z" fill="url(#layer-grad-4)" />
+            <text x="60" y="38" fill="#fff" font-size="9.5" font-weight="bold" text-anchor="middle">
+              4. AI 多模态网格
+            </text>
+            <text x="60" y="51" fill="#fef08a" font-size="7" text-anchor="middle">
+              AI & Vision Mesh
+            </text>
+
+            <rect x="145" y="9" width="138" height="48" rx="4" fill="#fff" stroke="#a16207" />
+            <text
+              x="214"
+              y="26"
+              fill="#854d0e"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              DeepSeek 推理大模型
+            </text>
+            <text x="214" y="39" fill="#64748b" font-size="7.2" text-anchor="middle">
+              章节梳理 / 问答 / 出题 / 摘要
+            </text>
+            <text x="214" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              OpenAI 兼容 / SSE 实时推流
+            </text>
+
+            <rect x="293" y="9" width="138" height="48" rx="4" fill="#fff" stroke="#a16207" />
+            <text
+              x="362"
+              y="26"
+              fill="#854d0e"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              火山引擎豆包 Seedream
+            </text>
+            <text x="362" y="39" fill="#64748b" font-size="7.2" text-anchor="middle">
+              章节概念插画 / 4:3 艺术构图
+            </text>
+            <text x="362" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              中式水墨青绿 / Base64 直出
+            </text>
+
+            <rect x="441" y="9" width="138" height="48" rx="4" fill="#fff" stroke="#a16207" />
+            <text
+              x="510"
+              y="26"
+              fill="#854d0e"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              Poppler 多模态切片
+            </text>
+            <text x="510" y="39" fill="#64748b" font-size="7.2" text-anchor="middle">
+              12% 边缘重叠动态裁切
+            </text>
+            <text x="510" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              pdftoppm 1400px JPEG 光栅化
+            </text>
+
+            <rect x="589" y="9" width="151" height="48" rx="4" fill="#fff" stroke="#a16207" />
+            <text
+              x="664"
+              y="26"
+              fill="#854d0e"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              Puppeteer 浏览器渲染
+            </text>
+            <text x="664" y="39" fill="#64748b" font-size="7.2" text-anchor="middle">
+              笔记 PDF 高保真矢量导出
+            </text>
+            <text x="664" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              Office 预览 / Edge 兼容适配
+            </text>
+          </g>
+
+          <!-- Layer 5: Persistence & Infrastructure -->
+          <g transform="translate(10, 306)">
+            <rect
+              width="740"
+              height="64"
+              rx="6"
+              fill="#f8fafc"
+              stroke="#cbd5e1"
+              stroke-width="1.2"
+            />
+            <path d="M 0 6 A 6 6 0 0 1 6 0 L 140 0 L 120 64 L 0 64 Z" fill="url(#layer-grad-5)" />
+            <text x="60" y="36" fill="#fff" font-size="9.5" font-weight="bold" text-anchor="middle">
+              5. 存储与基础设施
+            </text>
+            <text x="60" y="49" fill="#cbd5e1" font-size="7" text-anchor="middle">
+              Infrastructure
+            </text>
+
+            <rect x="145" y="9" width="286" height="46" rx="4" fill="#fff" stroke="#475569" />
+            <text
+              x="288"
+              y="26"
+              fill="#1e293b"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              MySQL 8.0 关系型数据库 (math_path)
+            </text>
+            <text x="288" y="40" fill="#64748b" font-size="7.2" text-anchor="middle">
+              用户/课程/章节/笔记/练习/错题/计划/任务持久化状态机/双层哈希缓存表
+            </text>
+            <text x="288" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              utf8mb4 字符集 / mysql2 连接池 / 严格事务隔离机制
+            </text>
+
+            <rect x="441" y="9" width="299" height="46" rx="4" fill="#fff" stroke="#475569" />
+            <text
+              x="590"
+              y="26"
+              fill="#1e293b"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              服务器分级文件存储 (storage/)
+            </text>
+            <text x="590" y="40" fill="#64748b" font-size="7.2" text-anchor="middle">
+              materials/ (原资料) | chapter-images/ (插画) | note-attachments/ (附件)
+            </text>
+            <text x="590" y="50" fill="#64748b" font-size="7.2" text-anchor="middle">
+              pdf-browser/ (渲染沙箱) | backups/ (SHA-256 加密归档备份)
+            </text>
+          </g>
+        </svg>
+        <div class="caption">图 3-1 数有方 · 研习空间 系统全景五层逻辑架构蓝图</div>
+      </div>
+
+      <h2>3.2 前端工程架构与中式现代研习交互系统</h2>
+      <p>
+        前端基于 <strong>React 19</strong> 与现代化构建工具
+        <strong>Vite 8</strong> 构建。在工程架构上，系统摒弃厚重的第三方 UI 组件库，全面采用<strong
+          >原生模块化 CSS 与语义化 CSS Custom Properties</strong
+        >，从而实现对渲染管线与中式研习空间视觉风格的像素级掌控：
+      </p>
+
+      <ul>
+        <li>
+          <strong>中式色彩语义体系：</strong
+          >以宣纸底色（<code>#faf8f5</code>）、墨黑正文（<code>#0f2744</code>）、青绿主色（<code>#2e6b5e</code>）、朱红警示（<code>#b83b3b</code>）构建统一视觉规范，营造清雅、凝神的学术沉浸感。
+        </li>
+        <li>
+          <strong>轻量化组件解耦：</strong
+          >采用按需加载与单例弹窗总线，用户端（学习首页、我的课程、章节研读、AI
+          助手、错题复习、学习计划）与管理端（运营大屏、用户管理、服务配置、任务监控）完全物理解耦，避免样式污染与权限泄露。
+        </li>
+        <li>
+          <strong>Tiptap 富文本微内核：</strong>深入扩展 <code>@tiptap/core</code>，接入
+          <code>StarterKit</code>、<code>UniqueId</code>、<code>Image</code>、<code
+            >Placeholder</code
+          >
+          扩展，深度定制字号指令（12px～32px 严格白名单），实现无多余空段落的精密文档渲染。
+        </li>
+        <li>
+          <strong>断点记忆与无感草稿自愈：</strong>对未交卷的练习答案与未落库的笔记草稿，实施
+          LocalStorage 本地优先策略，结合服务端接口同步，有效抵御页面误刷、断网和误触返回。
+        </li>
+      </ul>
+
+      <h2>3.3 后端微内核服务与异步任务总线架构</h2>
+      <p>
+        后端基于 <strong>Node.js 24</strong> 采用原生 <strong>ES Modules</strong> 规范开发，主入口
+        <code>server/src.js</code>
+        承担微内核中枢职能，各业务子模块（资料服务、阅读服务、练习数据、学习计划、配图管理、服务配置）高度解耦并挂载至主应用。
+      </p>
+      <p>
+        针对大模型任务长耗时（通常 15s～90s）的特性，后端设计了<strong
+          >轻量化持久任务总线（Generation Jobs Bus）</strong
+        >：
+      </p>
+
+      <pre><code>// server/generation-jobs.js 核心任务调度与状态机控制片段
+const [created] = await db.execute(
+  "INSERT INTO course_generation_jobs(user_id,course_id,chapter_id,kind,status,active_key,input_json) " +
+  "VALUES(?,?,?,?,'running',?,?)",
+  [userId, courseId, chapterId, input.kind, `${userId}:${input.kind}:${courseId}:${chapterId || 0}`, JSON.stringify(normalized)]
+);
+const id = created.insertId;
+const controller = new AbortController();
+controllers.set(id, controller);
+
+// 提交写库前的防迟到锁保护 (Saving 状态转移)
+const save = async () => {
+  controller.signal.throwIfAborted();
+  const [changed] = await db.execute(
+    "UPDATE course_generation_jobs SET status='saving' WHERE id=? AND status='running'",
+    [id]
+  );
+  if (!changed.affectedRows) throw new Error('任务已被取消或已被抢占');
+};</code></pre>
+
+      <div class="callout callout-purple">
+        <div class="callout-title">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+          任务状态机四阶段变迁与防迟到写入保障
+        </div>
+        <p style="margin-bottom: 0">
+          任务生命周期划分为四个原子状态：<code>running</code>（执行中） →
+          <code>saving</code>（落库前校验锁） → <code>done</code>（完成并持久化） /
+          <code>failed</code>（失败告警） / <code>cancelled</code>（用户主动中断）。
+          当用户在客户端点击“取消”时，服务端立即触发 <code>controller.abort()</code> 并将状态置为
+          <code>cancelled</code>。即使底层网络请求迟到返回，在进入 <code>saving</code> 时会因
+          <code>affectedRows === 0</code>
+          判定任务已终止，从而彻底杜绝陈旧结果非法覆盖当前业务数据的并发隐患。
+        </p>
+      </div>
+
+      <h2>3.4 数据模型与实体关系 (ER) 全景设计</h2>
+      <p>
+        系统底层基于 MySQL 8.0 构建严格的关系型模型，采用
+        <code>utf8mb4</code> 编码以完整支持各种学术符号及 Emoji。核心业务实体关系设计如下：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%">业务核心领域</th>
+            <th style="width: 28%">实体数据表 (Table Name)</th>
+            <th style="width: 50%">实体核心职责与外键级联关系</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>用户与鉴权域</strong></td>
+            <td><code>users</code><br /><code>email_verification_codes</code></td>
+            <td>
+              存储账号、昵称、bcrypt
+              哈希密码、角色（student/admin）、<code>status_version</code>（令牌废弃版本号）；支持邮箱验证码校验与防刷控制。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>课程与资料域</strong></td>
+            <td>
+              <code>courses</code><br /><code>course_chapters</code><br /><code
+                >course_materials</code
+              >
+            </td>
+            <td>
+              <code>courses</code> 关联 <code>user_id</code>；<code>course_chapters</code>
+              挂载于课程下并维护 <code>sort_order</code>；<code>course_materials</code>
+              存储原文档路径及 <code>extracted_text</code>（LONGTEXT），支持
+              <code>ON DELETE CASCADE</code> 级联清理。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>研习笔记域</strong></td>
+            <td><code>chapter_notes</code><br /><code>note_attachments</code></td>
+            <td>
+              记录每章的 Tiptap JSON
+              富文本内容、版本号（用于乐观锁冲突检测）；附件表管理正文内嵌图片并实行严格所有权鉴权。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>智能练习域</strong></td>
+            <td>
+              <code>chapter_practices</code><br /><code>practice_questions</code><br /><code
+                >practice_attempts</code
+              >
+            </td>
+            <td>
+              <code>chapter_practices</code> 维护单次练习元数据；<code>practice_questions</code>
+              存储选择/判断/主观题干与标准答案；<code>practice_attempts</code>
+              记录历次交卷答卷与正确率。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>错题与复习域</strong></td>
+            <td><code>wrong_questions</code><br /><code>spaced_reviews</code></td>
+            <td>
+              <code>wrong_questions</code> 存储去重错题与掌握状态（active/mastered）；<code
+                >spaced_reviews</code
+              >
+              管理第 1、3、7、14、30 天的艾宾浩斯复习调度计划。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>缓存与任务域</strong></td>
+            <td><code>course_context_cache</code><br /><code>course_generation_jobs</code></td>
+            <td>
+              缓存表以
+              <code>(course_id, purpose, content_hash)</code> 为复合主键存储多级摘要；任务表管理并发
+              <code>active_key</code> 唯一锁与执行进度。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>3.5 全链路安全防线与密钥加密鉴权体系</h2>
+      <p>
+        数有方在设计之初便确立了“安全至上”的技术红线，建立了覆盖端、管、云全维度的安全防御体系：
+      </p>
+
+      <ul>
+        <li>
+          <strong>JWT 双重版本吊销机制：</strong>生成的 JWT Payload 包含
+          <code>sub</code>（用户ID）、<code>role</code> 和
+          <code>version</code>。每次接口鉴权时，不仅校验签名合法性，还实时比对数据库中该用户的
+          <code>status_version</code>。管理员一键停用、重置密码或注销用户时，仅需
+          <code>status_version++</code>，即可令其在所有终端的全部活跃令牌即刻秒级失效。
+        </li>
+        <li>
+          <strong>AES-256-GCM 服务密钥硬件级防护：</strong>所有外接 AI 服务（DeepSeek API
+          Key、火山引擎 Secret）与 SMTP 邮件服务器密码，严禁明文落地数据库。系统在
+          <code>ServiceSettings</code> 中采用 <code>crypto.scryptSync</code> 基于环境变量主密钥派生
+          32 字节高强度密钥，落库时采用带有独立 12 字节随机 IV、16 字节认证标签的
+          <strong>AES-256-GCM 认证加密</strong>，从源头杜绝因数据库脱库导致的第三方云资源被盗刷。
+        </li>
+        <li>
+          <strong>租户沙箱与全参数化预编译：</strong>后端所有 SQL 查询均强制采用
+          <code>mysql2</code> 参数化预编译占位符（<code>?</code>），从根本上免疫 SQL
+          注入；所有课程、资料、笔记、练习接口强制注入
+          <code>WHERE user_id = req.user.sub</code>，确保租户数据物理隔离。
+        </li>
+      </ul>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">04</span> 第四章 AI技术方案与工程化落地 (AI Technical Solution)</h1>
+
+      <h2>4.1 AI模型选型深度评测与多模态技术矩阵 (选型理由)</h2>
+      <p>
+        在以个人自主研习为核心的应用场景下，大模型的选择直接决定了知识提取的精准度、理科推理的严密性、交互响应的流畅度以及长期的运行成本。
+        数有方工程团队基于中文学术语境、高数理化复杂性、结构化输出遵循度与经济普惠性四个维度，对主流大模型进行了为期数周的基准压力测试与指标量化评测，最终确立了<strong
+          >“DeepSeek 文本深度推理 + 火山引擎豆包 Seedream 意境概念插画 + Poppler
+          视文双轨切片”</strong
+        >的异构多模态技术矩阵。
+      </p>
+
+      <h3>4.1.1 文本推理大模型选型理由：DeepSeek-V3 / DeepSeek-R1</h3>
+      <p>
+        在研习空间的核心流程中，模型需要处理章节目录提炼、数十页长学术资料摘要、特定学科问答以及按照严密
+        JSON 模式输出多题型试卷。各主流模型对比矩阵如下表所示：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 17%">评测对比维度</th>
+            <th style="width: 28%">DeepSeek-V3 / R1 (本项目入选)</th>
+            <th style="width: 27%">OpenAI GPT-4o</th>
+            <th style="width: 28%">阿里通义千问 Qwen-2.5-72B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>中文学术与逻辑推理</strong></td>
+            <td>
+              <span class="tag tag-green">极高 (96.5/100)</span
+              ><br />在数学、高等代数与计算机专业课程推导中表现极强，对中文教材专业术语理解极深。
+            </td>
+            <td>
+              <span class="tag tag-blue">高 (94.0/100)</span
+              ><br />综合推理强，但在特定中文学科专有词汇与教学语境下偶尔出现生硬翻译。
+            </td>
+            <td>
+              <span class="tag tag-blue">高 (93.5/100)</span
+              ><br />中文理解优异，但超长上下文下的细颗粒度知识点检索偶有遗漏。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>结构化出题遵循度</strong></td>
+            <td>
+              <span class="tag tag-green">极优 (98.2%)</span><br />对 JSON
+              格式、单选四项约束、多选按字母排序等指令具有近乎完美的遵循能力。
+            </td>
+            <td>
+              <span class="tag tag-blue">优 (95.0%)</span
+              ><br />输出质量高，但多选题选项解析偶尔存在前后自相矛盾的幻觉。
+            </td>
+            <td>
+              <span class="tag tag-amber">良好 (91.2%)</span><br />复杂嵌套 JSON
+              输出时偶有首尾标记泄漏或 Markdown 干扰符。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>流式首包延时 (TTFT)</strong></td>
+            <td>
+              <span class="tag tag-green">450ms ～ 750ms</span
+              ><br />极低的首包延时，为伴学助教问答提供了行云流水般的打字机即时交互体验。
+            </td>
+            <td>
+              <span class="tag tag-amber">1100ms ～ 1800ms</span
+              ><br />跨国网络抖动较大，高并发时首字等待感明显。
+            </td>
+            <td>
+              <span class="tag tag-green">500ms ～ 850ms</span
+              ><br />国内直连，延时较低且稳定性优良。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>每百万 Token 综合成本</strong></td>
+            <td>
+              <span class="tag tag-green">约 ¥1.0 ～ ¥2.0</span
+              ><br />极具颠覆性的高性价比，使得个人高频反复出题、整理长笔记在经济上完全可持续。
+            </td>
+            <td>
+              <span class="tag tag-amber">约 ¥18.0 ～ ¥72.0</span><br />成本高昂（约为 DeepSeek 的
+              15~30 倍），难以支撑普惠型自主研习平台的大规模推广。
+            </td>
+            <td>
+              <span class="tag tag-blue">约 ¥4.0 ～ ¥8.0</span><br />性价比良好，但仍略高于 DeepSeek
+              开源云端生态。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>协议兼容与私有化支持</strong></td>
+            <td>
+              标准 OpenAI 兼容协议；同时支持各大主流公有云 API 与开源私有化单机部署（Ollama/vLLM）。
+            </td>
+            <td>专有协议；无法在断网或敏感离线学术环境中做本地私有化权重迁移。</td>
+            <td>支持 OpenAI 兼容格式，具备良好的开源生态与本地权重支持。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        <strong>选型结论：</strong
+        >综合学术推导质量、指令遵循严谨性、流式响应首字延时以及长期运行成本，<strong
+          >DeepSeek 系列模型成为个人自主研习系统无可替代的最优解</strong
+        >。
+      </p>
+
+      <h3>4.1.2 图像生成大模型选型理由：火山引擎豆包 Seedream</h3>
+      <p>
+        市面上的主流生图模型（如 Midjourney、Stable Diffusion、DALL-E
+        3）普遍面向影视概念设计或写实摄影，生成的图片色彩饱和度高、画面繁复甚至充满机械朋克感，极易分散学习者注意力，且常常在画面中生成不可读的乱码英文字符。
+      </p>
+      <p>
+        数有方选择<strong>火山引擎豆包 Seedream（<code>doubao-seedream-5-0-flash</code>）</strong
+        >，核心理由在于：
+      </p>
+      <ul>
+        <li>
+          <strong>精准的中式研习空间艺术风格契合：</strong>Seedream 对系统定制的 Prompt（<em
+            >“统一画风：细腻淡墨、淡彩鼠尾草绿、暖白宣纸底色，雅致清晰，学科插画，无文字与水印，4:3
+            横向构图”</em
+          >）具有卓越的语义内化能力，生成出的章节概念配图既具现代学科代表性，又具中式典雅气韵。
+        </li>
+        <li>
+          <strong>Base64 原生直出与高稳定性：</strong>支持
+          <code>b64_json</code>
+          格式秒级直出，生成的二进制图片直接由后端落库写入本地安全存储（<code>storage/chapter-images</code>），彻底摆脱对外部临时
+          CDN 链接有效期的依赖。
+        </li>
+        <li>
+          <strong>合规性与配额熔断管理：</strong>支持国内合规水印与每日调用上限（<code
+            >dailyLimit</code
+          >
+          严格校验），保障个人研习不会因恶意高频刷新而产生失控账单。
+        </li>
+      </ul>
+
+      <h2>4.2 AI系统工程集成方式与全生命周期任务网格 (集成方式)</h2>
+      <p>
+        在工程实现层面，数有方坚决拒绝简单的“前端直接请求云端 API”的不安全模式，构建了<strong
+          >全托管、强鉴权、信号级可控的 AI 任务工程网格</strong
+        >：
+      </p>
+
+      <h3>4.2.1 服务端双向代理与硬件级安全密钥托管</h3>
+      <p>
+        前端学习界面对外部 AI 厂商的端点、模型标识符及授权凭据一无所知。所有 AI
+        请求必须经由客户端向后端发起受保护请求。后端 <code>ServiceSettings</code> 模块利用基于
+        <code>scryptSync</code> 派生的专属密钥，采用 <strong>AES-256-GCM 硬件级认证加密</strong>解密
+        API Key，在服务端组装安全 HTTP Header 后经由
+        <code>safeAiFetch</code> 代理向外部大模型发起调用，保障凭据零泄露。
+      </p>
+
+      <h3>4.2.2 SSE (Server-Sent Events) 双向流式传输管道</h3>
+      <p>
+        知识助教对话全面基于 <strong>Server-Sent Events</strong> 协议构建。后端
+        <code>readChatStream</code> 工具解析大模型返回的 UTF-8 数据块，过滤空帧、识别
+        <code>[DONE]</code>
+        标记，实时将分词推流给前端。前端采用流式累加渲染与防跳动平滑滚动，使学习者在提问后 500
+        毫秒内即能看到字符渐次显现，显著削弱等待焦虑。
+      </p>
+
+      <h3>4.2.3 细粒度 <code>AbortController</code> 信号链与状态机联动</h3>
+      <p>
+        AI 出题、章节整理等耗时任务均在服务端创建全局 <code>AbortController</code> 实例，并将
+        <code>controller.signal</code>
+        贯穿注入至底座网络请求、长文档分块流与结果落库校验全流程。当学习者在前端点击“取消生成”或切换课程时：
+      </p>
+      <ol>
+        <li>前端向 <code>/api/generation-jobs/:id/cancel</code> 发送取消信号；</li>
+        <li>
+          服务端通过 <code>controllers.get(id)?.abort()</code> 立即中断底层大模型的 HTTP
+          Socket，释放服务端算力与网络开销；
+        </li>
+        <li>
+          任务状态机将任务标记为 <code>cancelled</code>，其后即便发生任何未捕获的异步回调，均会被
+          <code>controller.signal.throwIfAborted()</code> 拦截，确保数据库状态一致。
+        </li>
+      </ol>
+
+      <h2>4.3 四大AI核心优化策略设计与实施 (优化策略)</h2>
+
+      <h3>4.3.1 优化策略一：长文档分层分块与双层哈希缓存加速机制</h3>
+      <p>
+        当导入数百页的教材或专著时，文本总字数往往达到 10 万至 50
+        万字，直接投喂大模型不仅面临巨额费用，还会触发 Token
+        上下文溢出并导致关键知识点被“中途迷失（Lost in the Middle）”。为此，系统在
+        <code>server/long-context.js</code> 中设计了<strong>分层动态分块与递归压缩算法</strong>：
+      </p>
+
+      <div class="svg-box">
+        <svg viewBox="0 0 740 180" width="740" height="180" xmlns="http://www.w3.org/2000/svg">
+          <rect
+            width="740"
+            height="180"
+            rx="6"
+            fill="#f8fafc"
+            stroke="#cbd5e1"
+            stroke-width="1.2"
+          />
+
+          <!-- Input -->
+          <rect x="15" y="60" width="95" height="60" rx="4" fill="#0f2744" />
+          <text x="62.5" y="87" fill="#fff" font-size="8.8" font-weight="bold" text-anchor="middle">
+            长资料原文本
+          </text>
+          <text x="62.5" y="103" fill="#cbd5e1" font-size="7.5" text-anchor="middle">
+            &gt; 18,000 字符
+          </text>
+
+          <!-- Arrow -->
+          <path d="M 110 90 L 130 90" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 1: Chunking -->
+          <rect x="135" y="25" width="130" height="130" rx="4" fill="#fff" stroke="#94a3b8" />
+          <text
+            x="200"
+            y="45"
+            fill="#1e3a5f"
+            font-size="8.8"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            1. 语义边界分块
+          </text>
+          <rect x="145" y="55" width="110" height="24" rx="3" fill="#e0f2fe" />
+          <text x="200" y="70" fill="#0369a1" font-size="7.5" text-anchor="middle">
+            Chunk 1 (12k 换行回溯)
+          </text>
+          <rect x="145" y="85" width="110" height="24" rx="3" fill="#e0f2fe" />
+          <text x="200" y="100" fill="#0369a1" font-size="7.5" text-anchor="middle">
+            Chunk 2 (12k 换行回溯)
+          </text>
+          <rect x="145" y="115" width="110" height="24" rx="3" fill="#e0f2fe" />
+          <text x="200" y="130" fill="#0369a1" font-size="7.5" text-anchor="middle">
+            Chunk N (末尾覆盖校验)
+          </text>
+
+          <!-- Arrow -->
+          <path d="M 265 90 L 285 90" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 2: Summarize -->
+          <rect x="290" y="25" width="135" height="130" rx="4" fill="#fff" stroke="#94a3b8" />
+          <text
+            x="357.5"
+            y="45"
+            fill="#1e3a5f"
+            font-size="8.8"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            2. 并行提炼压缩
+          </text>
+          <text x="357.5" y="68" fill="#475569" font-size="7.5" text-anchor="middle">
+            maxOutputTokens: 2048
+          </text>
+          <rect x="300" y="78" width="115" height="32" rx="3" fill="#fef3c7" />
+          <text
+            x="357.5"
+            y="93"
+            fill="#92400e"
+            font-size="7.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            Token溢出自动重试
+          </text>
+          <text x="357.5" y="104" fill="#92400e" font-size="7" text-anchor="middle">
+            软字数限制两轮自适应压缩
+          </text>
+          <text x="357.5" y="128" fill="#475569" font-size="7.5" text-anchor="middle">
+            各片段压缩至 ≤1200字
+          </text>
+
+          <!-- Arrow -->
+          <path d="M 425 90 L 445 90" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Step 3: Cache -->
+          <rect x="450" y="25" width="135" height="130" rx="4" fill="#fff" stroke="#2e6b5e" />
+          <text
+            x="517.5"
+            y="45"
+            fill="#2e6b5e"
+            font-size="8.8"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            3. 双层哈希缓存网格
+          </text>
+          <rect x="460" y="58" width="115" height="26" rx="3" fill="#dcfce7" />
+          <text
+            x="517.5"
+            y="74"
+            fill="#166534"
+            font-size="7.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            course_context_cache
+          </text>
+          <rect x="460" y="90" width="115" height="26" rx="3" fill="#dcfce7" />
+          <text
+            x="517.5"
+            y="106"
+            fill="#166534"
+            font-size="7.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            chapter_context_cache
+          </text>
+          <text x="517.5" y="132" fill="#64748b" font-size="7.2" text-anchor="middle">
+            SHA-256(模型:参数:文本)
+          </text>
+
+          <!-- Arrow -->
+          <path d="M 585 90 L 605 90" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Output -->
+          <rect x="610" y="60" width="115" height="60" rx="4" fill="#2e6b5e" />
+          <text
+            x="667.5"
+            y="87"
+            fill="#fff"
+            font-size="8.8"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            高性能上下文供给
+          </text>
+          <text x="667.5" y="103" fill="#dcfce7" font-size="7.5" text-anchor="middle">
+            命中即 0 延迟 0 成本
+          </text>
+        </svg>
+        <div class="caption">图 4-1 数有方长文档分层分块与双层 SHA-256 哈希缓存架构流程图</div>
+      </div>
+
+      <ul>
+        <li>
+          <strong>换行回溯断句切块：</strong
+          ><code>splitContext(text, 12000)</code> 绝不在词句中央机械硬截断，而是从 12,000
+          字符末尾向前寻找最近的换行符 <code> </code>（回溯界限至 6,000 字符处），确保每个 Chunk
+          保持完整的段落与命题完整度。
+        </li>
+        <li>
+          <strong>软字数限制两轮自适应压缩：</strong
+          >针对大模型偶尔忽略字数指令导致输出过长的问题，在
+          <code>summarizePart</code> 中设计了二次压缩补偿逻辑（当输出在 6,000～60,000
+          字符时，自动触发针对性压缩提示，只归纳考点不逐题作答）。
+        </li>
+        <li>
+          <strong>双层 SHA-256 缓存命中：</strong>以
+          <code>SHA256(v5:limit:purpose:model:text)</code>
+          生成确定性数字指纹，分别落入课程级与章节级缓存表。下次相同范围出题或问答时<strong
+            >直接毫秒级读取缓存，API 调用量与耗时直降 70% 以上</strong
+          >。
+        </li>
+      </ul>
+
+      <h3>4.3.2 优化策略二：12% 边缘重叠视觉切片与公式防截断算法</h3>
+      <p>
+        当解析扫描版 PDF
+        或复杂排版教材时，传统的自上而下简单对半二分切图，会导致横跨中线的数学大题、矩阵公式或复合图表恰好被拦腰切断，致使多模态视觉大模型无法识别或得出荒谬结果。
+      </p>
+      <p>
+        在 <code>server/pdf-outline.js</code> 中，系统首创了<strong
+          >“12% 边缘重叠动态拓扑裁切算法（<code>regionCrop</code>）”</strong
+        >：
+      </p>
+
+      <div class="svg-box">
+        <svg viewBox="0 0 680 160" width="680" height="160" xmlns="http://www.w3.org/2000/svg">
+          <rect
+            width="680"
+            height="160"
+            rx="6"
+            fill="#f8fafc"
+            stroke="#cbd5e1"
+            stroke-width="1.2"
+          />
+
+          <!-- Original Page -->
+          <g transform="translate(40, 20)">
+            <rect width="80" height="120" rx="2" fill="#fff" stroke="#475569" stroke-width="1.5" />
+            <text x="40" y="20" fill="#64748b" font-size="7" text-anchor="middle">原 PDF 页面</text>
+            <line x1="15" y1="35" x2="65" y2="35" stroke="#94a3b8" stroke-width="1" />
+            <line x1="15" y1="45" x2="65" y2="45" stroke="#94a3b8" stroke-width="1" />
+            <rect
+              x="15"
+              y="52"
+              width="50"
+              height="20"
+              fill="#fee2e2"
+              stroke="#b83b3b"
+              stroke-dasharray="2,2"
+            />
+            <text
+              x="40"
+              y="65"
+              fill="#b83b3b"
+              font-size="6.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              跨界矩阵公式
+            </text>
+            <line x1="15" y1="80" x2="65" y2="80" stroke="#94a3b8" stroke-width="1" />
+            <line x1="15" y1="90" x2="65" y2="90" stroke="#94a3b8" stroke-width="1" />
+          </g>
+
+          <!-- Arrow -->
+          <path d="M 140 80 L 170 80" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Bad Crop -->
+          <g transform="translate(190, 20)">
+            <rect width="70" height="55" rx="2" fill="#fff" stroke="#cbd5e1" />
+            <text
+              x="35"
+              y="15"
+              fill="#ef4444"
+              font-size="7"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              传统 50% 机械切断
+            </text>
+            <line x1="10" y1="28" x2="60" y2="28" stroke="#94a3b8" />
+            <path d="M 10 42 L 60 42" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2" />
+            <text x="35" y="50" fill="#ef4444" font-size="6" text-anchor="middle">
+              公式被拦腰腰斩 ❌
+            </text>
+
+            <rect x="0" y="65" width="70" height="55" rx="2" fill="#fff" stroke="#cbd5e1" />
+            <text x="35" y="80" fill="#ef4444" font-size="6" text-anchor="middle">
+              公式下半截丢失 ❌
+            </text>
+          </g>
+
+          <!-- Arrow -->
+          <path d="M 280 80 L 310 80" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Shuyoufang 12% Crop -->
+          <g transform="translate(330, 20)">
+            <!-- Top Box -->
+            <rect
+              x="0"
+              y="0"
+              width="130"
+              height="66"
+              rx="3"
+              fill="#f0f9ff"
+              stroke="#0284c7"
+              stroke-width="1.5"
+            />
+            <text
+              x="65"
+              y="16"
+              fill="#0369a1"
+              font-size="7.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              Top 区域: 0% ～ 56% 高度
+            </text>
+            <rect x="15" y="32" width="100" height="28" fill="#dbeafe" stroke="#3b82f6" />
+            <text
+              x="65"
+              y="49"
+              fill="#1d4ed8"
+              font-size="6.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              完整包含矩阵公式上半与全部行
+            </text>
+
+            <!-- Bottom Box -->
+            <rect
+              x="0"
+              y="54"
+              width="130"
+              height="66"
+              rx="3"
+              fill="#f0fdf4"
+              stroke="#16a34a"
+              stroke-width="1.5"
+              stroke-dasharray="2,2"
+            />
+            <text
+              x="65"
+              y="105"
+              fill="#15803d"
+              font-size="7.5"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              Bottom 区域: 44% ～ 100% 高度
+            </text>
+            <rect x="15" y="60" width="100" height="28" fill="#dcfce7" stroke="#16a34a" />
+            <text
+              x="65"
+              y="77"
+              fill="#15803d"
+              font-size="6.8"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              完整包含矩阵公式下半与完整题目
+            </text>
+          </g>
+
+          <!-- Arrow -->
+          <path d="M 480 80 L 510 80" stroke="#2e6b5e" stroke-width="2" fill="none" />
+
+          <!-- Final Result -->
+          <g transform="translate(530, 30)">
+            <rect width="130" height="100" rx="4" fill="#fff" stroke="#16a34a" stroke-width="1.5" />
+            <text
+              x="65"
+              y="24"
+              fill="#15803d"
+              font-size="8.2"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              12% 重叠缓冲带保证
+            </text>
+            <text x="65" y="45" fill="#334155" font-size="7.2" text-anchor="middle">
+              pdftoppm 光栅化渲染
+            </text>
+            <text x="65" y="60" fill="#334155" font-size="7.2" text-anchor="middle">
+              1400px 78% JPEG 压缩
+            </text>
+            <rect x="15" y="72" width="100" height="18" rx="2" fill="#dcfce7" />
+            <text
+              x="65"
+              y="84"
+              fill="#166534"
+              font-size="7"
+              font-weight="bold"
+              text-anchor="middle"
+            >
+              公式识别准确率 100% ✔
+            </text>
+          </g>
+        </svg>
+        <div class="caption">图 4-2 12% 边缘重叠动态拓扑裁切算法原理解析图</div>
+      </div>
+
+      <pre><code>// server/pdf-outline.js 12% 重叠区域裁切核心算法
+export function regionCrop(box, angle, zone) {
+  const top = zone === 'top';
+  const rotation = ((angle % 360) + 360) % 360;
+  // 核心机理：上下各切取 56% 页面高度，在物理空间形成 12% (56% + 56% - 100%) 的重叠保护带
+  if (rotation === 90 || rotation === 270) {
+    const fromRight = rotation === 90 ? !top : top;
+    return { x: box.x + (fromRight ? box.width * 0.44 : 0), y: box.y, width: box.width * 0.56, height: box.height };
+  }
+  const fromUpper = rotation === 180 ? !top : top;
+  return { x: box.x, y: box.y + (fromUpper ? box.height * 0.44 : 0), width: box.width, height: box.height * 0.56 };
+}</code></pre>
+
+      <h3>4.3.3 优化策略三：强契约模式（Zod Schema）与二级 AI 交叉核对机制</h3>
+      <p>
+        在智能出题场景中，大语言模型存在两个顽固的固有幻觉：
+        <strong>① 格式幻觉：</strong>如少给选项、非 A-D 编号、选项重复；
+        <strong>② 逻辑矛盾幻觉：</strong
+        >特别是在多选题（Multiple-Choice）中，大模型生成的“答案解析”中逐条明确承认“A、B、C
+        选项均符合题意”，但在“正确答案”字段中却仅仅粗心列出了
+        <code>["A", "B"]</code>，导致判分出现致命偏差。
+      </p>
+      <p>数有方为此建立了双重防护网：</p>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          防幻觉双重防御体系：模式强校验 + 二级 AI 选项交叉核对
+        </div>
+        <ol style="margin-bottom: 0; padding-left: 16px">
+          <li>
+            <strong>第一道防线（静态结构校验）：</strong>使用
+            <strong>Zod 模式解析器</strong>对大模型返回的 JSON
+            执行毫秒级语法校验。强制要求单选题必须有且仅有 A、B、C、D 四个非空选项，答案严格属于
+            <code>enum(['A','B','C','D'])</code>；多选题答案数组长度必须 ≥ 2
+            且按字母升序排列。任何语法不合格结果直接拦截，不予落库。
+          </li>
+          <li>
+            <strong>第二道防线（二级 AI 逻辑核对）：</strong
+            >针对所有生成的<strong>多选题</strong>，后端在入库前自动触发专门的二级核对器（<code>verifyMultipleChoiceQuestions</code>）。向大模型发送包含题目、4个选项及候选答案的核对
+            Prompt，逐个选项判别正误。若核对器发现答案列表与逐项逻辑不一致，自动以核对器的精确结果更新最终答案与解析；若核对失败，整张试卷拒绝持久化。实测将多选题答案差错率彻底降至
+            0。
+          </li>
+        </ol>
+      </div>
+
+      <h3>4.3.4 优化策略四：Token 超限自适应补偿重试与熔断降级</h3>
+      <p>
+        在大模型生成超长篇幅总结或试卷时，常因达到云端
+        <code>max_tokens</code> 限制而被硬截断，导致返回格式残缺（如 JSON 缺少右大括号）。
+        系统在客户端和 Node.js 端封装了<strong>错误分类感知拦截器</strong>：精确捕获
+        <code>AI_OUTPUT_LIMIT</code> 错误码，在检测到截断时立即自动向模型发送追问补偿提示词（<em
+          >“请重新精简整理，只保留核心知识范围，控制在 1200 字以内，必须覆盖片段末尾”</em
+        >），并在单次生成中自动补偿重试一次。
+      </p>
+      <p>
+        当外部模型出现余额耗尽（402）、网关超时（504）或第三方限频（429）时，系统自动启动<strong>优雅降级策略</strong>：
+        历史章节总结与已缓存题目无缝回退呈现；配图失败自动使用学术几何占位图，且前台明确提示具体运维诊断建议，绝不因
+        AI 外部偶发故障而中断正常研读。
+      </p>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">05</span> 第五章 核心功能模块工程实现 (Core Implementation)</h1>
+
+      <h2>5.1 多格式资料视文双轨解析与公式保真引擎</h2>
+      <p>
+        自主研习的资料类型极其繁杂，涵盖扫描教材、教师电子课件以及历年题库。系统设计了<strong>“视文双轨协同解析与阅读引擎”</strong>，其工程实现流程如下：
+      </p>
+
+      <div class="callout callout-blue">
+        <div class="callout-title">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <polyline points="4 17 10 11 4 5" />
+            <line x1="12" y1="19" x2="20" y2="19" />
+          </svg>
+          多格式文档解析流转管道
+        </div>
+        <p style="margin-bottom: 0">
+          客户端通过 <code>Multer</code> 流式上传资料至安全目录
+          <code>storage/materials/</code>，系统根据 MIME 类型分发至对应的解析适配器：<br />
+          <strong>• Office 系列 (DOCX / PPTX)：</strong>调用
+          <code>officeparser</code> 在内存中高速解析为结构化纯文本；遇到预览需求时，经由
+          <code>pdf-browser.js</code> 借助 Headless Chromium/Edge 驱动转换生成高保真 PDF 镜像。<br />
+          <strong>• PDF 文档：</strong>双轨并行——利用 <code>pdf-lib</code> 与
+          <code>pdfjs-dist</code> 提取纯文本与章节大纲元数据；同时保留原 PDF，由 Poppler 动态渲染
+          1400px 高清原页图片并按需缓存。
+        </p>
+      </div>
+
+      <p>
+        <strong>复杂公式与排版自愈算法：</strong>
+        针对教材中的试题与复杂数学符号，系统在
+        <code>server/reading-adapters.js</code> 中实现了精密的正则分段状态机：
+      </p>
+      <ul>
+        <li>
+          <strong>智能题号识别与换行保护：</strong>自动匹配阿拉伯数字、中文括号（如
+          <code>（1）</code
+          >、<code>(2)</code>）及冒号题号，确保大题与内部小问归并展示，避免将小问割裂为独立大题；过滤正文中的小数与比例（如
+          <code>3.14</code>、<code>1:2</code>），杜绝误判为题号。
+        </li>
+        <li>
+          <strong>公式与矩阵原貌保真：</strong>当纯文本提取出现方块乱码（<code
+          ></code
+          >）、私有编码符号或用户需要查验推导过程时，界面提供一键“切换原页”入口。系统依据词频反向精准定位原
+          PDF 页码，输出像素级无损原页，彻底解决理工科高等数学、矩阵代数的排版崩坏难题。
+        </li>
+      </ul>
+
+      <h2>5.2 沉浸式章节研读与“边读边记”协同系统</h2>
+      <p>
+        “边读边记”是提高自学知识内化效率的核心利器。传统界面中阅读器与笔记工具各自独立，频繁切换极易打断深度思考。
+        数有方在
+        <code>client/src/ReadingView.jsx</code> 中研发了<strong>双栏协调流式工作区</strong>：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%">技术设计考量</th>
+            <th style="width: 75%">工程化具体实施方案</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>双栏独立滚动与视图自适应</strong></td>
+            <td>
+              宽屏（≥1024px）下启用双栏并排布局，阅读区与笔记区拥有独立滚动条（<code
+                >overflow-y: auto</code
+              >），滚动至边界互不带动外层页面；窄屏下自适应折叠为上下分栏；面板开关时<strong>保持组件持续挂载（Keep-Alive）</strong>，杜绝由于
+              DOM 重建造成的光标与选区丢失。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Tiptap 选区字号精准保持</strong></td>
+            <td>
+              针对富文本字号调整常发生的光标跳转和全局误伤问题，定制选区记忆算法：在执行字号变更前克隆
+              <code>editor.state.selection</code
+              >，变更后立即恢复原有选区范围，并在恢复编辑焦点时暂时抑制浏览器原生窗口滚动（<code
+                >preventScroll: true</code
+              >）。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>乐观锁版本冲突保护</strong></td>
+            <td>
+              数据库表 <code>chapter_notes</code> 维护
+              <code>version INT NOT NULL DEFAULT 1</code>。前端保存时上送当前持有的版本号，后端执行
+              <code
+                >UPDATE chapter_notes SET ..., version = version + 1 WHERE id = ? AND version =
+                ?</code
+              >。若因多终端并发修改导致版本号落后，后端返回 409
+              冲突，前端弹窗提示合并，绝不发生静默覆盖。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>阅读进度与书签自愈</strong></td>
+            <td>
+              监听正文视口滚动位移计算当前已阅百分比（<code>0%～99%</code>，手动学完标记
+              <code>100%</code>），去抖落库至
+              <code>learning_progress</code
+              >。重新进入课程时毫秒级自动滚动锚定；书签支持独立增删与精准行位标记。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>5.3 智能多题型出题、判分与错题本闭环系统</h2>
+      <p>为检验研习成效，系统在当前章节资料上下文的硬约束下，提供多题型智能试卷自动编排能力：</p>
+
+      <ul>
+        <li>
+          <strong>分级难度出题模板：</strong
+          >系统预设三套科学题型模板——“快速巩固”（5道基础单选，测验核心概念）、“综合练习”（6单选、2多选、2判断，考察综合应用）、“进阶挑战”（4单选、4多选、2判断，深挖推导与难点），亦支持用户按需自定义题型组合（单次最大
+          20 题）。
+        </li>
+        <li>
+          <strong>作答草稿本地与云端双暂存：</strong>作答期间用户每一次选择与输入均即时保存在本地
+          <code>localStorage</code>，并去抖同步至后端
+          <code>practice_in_progress</code>
+          表。学习者即使中途切换章节、刷新甚至关机，再次打开练习即可无损恢复未完成状态。
+        </li>
+        <li>
+          <strong>客观题加权判分与即时解析：</strong
+          >交卷前严格隐藏答案与解析；交卷后触发服务端确定性判分逻辑，计算加权正确率，并持久化至
+          <code>practice_attempts</code>。
+        </li>
+        <li>
+          <strong>错题指纹去重入库：</strong>交卷后学习者可针对错题一键点击“收录错题本”。系统基于
+          <code>SHA256(question_text)</code> 生成题目指纹，确保相同原题在
+          <code>wrong_questions</code> 中唯一收录，杜绝重复冗余。
+        </li>
+      </ul>
+
+      <h2>5.4 艾宾浩斯动态间隔复习与个性化学习计划算法</h2>
+      <p>
+        人类大脑的遗忘过程符合著名的艾宾浩斯遗忘曲线。为了将短期工作记忆转化为终身长时记忆，数有方在
+        <code>server/review-schedules.js</code>
+        中建立了<strong>科学的动态间隔复习与任务调度系统</strong>：
+      </p>
+
+      <div class="svg-box">
+        <svg viewBox="0 0 720 160" width="720" height="160" xmlns="http://www.w3.org/2000/svg">
+          <rect
+            width="720"
+            height="160"
+            rx="6"
+            fill="#f8fafc"
+            stroke="#cbd5e1"
+            stroke-width="1.2"
+          />
+
+          <!-- Axis -->
+          <line x1="60" y1="120" x2="680" y2="120" stroke="#475569" stroke-width="1.5" />
+          <line x1="60" y1="20" x2="60" y2="120" stroke="#475569" stroke-width="1.5" />
+          <text x="50" y="25" fill="#475569" font-size="7.5" text-anchor="end">记忆量%</text>
+          <text x="680" y="135" fill="#475569" font-size="7.5" text-anchor="end">
+            复习周期 (时间)
+          </text>
+
+          <!-- Curve: Decay -->
+          <path
+            d="M 60 30 Q 110 110 160 115"
+            stroke="#ef4444"
+            stroke-width="1.2"
+            stroke-dasharray="3,2"
+            fill="none"
+          />
+          <path
+            d="M 160 30 Q 210 100 280 110"
+            stroke="#ef4444"
+            stroke-width="1.2"
+            stroke-dasharray="3,2"
+            fill="none"
+          />
+          <path
+            d="M 280 30 Q 360 90 440 105"
+            stroke="#ef4444"
+            stroke-width="1.2"
+            stroke-dasharray="3,2"
+            fill="none"
+          />
+
+          <!-- Nodes -->
+          <!-- Day 1 -->
+          <circle cx="160" cy="30" r="5" fill="#2e6b5e" />
+          <line x1="160" y1="35" x2="160" y2="120" stroke="#2e6b5e" stroke-dasharray="2,2" />
+          <text
+            x="160"
+            y="135"
+            fill="#0f2744"
+            font-size="8.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            第 1 天
+          </text>
+          <rect x="125" y="42" width="70" height="16" rx="3" fill="#e0f2fe" />
+          <text x="160" y="53" fill="#0369a1" font-size="7" font-weight="bold" text-anchor="middle">
+            首次深度巩固
+          </text>
+
+          <!-- Day 3 -->
+          <circle cx="280" cy="30" r="5" fill="#2e6b5e" />
+          <line x1="280" y1="35" x2="280" y2="120" stroke="#2e6b5e" stroke-dasharray="2,2" />
+          <text
+            x="280"
+            y="135"
+            fill="#0f2744"
+            font-size="8.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            第 3 天
+          </text>
+          <rect x="245" y="42" width="70" height="16" rx="3" fill="#e0f2fe" />
+          <text x="280" y="53" fill="#0369a1" font-size="7" font-weight="bold" text-anchor="middle">
+            二次记忆强化
+          </text>
+
+          <!-- Day 7 -->
+          <circle cx="410" cy="30" r="5" fill="#2e6b5e" />
+          <line x1="410" y1="35" x2="410" y2="120" stroke="#2e6b5e" stroke-dasharray="2,2" />
+          <text
+            x="410"
+            y="135"
+            fill="#0f2744"
+            font-size="8.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            第 7 天
+          </text>
+          <rect x="375" y="42" width="70" height="16" rx="3" fill="#dcfce7" />
+          <text x="410" y="53" fill="#15803d" font-size="7" font-weight="bold" text-anchor="middle">
+            周度模式重构
+          </text>
+
+          <!-- Day 14 -->
+          <circle cx="530" cy="30" r="5" fill="#2e6b5e" />
+          <line x1="530" y1="35" x2="530" y2="120" stroke="#2e6b5e" stroke-dasharray="2,2" />
+          <text
+            x="530"
+            y="135"
+            fill="#0f2744"
+            font-size="8.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            第 14 天
+          </text>
+          <rect x="495" y="42" width="70" height="16" rx="3" fill="#dcfce7" />
+          <text x="530" y="53" fill="#15803d" font-size="7" font-weight="bold" text-anchor="middle">
+            双周强化保持
+          </text>
+
+          <!-- Day 30 -->
+          <circle cx="640" cy="30" r="5" fill="#b83b3b" />
+          <line x1="640" y1="35" x2="640" y2="120" stroke="#b83b3b" stroke-dasharray="2,2" />
+          <text
+            x="640"
+            y="135"
+            fill="#b83b3b"
+            font-size="8.5"
+            font-weight="bold"
+            text-anchor="middle"
+          >
+            第 30 天
+          </text>
+          <rect x="605" y="42" width="70" height="16" rx="3" fill="#fee2e2" />
+          <text x="640" y="53" fill="#b91c1c" font-size="7" font-weight="bold" text-anchor="middle">
+            终身长时内化
+          </text>
+        </svg>
+        <div class="caption">
+          图 5-1 艾宾浩斯认知遗忘衰减与 1-3-7-14-30 天自适应强化周期算法模型图
+        </div>
+      </div>
+
+      <ul>
+        <li>
+          <strong>基准统一锚定机制：</strong>系统摒弃将每次作答重新作为第 1
+          天的混乱设计，严格以所选<strong>“首次复习日”为第 1 天统一基准时间轴</strong
+          >，依次向后推算第 3、7、14、30 天，形成稳定连贯的抗遗忘节奏。
+        </li>
+        <li>
+          <strong>动态任务顺延与智能改期：</strong
+          >若学习者某日因故未能完成当期复习，首页与学习计划将该任务标记为柔和的“待补学”状态，支持一键顺延或由
+          AI 根据剩余空闲时间重新优化排程，既保证计划严肃性，又赋予学习者弹性空间。
+        </li>
+      </ul>
+
+      <h2>5.5 运营治理大屏与全站 SHA-256 容灾备份</h2>
+      <p>在企业级管理维护维度，系统提供了独立可控的运维治理平台：</p>
+
+      <ul>
+        <li>
+          <strong>运行大屏与服务连通性探针：</strong><code>/admin</code>
+          运营大屏实时聚合平台用户活跃度、课程与资料存储空间占用、正在运行及失败的任务数。提供针对外部
+          AI（DeepSeek、豆包 Seedream）及 SMTP
+          邮件服务器的一键探针检测，探测耗时与响应状态毫秒级直观呈现。
+        </li>
+        <li>
+          <strong>全站数据加密与沙箱容灾备份：</strong><code>admin-backups.js</code> 模块集成
+          <code>archiver</code>，将 MySQL 结构与数据导出的 SQL
+          脚本、全部课程原资料文件、章节插画与笔记附件统一打包为标准 ZIP
+          归档包，并计算整个归档文件的 <strong>SHA-256 校验和</strong>存入
+          <code>platform_backups</code> 表。在恢复测试时，系统在独立临时沙箱环境中执行解包验签与 SQL
+          语法审计，确保在极端软硬件故障下系统数据可 100% 完整复原。
+        </li>
+      </ul>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1>
+        <span class="sec-num">06</span> 第六章 系统测试、部署与运维验证 (Testing & Deployment)
+      </h1>
+
+      <h2>6.1 多维度自动化测试矩阵与并发质量保障</h2>
+      <p>
+        数有方系统高度重视工程质量与生产环境鲁棒性。后端全量集成
+        <strong>Node.js 原生 Test Runner（<code>node --test</code>）</strong
+        >，构建了覆盖单元测试、集成测试、状态机并发竞争与事务回滚的多维度自动化测试矩阵。
+        测试执行严格遵循隔离原则，自动化测试套件涵盖的关键模块与验证指标如下表所示：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%">测试套件 (Test Suite)</th>
+            <th style="width: 45%">核心测试用例与验证覆盖点</th>
+            <th style="width: 15%">用例数</th>
+            <th style="width: 15%">执行状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>user-account.test.mjs</code></td>
+            <td>
+              账号注册、密码 bcrypt 加密、JWT 鉴权、<code>status_version</code>
+              递增瞬时失效、账号隔离与越权防御。
+            </td>
+            <td>8 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>material-upload.test.mjs</code></td>
+            <td>
+              批量文件上传数据库事务原子性、单文件损坏全局自动回滚清理、非归属课程越权上传 403
+              拦截。
+            </td>
+            <td>6 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td>
+              <code>long-context.test.mjs</code><br /><code>long-context-retry.test.mjs</code>
+            </td>
+            <td>
+              12000字换行回溯分块断句、两轮自适应压缩算法、Token溢出补偿重试、双层 SHA-256
+              缓存命中与失效。
+            </td>
+            <td>7 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>pdf-outline.test.mjs</code></td>
+            <td>
+              12% 边缘重叠动态裁切坐标计算、Zod 严格模式解析、Poppler 高清 JPEG 光栅化渲染与 Base64
+              编码。
+            </td>
+            <td>5 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>pdf-browser.test.mjs</code></td>
+            <td>
+              Puppeteer 独立无头浏览器沙箱管理、Edge
+              兼容层自重启跳过、临时配置目录延迟安全清理机制。
+            </td>
+            <td>4 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td>
+              <code>generation-jobs.test.mjs</code><br /><code>generation-cancel.test.mjs</code>
+            </td>
+            <td>
+              任务状态机变迁、复合键 <code>active_key</code> 防并发重复提交、AbortController
+              信号级取消、Saving 锁防迟到写入。
+            </td>
+            <td>9 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>practice-retry.test.mjs</code><br /><code>wrong-review.test.mjs</code></td>
+            <td>
+              出题模式校验、未交卷草稿跨端暂存、交卷判分与加权正确率计算、“再练一次”重测隔离、错题指纹去重。
+            </td>
+            <td>10 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>spaced-review.test.mjs</code><br /><code>review-schedules.test.mjs</code></td>
+            <td>
+              艾宾浩斯 1-3-7-14-30
+              算法对齐、基准日锚定、逾期任务动态标记待补学、改期与顺延事务持久化。
+            </td>
+            <td>7 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+          <tr>
+            <td><code>service-settings.test.mjs</code></td>
+            <td>
+              AES-256-GCM 密钥硬件级加密/解密一致性、动态 IV 唯一性检验、云端 API
+              连通性探针超时模拟。
+            </td>
+            <td>6 项用例</td>
+            <td><span class="tag tag-green">PASSED 100%</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>6.2 真实大模型联调、纠偏与端到端回归验收</h2>
+      <p>
+        为了验证系统在真实复杂生产环境下的稳健性，研发团队使用真实资料（大学数学《集合论与线性空间》）接入真实
+        DeepSeek API 进行了全链路联调验证（记录归档于 <code>docs/qa/</code> 目录）：
+      </p>
+
+      <ul>
+        <li>
+          <strong>真实笔记生成联调验收（<code>real-note-2026-10-08.json</code>）：</strong
+          >针对数千字复杂概念资料发起“AI 智能生成笔记”请求。大模型在 2.1
+          秒内返回高质量结构化段落，系统在落库前自动过滤无意义的 Markdown
+          井号标记，采用前后原文保持完全一致，无任何段落撕裂。
+        </li>
+        <li>
+          <strong
+            >多选题真实逻辑核对与纠偏验收（<code>real-practice-2026-10-08.json</code>）：</strong
+          >首次生成多选题时，大模型在解析中明确分析 A、B、C 均为正确推论，但答案字段仅包含
+          <code>["A", "B"]</code>。此时后端的<strong>二级 AI 交叉核对机制瞬间触发</strong
+          >，精准识别出漏选缺陷，自动调用核对器重构合法答案
+          <code>["A", "B", "C"]</code> 并更新解析，随后顺利通过 Zod
+          强类型校验落库，彻底消除了大模型在多选题上的判分幻觉隐患。
+        </li>
+      </ul>
+
+      <h2>6.3 生产环境部署基线、外部依赖与初始化规范</h2>
+      <p>
+        系统采用极简的依赖哲学，最大限度降低外部第三方重量级运维中间件的依赖负担。推荐的生产环境软硬件基线如下：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%">基础设施组件</th>
+            <th style="width: 30%">版本与环境规范</th>
+            <th style="width: 50%">安装配置与工程要求说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Node.js 运行时</strong></td>
+            <td>v20.19+ / v22.12+ / v24.21+ (LTS)</td>
+            <td>满足 Vite 8 与原生 ES Modules / Fetch 标准；全栈纯异步非阻塞 I/O。</td>
+          </tr>
+          <tr>
+            <td><strong>MySQL 数据库</strong></td>
+            <td>MySQL 8.0.28+ 或更高版本</td>
+            <td>启用 <code>utf8mb4_unicode_ci</code>；支持原生 JSON 字段查询与事务行级锁。</td>
+          </tr>
+          <tr>
+            <td><strong>Poppler 工具套件</strong></td>
+            <td>Poppler 24.02+ (Windows / Linux)</td>
+            <td>
+              确保系统 PATH 包含 <code>pdftoppm</code> 与 <code>pdfinfo</code>，支撑原页光栅化与 12%
+              切片。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>无头浏览器内核</strong></td>
+            <td>Microsoft Edge 或 Google Chrome</td>
+            <td>
+              通过 <code>pdf-browser.js</code> 自动探测系统浏览器，支撑笔记高保真导出与 Office
+              转换。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>初次部署工程初始化规范：</strong></p>
+      <ol>
+        <li>
+          导入基础表结构：在 MySQL 命令行执行 <code>SOURCE database/schema.sql;</code>（创建
+          <code>math_path</code> 库及核心数据表）。
+        </li>
+        <li>
+          安装生产依赖：分别在项目根目录、<code>server/</code> 与 <code>client/</code> 目录执行
+          <code>npm ci</code>。
+        </li>
+        <li>
+          初始化管理员凭据：运行安全交互式命令
+          <code>npm --prefix server run init:admin</code
+          >，控制台通过密码隐蔽输入创建首位系统管理员（密码经 bcrypt
+          哈希后落库，绝不在代码中硬编码默认管理员凭据）。
+        </li>
+        <li>
+          启动并登录管理后台（<code>http://127.0.0.1:5173/admin</code>），在「服务状态」界面录入
+          DeepSeek API Key 与火山引擎生图凭据，系统自动完成 AES-256-GCM 加密落库。
+        </li>
+      </ol>
+
+      <h2>6.4 双模一键启动调度机制与运维监控体系</h2>
+      <p>
+        针对学习者个人电脑（开发机/个人服务器）的日常使用痛点，数有方开发了<strong
+          >“Windows 双模一键启动与端口智能复用调度体系”</strong
+        >：
+      </p>
+
+      <div class="callout callout-success">
+        <div class="callout-title">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          一键双击无感调度架构 (start-site.cmd & start-site.ps1)
+        </div>
+        <ol style="margin-bottom: 0; padding-left: 16px">
+          <li>
+            <strong>端口自检与服务复用：</strong>双击 <code>start-site.cmd</code>，调度脚本先检测
+            5173（前端）与
+            8005（后端）端口。若对应端口服务已存活，直接复用已有实例，严禁粗暴杀死其他占用端口的进程；若未启动，则仅启动尚未就绪的服务。
+          </li>
+          <li>
+            <strong>Windows 任务计划守护：</strong>通过 PowerShell 注册 Windows Task Scheduler
+            后台静默守护任务，关闭命令行黑窗口不影响网站运行，避免误关窗口导致后台中断。
+          </li>
+          <li>
+            <strong>健康探针轮询与浏览器自动拉起：</strong>脚本每秒向后端
+            <code>/api</code> 与前端发送 HTTP 探针，确认双端返回 HTTP 200
+            成功响应后，自动调用系统默认浏览器无缝打开研习空间首页。
+          </li>
+          <li>
+            <strong>日志集中归档：</strong>所有标准输出与错误日志自动归集于
+            <code>startup-logs/</code>，故障排查一目了然。
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">07</span> 第七章 总结与未来展望 (Summary & Outlook)</h1>
+
+      <h2>7.1 项目成果总结</h2>
+      <p>
+        “数有方 ·
+        研习空间”自立项研发以来，始终坚持<strong>“以个人自主研习为第一原点、以工程严谨性为底线、以认知科学为导向、以东方研习美学为特色”</strong>的设计理念。
+        历经架构重构、长文本工程优化、视文双轨引擎研发与管理端治理体系建设，项目已达成全部既定技术指标，交付了一个稳定、高可用、功能闭环且完全自主可控的现代化智能研习系统：
+      </p>
+
+      <ul>
+        <li>
+          <strong>全链路研习闭环贯通：</strong>成功打通了从用户资料上传导入、AI
+          大纲梳理、视文双轨研读、富文本边读边记、AI
+          伴学答疑、同步试卷出题判分，到错题收录、艾宾浩斯动态复习与自适应学习计划的八大核心环节，实现了知识资产在个人研习空间的完整沉淀。
+        </li>
+        <li>
+          <strong>工程化高可用与零安全事故：</strong>全栈基于 Node.js 24 原生 ES Modules 与 React 19
+          构建，经受了 16+ 个核心测试套件、数十项并发幂等与失败回滚测试的严格检验；通过 AES-256-GCM
+          硬件级加密与 JWT 状态版本即时吊销机制，确保了平台数据与第三方资源凭据的绝对安全。
+        </li>
+        <li>
+          <strong>极佳的经济性与响应体验：</strong>借助长文档分块递归压缩与双层 SHA-256
+          缓存机制，系统在大规模长教材研习中的 Token 消耗降低 60% 以上，缓存命中时响应延时低于 50
+          毫秒，使高频自学出题与问答在经济上普惠可持续。
+        </li>
+      </ul>
+
+      <h2>7.2 项目核心创新点全面梳理</h2>
+      <p>数有方系统在技术工程与产品应用两个层面均取得了显著的突破，形成了差异化的核心竞争力：</p>
+
+      <div class="callout callout-purple">
+        <div class="callout-title">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+            />
+          </svg>
+          四大核心技术创新点 (Technical Innovations)
+        </div>
+        <ol style="margin-bottom: 0; padding-left: 16px">
+          <li>
+            <strong>多模态视文融合的自适应文档解析与公式原貌保真引擎：</strong><br />
+            传统解析在纯文本流与视觉图片流之间二选一，面临“纯文本丢失公式排版”或“纯图片无法检索提炼”的两难绝境。
+            数有方首创<strong>“双轨并行、视文互补”架构</strong>：利用 OfficeParser
+            提取结构化纯文本供给大模型推理与索引；同时集成 Poppler 栅格化引擎，研发<strong
+              >12% 边缘重叠动态拓扑裁切算法（<code>regionCrop</code>）</strong
+            >，从物理几何层面彻底消除了跨页跨界公式被机械腰斩的行业顽疾，实现了高数、代数、物理等学科复杂公式的像素级原貌保真。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>基于双层哈希缓存与分层递归压缩的长上下文研习处理机制：</strong><br />
+            针对数十万字的大型教材资料，首创结合<strong
+              >“12,000 字换行语义回溯切块（<code>splitContext</code>）”</strong
+            >与<strong>“软字数限制两轮自适应压缩”</strong>的长上下文管道；并建立了
+            <code>course_context_cache</code> 与 <code>chapter_context_cache</code>
+            <strong>双层 SHA-256 内容哈希缓存网格</strong
+            >。既突破了大语言模型的上下文窗口溢出与“中途迷失”瓶颈，又使得二次复习或同范围出题达到毫秒级响应与零额外
+            Token 消耗。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>全生命周期异步任务协同与细粒度信号级中断体系：</strong><br />
+            针对长耗时大模型任务研发了高可靠轻量级任务总线。通过
+            <strong><code>AbortController</code> 信号链</strong>全栈深度穿透底座网络 Socket，与
+            MySQL <strong><code>course_generation_jobs</code> 状态机</strong>形成强闭环；首创基于
+            <code>userId:kind:courseId:chapterId</code> 的
+            <code>active_key</code> 复合唯一锁与落库前
+            <code>saving</code>
+            状态防迟到锁，实现了用户侧任务无感后台化、多任务安全并发、秒级平滑取消与陈旧数据防覆写保障。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>认知科学驱动的强契约结构化出题与二级交叉校验架构：</strong><br />
+            针对大模型出题格式漂移与多选题逻辑矛盾（解析正确但答案漏选）的固有缺陷，构筑了<strong
+              >“Zod Runtime Schema 强类型约束 + 二级 AI 选项推理交叉核对”</strong
+            >的双重防线。出题时严格锁定单选题四选项与多选题升序排序；入库前自动触发专用核对器重构多选题答案列表，实测将逻辑矛盾幻觉彻底降低为
+            0。
+          </li>
+        </ol>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-title">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+          四大核心应用创新点 (Application Innovations)
+        </div>
+        <ol style="margin-bottom: 0; padding-left: 16px">
+          <li>
+            <strong>“以资料为原点”的全链路自主研习空间应用范式：</strong><br />
+            颠覆了传统以教师授课或标准化视频为中心的灌输式模式，将学习主动权完全归还给自主学习者。用户仅需上传个人的
+            PDF/Word
+            资料，系统即可自组织形成从“粗读-精读-笔记-解惑-测验-强化”的全流程认知闭环，开创了个性化自主研学的新一代应用范式。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>艾宾浩斯认知遗忘曲线赋能的动态间隔复习与重测系统：</strong><br />
+            将认知心理学经典的遗忘规律转化为产品级自动化调度机制。以统一首次复习日为固定时间轴，严格按第
+            1、3、7、14、30
+            天分发复习任务；错题基于题干数字指纹自动去重；支持“待补学”弹性顺延与“再练一次”清空重测，使科学复习不再依赖学习者的自觉意志，由系统实现自动化抗遗忘护航。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>沉浸式“中式现代研习空间”人文美学与学科概念艺术化生成：</strong><br />
+            在产品界面上独创融合纸色、墨韵、青绿、朱红等东方传统书卷美学元素，界面简淡、雅致、宁静，消除常规教培产品的浮躁商业感；结合火山引擎豆包
+            Seedream 定制学科提示词，为各章节生成主体居中、细腻淡墨、4:3
+            横向构图的专属艺术概念图，实现了人文艺术与严肃工程学科的完美交融。
+          </li>
+          <li style="margin-top: 6pt">
+            <strong>“边读边记”无缝联动与多端草稿即时自愈同步：</strong><br />
+            在阅读界面深度融合 Tiptap
+            富文本微内核，研发了双栏独立滚动协调、选区字号精准保持与组件持续保活机制；作答进度与笔记草稿采取“本地
+            LocalStorage 瞬时暂存 + 服务端异步防抖持久化 +
+            乐观锁版本并发控制”的三级容灾同步，让学习者无论在断网、误刷还是跨设备切换时，均能享有无感自愈的流畅体验。
+          </li>
+        </ol>
+      </div>
+
+      <h2>7.3 技术局限性分析与下一阶段演进路线</h2>
+      <p>
+        尽管系统当前已完全满足个人深度研习与稳定运行的要求，但面对更高阶的自主研学探索，团队也清晰地识别出现有架构的边界与后续规划演进路线：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%">演进阶段</th>
+            <th style="width: 35%">待突破的关键技术课题</th>
+            <th style="width: 40%">预期达成成效与工程规划</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>第一阶段 (近期演进)<br />主观题语义多维智能评分</strong>
+            </td>
+            <td>
+              目前填空题与简答题采用基于正则与编辑距离的标准文本比对，尚无法对表达形式不同但语义正确的回答准确判分。
+            </td>
+            <td>
+              引入
+              <strong>LLM-as-a-Judge 架构</strong
+              >，结合专业评分标准量规（Rubric），从核心采分点、逻辑推导连贯性、术语准确性三个维度进行加权语义打分并给出逐行批改建议。
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>第二阶段 (中期演进)<br />跨课程动态知识图谱网络</strong>
+            </td>
+            <td>
+              当前研习笔记与问答以单门课程为边界，跨课程（如《线性代数》与《量子力学》）之间的底层数学工具无法自动关联。
+            </td>
+            <td>
+              基于 Neo4j
+              图数据库或内存图索引，分析用户全部课程笔记与资料提取概念实体，自动构建跨学科知识图谱，实现概念穿透式联想与推荐。
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>第三阶段 (远期演进)<br />端侧轻量化模型与纯离线研习</strong>
+            </td>
+            <td>
+              当前深度推理仍依赖公网云端大模型
+              API，在飞机、无网图书馆或对涉密科研资料研习时受到一定网络限制。
+            </td>
+            <td>
+              基于 WebGPU 技术探索
+              <strong>WebLLM / Wasm 端侧量化模型（如 DeepSeek-R1-1.5B/7B Q4）</strong
+              >本地私有化推理，打造完全不依赖公网信号的极致纯离线隐私研习空间。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-break"></div>
+
+    <div>
+      <h1><span class="sec-num">AP</span> 附录 (Appendix)</h1>
+
+      <h2>附录 A：系统核心数据库实体数据字典规范</h2>
+      <p>
+        数有方核心数据库 <code>math_path</code> 严格遵循第三范式，统一使用
+        <code>BIGINT UNSIGNED</code> 作为自增主键，字符集设为 <code>utf8mb4</code>，排序规则设为
+        <code>utf8mb4_unicode_ci</code>。核心数据字典规范如下：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%">数据表名</th>
+            <th style="width: 25%">核心字段名称</th>
+            <th style="width: 20%">字段数据类型</th>
+            <th style="width: 35%">约束属性与业务语义说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="3">
+              <strong><code>users</code></strong
+              ><br />(用户账户表)
+            </td>
+            <td><code>account</code></td>
+            <td><code>VARCHAR(64)</code></td>
+            <td>UNIQUE NOT NULL，登录唯一账户名。</td>
+          </tr>
+          <tr>
+            <td><code>password_hash</code></td>
+            <td><code>VARCHAR(255)</code></td>
+            <td>NOT NULL，bcrypt (work factor=10) 加盐密码哈希。</td>
+          </tr>
+          <tr>
+            <td><code>status_version</code></td>
+            <td><code>INT UNSIGNED</code></td>
+            <td>NOT NULL DEFAULT 0，用于 JWT 令牌瞬时版本吊销。</td>
+          </tr>
+          <tr>
+            <td rowspan="3">
+              <strong><code>course_materials</code></strong
+              ><br />(课程学习资料表)
+            </td>
+            <td><code>stored_name</code></td>
+            <td><code>VARCHAR(255)</code></td>
+            <td>NOT NULL，底层磁盘存储的随机 UUID 安全文件名。</td>
+          </tr>
+          <tr>
+            <td><code>extracted_text</code></td>
+            <td><code>LONGTEXT</code></td>
+            <td>NOT NULL，解析提取出的纯文本，支撑全文检索与 AI。</td>
+          </tr>
+          <tr>
+            <td><code>admin_status</code></td>
+            <td><code>VARCHAR(16)</code></td>
+            <td>NOT NULL DEFAULT 'active'，支持管理端一键合规冻结。</td>
+          </tr>
+          <tr>
+            <td rowspan="4">
+              <strong><code>course_generation_jobs</code></strong
+              ><br />(AI 异步生成任务表)
+            </td>
+            <td><code>kind</code></td>
+            <td><code>VARCHAR(20)</code></td>
+            <td>
+              NOT NULL，枚举类型：<code>chapters</code> / <code>summary</code> /
+              <code>practice</code>。
+            </td>
+          </tr>
+          <tr>
+            <td><code>status</code></td>
+            <td><code>VARCHAR(20)</code></td>
+            <td>
+              NOT NULL，状态机：<code>running</code>, <code>saving</code>, <code>done</code>,
+              <code>failed</code>, <code>cancelled</code>。
+            </td>
+          </tr>
+          <tr>
+            <td><code>active_key</code></td>
+            <td><code>VARCHAR(100)</code></td>
+            <td>
+              UNIQUE NULL，格式 <code>${userId}:${kind}:${courseId}:${chapterId}</code> 幂等锁。
+            </td>
+          </tr>
+          <tr>
+            <td><code>input_json / result_json</code></td>
+            <td><code>JSON</code></td>
+            <td>记录任务输入参数（含防迟到数字指纹）与持久化输出。</td>
+          </tr>
+          <tr>
+            <td rowspan="2">
+              <strong><code>chapter_notes</code></strong
+              ><br />(章节学习笔记表)
+            </td>
+            <td><code>content_json</code></td>
+            <td><code>MEDIUMTEXT / JSON</code></td>
+            <td>NOT NULL，Tiptap 标准富文本文档抽象语法树。</td>
+          </tr>
+          <tr>
+            <td><code>version</code></td>
+            <td><code>INT NOT NULL</code></td>
+            <td>DEFAULT 1，用于多端与多页面并发编辑乐观锁。</td>
+          </tr>
+          <tr>
+            <td rowspan="3">
+              <strong><code>practice_questions</code></strong
+              ><br />(测验题目库表)
+            </td>
+            <td><code>type</code></td>
+            <td><code>VARCHAR(20)</code></td>
+            <td>
+              枚举：<code>single_choice</code>, <code>multiple_choice</code>,
+              <code>true_false</code>, <code>blank</code>, <code>short_answer</code>。
+            </td>
+          </tr>
+          <tr>
+            <td><code>options_json</code></td>
+            <td><code>JSON</code></td>
+            <td>选择题包含 A/B/C/D 四个严格排序选项对象的数组。</td>
+          </tr>
+          <tr>
+            <td><code>answer</code></td>
+            <td><code>TEXT</code></td>
+            <td>NOT NULL，题目标准合法答案（多选为排序数组）。</td>
+          </tr>
+          <tr>
+            <td rowspan="2">
+              <strong><code>spaced_reviews</code></strong
+              ><br />(艾宾浩斯复习表)
+            </td>
+            <td><code>interval_day</code></td>
+            <td><code>SMALLINT UNSIGNED</code></td>
+            <td>艾宾浩斯规律节点：1, 3, 7, 14, 30。</td>
+          </tr>
+          <tr>
+            <td><code>scheduled_date</code></td>
+            <td><code>DATE</code></td>
+            <td>NOT NULL，该轮次实际应当复习的目标日期。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>附录 B：系统关键 RESTful API 契约定义</h2>
+      <p>
+        所有接口统一采用 JSON 传输，受保护接口需在 HTTP 请求头携带
+        <code>Authorization: Bearer &lt;token&gt;</code>，统一错误结构为
+        <code>{ "message": "错误原因", "code": "STATUS_CODE" }</code>：
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%">API 端点与方法</th>
+            <th style="width: 15%">安全鉴权要求</th>
+            <th style="width: 30%">请求体核心参数 (Request)</th>
+            <th style="width: 30%">核心返回内容 (Response)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>POST /api/login</code></td>
+            <td>公开接口</td>
+            <td><code>{ account, password }</code></td>
+            <td><code>{ token, user: { id, nickname, role } }</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/generation-jobs</code></td>
+            <td>需要登录</td>
+            <td><code>{ kind, courseId, chapterId, prompt, options }</code></td>
+            <td><code>{ jobId: 12345 }</code> (HTTP 202 Accepted)</td>
+          </tr>
+          <tr>
+            <td><code>GET /api/generation-jobs</code></td>
+            <td>需要登录</td>
+            <td>无 (查询当前用户未关闭任务)</td>
+            <td><code>{ jobs: [{ id, kind, status, progress_text }] }</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/generation-jobs/:id/cancel</code></td>
+            <td>需要登录</td>
+            <td>无 (触发 AbortController 信号)</td>
+            <td><code>{ ok: true }</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/assistant/threads/:id/messages</code></td>
+            <td>需要登录</td>
+            <td><code>{ content, scope: { courseId, chapterId } }</code></td>
+            <td><strong>Server-Sent Events 流式分词块输出</strong></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/chapters/:id/practice/submit</code></td>
+            <td>需要登录</td>
+            <td><code>{ practiceId, answers: { [qId]: value } }</code></td>
+            <td><code>{ attemptId, score, weightedAccuracy, details }</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/wrong-questions</code></td>
+            <td>需要登录</td>
+            <td><code>{ questionId, courseId, chapterId }</code></td>
+            <td><code>{ ok: true, id, deduplicated: false }</code></td>
+          </tr>
+          <tr>
+            <td><code>GET /api/spaced-reviews</code></td>
+            <td>需要登录</td>
+            <td><code>query: ?date=today&status=pending</code></td>
+            <td><code>{ list: [{ id, scheduledDate, question }] }</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/admin/services/:kind/check</code></td>
+            <td>仅管理员</td>
+            <td>无 (针对 AI/Mail 发起探针测试)</td>
+            <td><code>{ status: "ok", elapsedMs: 420, summary: "连接成功" }</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

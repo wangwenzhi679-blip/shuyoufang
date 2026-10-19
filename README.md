@@ -275,6 +275,11 @@ PDF 原页阅读需要 Poppler。后端优先使用 `PDFINFO_PATH`、`PDFTOPPM_P
 
 ## 相关说明
 
+- [系统技术文档（PDF）](docs/数有方_研习空间_技术文档.pdf)
+- [技术文档 HTML 源稿](docs/数有方_研习空间_技术文档.html)
+- [项目改动与本轮更新记录](docs/change-log.md)
+- [PDF 导入与分章稳定性说明](docs/pdf-import-reliability.md)
+- [导入与图片分析提速验证](docs/performance-check.md)
 - [开发过程与版本依据](docs/development-evidence/README.md)
 
 - [启动网站](docs/启动网站.md)
