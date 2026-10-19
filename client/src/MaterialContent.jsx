@@ -1,13 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NoteExcerpt } from './LearningNotes';
 import { splitImportedContent } from './imported-content.mjs';
 import { api } from './student-api.mjs';
 
 export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) {
+  const element = useRef(null);
+  const [visible, setVisible] = useState(false);
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
   const [retry, setRetry] = useState(0);
   useEffect(() => {
+    if (!globalThis.IntersectionObserver) {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '400px' },
+    );
+    observer.observe(element.current);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!visible) return;
     setError('');
     setUrl('');
     let alive = true;
@@ -31,9 +51,9 @@ export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) 
       controller.abort();
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [courseId, materialId, page, retry]);
+  }, [courseId, materialId, page, retry, visible]);
   return (
-    <figure className="original-pdf-page">
+    <figure ref={element} className="original-pdf-page" style={{ minHeight: 300 }}>
       <figcaption>原资料 · 第 {page} 页</figcaption>
       {error ? (
         <div>
@@ -67,7 +87,11 @@ export function ChapterMaterialContent({ section, courseId, onReadOriginal }) {
   return (
     <div className="original-chapter-content">
       <div className="original-page-notice">
-        <span>部分公式或符号未能完整提取，请以原资料为准。</span>
+        <span>
+          {section.displayMode === 'pdf-images'
+            ? '本章按 PDF 原页图片展示，保留公式与排版。'
+            : '部分公式或符号未能完整提取，请以原资料为准。'}
+        </span>
         <button type="button" onClick={onReadOriginal}>
           打开原文件
         </button>

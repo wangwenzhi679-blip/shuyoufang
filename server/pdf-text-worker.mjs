@@ -1,0 +1,74 @@
+import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
+import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+
+// 只提取 PDF 自带文字，不构建版面 AST、不解码插图，也不启动整本 OCR。
+// 独立线程使解析和取消不会阻塞网站请求。
+export function extractPdfText(filename, { signal, timeoutMs = 120000 } = {}) {
+  signal?.throwIfAborted();
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL(import.meta.url), { workerData: { filename }, execArgv: [] });
+    let settled = false;
+    const finish = (error, text) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      signal?.removeEventListener('abort', abort);
+      void worker.terminate();
+      if (error) reject(error);
+      else resolve(text);
+    };
+    const abort = () => finish(signal.reason || new Error('导入已停止'));
+    const timer = setTimeout(
+      () => finish(new Error('PDF 文字提取超时，请检查文件后重试')),
+      timeoutMs,
+    );
+    signal?.addEventListener('abort', abort, { once: true });
+    worker.once('message', (result) =>
+      result.error ? finish(new Error(result.error)) : finish(null, result.text),
+    );
+    worker.once('error', (error) => finish(error));
+    worker.once('exit', (code) => {
+      if (!settled) finish(new Error(`PDF 提取进程意外退出（${code}）`));
+    });
+  });
+}
+
+if (!isMainThread) {
+  let document;
+  try {
+    const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    document = await getDocument({
+      data: new Uint8Array(await fs.readFile(workerData.filename)),
+      isEvalSupported: false,
+      disableFontFace: true,
+      useSystemFonts: false,
+      cMapUrl: fileURLToPath(
+        new URL('./node_modules/pdfjs-dist/cmaps/', import.meta.url),
+      ).replaceAll('\\', '/'),
+      cMapPacked: true,
+      standardFontDataUrl: fileURLToPath(
+        new URL('./node_modules/pdfjs-dist/standard_fonts/', import.meta.url),
+      ).replaceAll('\\', '/'),
+      verbosity: 0,
+    }).promise;
+    const pages = [];
+    for (let number = 1; number <= document.numPages; number++) {
+      const page = await document.getPage(number);
+      const content = await page.getTextContent();
+      pages.push(
+        content.items
+          .map((item) =>
+            typeof item.str === 'string' ? item.str + (item.hasEOL ? '\n' : ' ') : '',
+          )
+          .join(''),
+      );
+      page.cleanup();
+    }
+    parentPort.postMessage({ text: pages.join('\n\n') });
+  } catch (error) {
+    parentPort.postMessage({ error: error.message || 'PDF 无法读取' });
+  } finally {
+    await document?.destroy();
+  }
+}

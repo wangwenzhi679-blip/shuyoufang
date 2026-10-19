@@ -5,9 +5,19 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { runPdfTool } from './pdf-tools.mjs';
 import { OfficeParser } from 'officeparser';
+import { createPdfOutlineReader } from './pdf-outline.js';
+import { extractPdfText } from './pdf-text-worker.mjs';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
-export function createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot }) {
+export function createMaterialService({
+  previewRoot,
+  uploadRoot,
+  runtime,
+  db,
+  visionRoot,
+  parseOffice = (...args) => OfficeParser.parseOffice(...args),
+  readPdfText = extractPdfText,
+}) {
   const supportedMaterialExtensions = new Set(['.pdf', '.docx', '.pptx']);
 
   const normalizeUploadedName = (name) => {
@@ -24,7 +34,7 @@ export function createMaterialService({ previewRoot, uploadRoot, runtime, db, vi
     for (const material of materials) {
       if (material.id)
         for (const name of fs.readdirSync(previewRoot)) {
-          if (new RegExp(`^reading-${Number(material.id)}-\\d+\\.png$`).test(name)) {
+          if (new RegExp(`^(?:reading|original)-${Number(material.id)}-\\d+\\.png$`).test(name)) {
             try {
               fs.rmSync(path.join(previewRoot, name), { force: true });
             } catch {
@@ -70,10 +80,18 @@ export function createMaterialService({ previewRoot, uploadRoot, runtime, db, vi
     },
   };
 
-  async function processMaterial(filePath, sourceName) {
-    const ast = await OfficeParser.parseOffice(filePath, {
-      extractAttachments: true,
-      ocr: true,
+  async function processMaterial(filePath, sourceName, { signal } = {}) {
+    // PDF 章节直接识别原页图片；导入只取原有文字，避免逐图 OCR 拖住整个队列。
+    const isPdf = path.extname(sourceName).toLowerCase() === '.pdf';
+    signal?.throwIfAborted();
+    if (isPdf)
+      return {
+        extractedText: formatExtractedText(await readPdfText(filePath, { signal })),
+        previewName: null,
+      };
+    const ast = await parseOffice(filePath, {
+      extractAttachments: !isPdf,
+      ocr: !isPdf,
       ocrConfig: { language: 'chi_sim+eng', preserveLayout: false },
     });
     const textResult = await ast.to('text', { includeImages: 'none' });
@@ -155,5 +173,19 @@ export function createMaterialService({ previewRoot, uploadRoot, runtime, db, vi
       for (const filePath of temporaryFiles) fs.rmSync(filePath, { force: true });
     }
   }
-  return { normalizeUploadedName, removeMaterialFiles, upload, processMaterial, buildVisionPages };
+  const preparePdfOutline = createPdfOutlineReader({
+    db,
+    uploadRoot,
+    tempRoot: visionRoot,
+    // 给问答等操作保留一个并发名额；仍受平台总并发限制约束。
+    concurrency: () => Math.max(1, Math.min(4, (runtime?.snapshot().aiConcurrency || 4) - 1)),
+  });
+  return {
+    normalizeUploadedName,
+    removeMaterialFiles,
+    upload,
+    processMaterial,
+    buildVisionPages,
+    preparePdfOutline,
+  };
 }

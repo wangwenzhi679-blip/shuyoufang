@@ -653,6 +653,9 @@ export function CourseDetail({
                         courseId={courseData.course.id}
                         chapterId={selectedChapter.id}
                         title={selectedChapter.title}
+                        zoomable={chapterContent.sections.some(
+                          (section) => section.originalPages?.length,
+                        )}
                         completed={Boolean(selectedChapter.completed_at)}
                         onProgress={(percent) =>
                           setChapterPercent((current) =>
@@ -672,7 +675,12 @@ export function CourseDetail({
                           {chapterContent.sections.map((section, index) => (
                             <article key={`${section.materialId}-${index}`}>
                               <small>
-                                {section.materialName} · {section.corrected ? '已修正' : '原始提取'}
+                                {section.materialName} ·{' '}
+                                {section.displayMode === 'pdf-images'
+                                  ? 'PDF 原图'
+                                  : section.corrected
+                                    ? '已修正'
+                                    : '原始提取'}
                               </small>
                               <MaterialNoteExcerpt
                                 token={token}

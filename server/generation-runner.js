@@ -13,6 +13,7 @@ export function registerGenerationRunner(
     summaryGenerate,
     questionsGenerate,
     practiceCreate,
+    runAsAiUser = (_userId, action) => action(),
   },
 ) {
   registerGenerationJobs(
@@ -35,16 +36,18 @@ export function registerGenerationRunner(
           },
         };
         await contentControl.assertCourse(userId, input.courseId, true);
-        await handler(
-          {
-            params: { courseId: input.courseId, chapterId: input.chapterId },
-            user: { sub: userId },
-            body,
-            generationSignal: signal,
-            beginSave,
-            updateProgress,
-          },
-          response,
+        await runAsAiUser(userId, () =>
+          handler(
+            {
+              params: { courseId: input.courseId, chapterId: input.chapterId },
+              user: { sub: userId },
+              body,
+              generationSignal: signal,
+              beginSave,
+              updateProgress,
+            },
+            response,
+          ),
         );
         if (status >= 400)
           throw Object.assign(new Error(result?.message || '生成失败'), { status });

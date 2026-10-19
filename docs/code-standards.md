@@ -9,11 +9,14 @@
 - `client/src/StudentApp.jsx`、`AccountWorkspace.jsx`、`CourseWorkspace.jsx`：分别负责登录会话、账号设置加载与学习工作区编排。
 - `client/src/PracticeWorkspace.jsx`：练习列表、答题、题目生成设置、预览与编辑；`ChapterPanels.jsx`：章节草稿、总结与生成设置。
 - `client/src/CourseDetail.jsx`：课程详情；`MaterialContent.jsx`：原资料页、章节内容与笔记摘录；`ShelfLibraryModal.jsx`：资料库弹窗。
+- `client/src/DocumentZoom.jsx`、`document-zoom.css`：课本比例输入、加减、重置及原页缩放样式；由 `Reading.jsx` 管理阅读区比例和翻页状态，章节原图与资料分页阅读共用控件。
 - `client/src/student-api.mjs`：资料上传及用户端接口基础地址；`StudentContent.jsx` 与 `Brand.jsx`：助手内容和品牌展示组件。
 - `server/`：Express 接口与业务模块；`src.js` 为服务入口，账号、课程、学习、生成任务与管理功能按业务文件维护。
 - `server/request-schemas.mjs`：账号、课程、章节与练习等接口的输入校验，以及生成结果的结构约束；可独立导入测试，无需启动服务。
 - `server/chapter-text.mjs`：章节标题定位与原文切分；直接使用纯函数测试目录排除和章节边界，不通过动态执行源码测试。
 - `server/material-text.mjs`：资料文本清理、题块提取与章节相关题目筛选；保留来源信息，与上传、OCR 和存储逻辑分离。
+- `server/pdf-outline.js`：PDF 原页重叠分区、分批图片识别、完整页面覆盖校验与缓存；失败、取消后清理本批次临时文件，不能静默只处理前几页。
+- `server/pdf-page-images.js`：原页图片并发合并、完整缓存检查与临时文件发布，避免返回尚未生成完的图片。
 - `server/course-routes.js`：课程修改、删除和章节增删改及排序接口；在入口的既有鉴权与内容控制中间件之后注册。
 - `server/auth-routes.js`、`assistant-routes.js`、`practice-routes.js`、`course-query-routes.js`：分别注册账号认证、助手问答、练习与课程查询接口。
 - `server/material-routes.js`、`material-reading-routes.js`、`reading-adapters.js`：资料上传与预览、章节原文读取，以及阅读和笔记服务适配。
@@ -47,7 +50,7 @@ React 组件使用 PascalCase，普通函数与变量使用 camelCase，固定�
 ```powershell
 npm.cmd run format:check
 npm.cmd --prefix client run build
-node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs server/route-modules.test.mjs server/long-context.test.mjs server/long-context-retry.test.mjs server/ai-output-budget.test.mjs
+node --test client/src/*.test.mjs shared/*.test.mjs server/first-admin.test.mjs server/request-schemas.test.mjs server/chapter-slicing.test.mjs server/material-text.test.mjs server/course-routes.test.mjs server/route-modules.test.mjs server/long-context.test.mjs server/long-context-retry.test.mjs server/ai-output-budget.test.mjs server/chapter-generation.test.mjs server/pdf-outline.test.mjs server/pdf-page-images.test.mjs server/material-import-jobs.test.mjs server/pdf-text-worker.test.mjs server/generation-delete.test.mjs server/user-ai-context.test.mjs
 git diff --check
 ```
 

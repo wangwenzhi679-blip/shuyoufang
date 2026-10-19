@@ -65,6 +65,33 @@ test('课程更新拒绝无效输入及无归属课程，不写入数据库', as
   assert.equal((await context.call('put /api/courses/:courseId', { title: '数学' })).code, 404);
 });
 
+test('成功删除课程才取消对应导入和 AI，删除无权访问课程不能干扰任务', async () => {
+  for (const affectedRows of [0, 1]) {
+    const cancelled = [];
+    const context = setup({
+      db: { execute: async () => [[]] },
+      courseCovers: { removeCourse: async () => ({ affectedRows }) },
+      importJobs: {
+        courseFiles: async () => [],
+        cancelCourse: (id) => cancelled.push(['import', id]),
+      },
+      cancelCourseGeneration: (id) => cancelled.push(['ai', id]),
+      removeMaterialFiles: () => false,
+    });
+    const response = await context.call('delete /api/courses/:courseId');
+    assert.equal(response.code, affectedRows ? 200 : 404);
+    assert.deepEqual(
+      cancelled,
+      affectedRows
+        ? [
+            ['import', 1],
+            ['ai', 1],
+          ]
+        : [],
+    );
+  }
+});
+
 test('章节排序不接受重复或缺失的章节编号', async () => {
   const context = setup({ db: { execute: async () => [[{ id: 1 }, { id: 2 }]] } });
   for (const chapterIds of [[1, 1], [1]]) {

@@ -279,6 +279,7 @@ export function registerLearningPlans(app, db, auth, wrap, askAi) {
             },
           ],
           controller.signal,
+          { userId: req.user.sub },
         );
         const cleaned = raw.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
         const result = validatePlan(JSON.parse(cleaned).tasks, config, ctx.chapters);

@@ -3,8 +3,7 @@ import { selectChapterQuestions } from './material-text.mjs';
 import { applyChapterCorrections } from './chapter-corrections.js';
 import { hasDamagedFormula } from './material-quality.js';
 import path from 'node:path';
-import fs from 'node:fs';
-import { runPdfTool } from './pdf-tools.mjs';
+import { createPdfPageImages } from './pdf-page-images.js';
 import { OfficeParser } from 'officeparser';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
@@ -12,6 +11,7 @@ export function registerMaterialReadingRoutes(
   app,
   { auth, asyncRoute, parseId, getOwnedCourse, db, getOwnedMaterial, uploadRoot, previewRoot },
 ) {
+  const readPdfPageImage = createPdfPageImages({ uploadRoot, previewRoot });
   app.get(
     '/api/courses/:courseId/chapters/:chapterId/content',
     auth,
@@ -22,7 +22,7 @@ export function registerMaterialReadingRoutes(
       const course = await getOwnedCourse(req.user.sub, courseId);
       if (!course) return res.status(404).json({ message: '课程不存在或无权访问' });
       const [chapters] = await db.execute(
-        'SELECT id,title,description,sort_order FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+        'SELECT id,title,description,sort_order,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
         [course.id],
       );
       const chapterIndex = chapters.findIndex((item) => Number(item.id) === Number(chapterId));
@@ -32,6 +32,37 @@ export function registerMaterialReadingRoutes(
         [course.id],
       );
       const chapter = chapters[chapterIndex];
+      const imageSources =
+        typeof chapter.source_regions_json === 'string'
+          ? JSON.parse(chapter.source_regions_json)
+          : chapter.source_regions_json;
+      if (imageSources?.length) {
+        const sections = imageSources
+          .map((source) => {
+            const material = materials.find(
+              (item) => Number(item.id) === Number(source.materialId),
+            );
+            if (!material) return null;
+            return {
+              materialId: material.id,
+              materialName: material.original_name,
+              content: '',
+              originalRequired: true,
+              displayMode: 'pdf-images',
+              originalPages: Array.from(
+                { length: source.endPage - source.startPage + 1 },
+                (_, index) => source.startPage + index,
+              ),
+            };
+          })
+          .filter(Boolean);
+        return res.json({
+          chapter,
+          sections,
+          contentType: 'pdf-images',
+          found: sections.length > 0,
+        });
+      }
       const laterChapters = chapters.slice(chapterIndex + 1);
       let contentType = 'section';
       let sections = materials
@@ -90,27 +121,7 @@ export function registerMaterialReadingRoutes(
       const { material } = await getOwnedMaterial(req.user.sub, courseId, materialId);
       if (!material || path.extname(material.stored_name).toLowerCase() !== '.pdf')
         return res.status(404).json({ message: 'PDF 资料不存在' });
-      const prefix = path.join(previewRoot, `original-${material.id}-${page}`);
-      const imagePath = `${prefix}.png`;
-      if (!fs.existsSync(imagePath))
-        await runPdfTool(
-          'pdftoppm',
-          [
-            '-f',
-            String(page),
-            '-l',
-            String(page),
-            '-singlefile',
-            '-png',
-            '-r',
-            '130',
-            path.join(uploadRoot, material.stored_name),
-            prefix,
-          ],
-          { timeout: 30_000 },
-        );
-      if (!fs.existsSync(imagePath))
-        return res.status(404).json({ message: '原页无法生成，请打开原文件阅读' });
+      const imagePath = await readPdfPageImage(material, page);
       res.sendFile(imagePath);
     }),
   );

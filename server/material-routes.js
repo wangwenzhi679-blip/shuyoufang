@@ -22,6 +22,7 @@ export function registerMaterialRoutes(
     validationError,
     removeMaterialFiles,
     uploadRoot,
+    importJobs,
   },
 ) {
   app.post(
@@ -42,6 +43,10 @@ export function registerMaterialRoutes(
       if (!files.length) return res.status(400).json({ message: '请选择 PDF、Word 或 PPT 文件' });
       const parsedFiles = [];
       try {
+        if (req.query?.background === '1') {
+          const job = await importJobs.enqueue(req.user.sub, course.id, files, req.body?.importKey);
+          return res.status(202).json({ job });
+        }
         for (const file of files) {
           const { extractedText, previewName } = await processMaterial(
             file.path,
@@ -124,7 +129,10 @@ export function registerMaterialRoutes(
       if (!courseId || !materialId) return;
       const { course, material } = await getOwnedMaterial(req.user.sub, courseId, materialId);
       if (!course || !material) return res.status(404).json({ message: '资料不存在或无权访问' });
-      await db.execute('DELETE FROM course_materials WHERE id=?', [material.id]);
+      const [deleted] = await db.execute('DELETE FROM course_materials WHERE id=?', [material.id]);
+      if (!deleted.affectedRows) return res.status(404).json({ message: '资料已删除' });
+      // 删除资料后立即中止使用旧资料的生成，避免旧结果重新写回目录。
+      app.locals?.adminTasks?.course?.abortCourse?.(course.id);
       await db.execute('DELETE FROM course_chapter_drafts WHERE course_id=?', [course.id]);
       const cleanupFailed = removeMaterialFiles([material]);
       res.json({ deleted: true, cleanupFailed });

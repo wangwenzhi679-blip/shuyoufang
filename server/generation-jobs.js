@@ -19,6 +19,7 @@ export async function ensureGenerationJobs(db) {
 
 export function registerGenerationJobs(app, db, auth, wrap, run) {
   const controllers = new Map();
+  const activeCourses = new Map();
   const decode = (value) => (typeof value === 'string' ? JSON.parse(value) : value);
   const signature = async (courseId) => {
     const [materials] = await db.execute(
@@ -83,10 +84,12 @@ export function registerGenerationJobs(app, db, auth, wrap, run) {
     const id = created.insertId,
       controller = new AbortController();
     controllers.set(id, controller);
-    const save = async () => {
+    activeCourses.set(id, courseId);
+    const save = async (connection = db) => {
       controller.signal.throwIfAborted();
-      await app.locals.contentControl?.assertCourse(userId, courseId, true);
-      const [changed] = await db.execute(
+      await app.locals.contentControl?.assertCourse(userId, courseId, true, connection);
+      // 目录事务可复用此连接，不占住一个连接后再等待另一个连接。
+      const [changed] = await connection.execute(
         "UPDATE course_generation_jobs SET status='saving' WHERE id=? AND status='running'",
         [id],
       );
@@ -101,10 +104,14 @@ export function registerGenerationJobs(app, db, auth, wrap, run) {
         controller.signal.throwIfAborted();
         return run(userId, normalized, controller.signal, save, async (stage) => {
           controller.signal.throwIfAborted();
-          await db.execute(
+          const [progress] = await db.execute(
             "UPDATE course_generation_jobs SET progress_text=? WHERE id=? AND status='running'",
             [stage, id],
           );
+          if (!progress.affectedRows) {
+            controller.abort(new Error('课程或任务已删除，生成已停止'));
+            controller.signal.throwIfAborted();
+          }
         });
       })
       .then(async (result) => {
@@ -121,11 +128,19 @@ export function registerGenerationJobs(app, db, auth, wrap, run) {
         );
       })
       .catch((e) => console.error('生成任务状态更新失败', e.message))
-      .finally(() => controllers.delete(id));
+      .finally(() => {
+        controllers.delete(id);
+        activeCourses.delete(id);
+      });
     return id;
   };
   app.locals.adminTasks ??= {};
   app.locals.adminTasks.course = {
+    abortCourse: (courseId) => {
+      for (const [id, controller] of controllers)
+        if (Number(activeCourses.get(id)) === Number(courseId))
+          controller.abort(new Error('课程已删除，生成已停止'));
+    },
     abort: (id) => controllers.get(id)?.abort(),
     validate: async (job) => {
       const input = decode(job.input_json);

@@ -215,13 +215,13 @@ export default function CourseForm({ title, submitLabel, initialFiles = [], onCl
         </div>
         <footer className="account-footer">
           <span className="course-create-saving" role="status">
-            {saving ? '正在导入并解析…' : ''}
+            {saving ? '正在创建课程…' : '资料将在后台导入，可继续浏览。'}
           </span>
           <button type="button" disabled={saving} onClick={onClose}>
             取消
           </button>
           <button className="primary" type="submit" disabled={saving}>
-            {saving ? '导入中…' : submitLabel}
+            {saving ? '正在提交…' : submitLabel}
           </button>
         </footer>
       </form>

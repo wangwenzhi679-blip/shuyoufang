@@ -27,7 +27,7 @@ export function splitContext(text, size = 12000) {
 async function summarizePart(ask, messages, signal) {
   let result;
   try {
-    result = await ask(messages, signal, { maxOutputTokens: 2048 });
+    result = await ask(messages, signal, { maxOutputTokens: 2048, thinking: false });
   } catch (error) {
     if (error.code !== 'AI_OUTPUT_LIMIT') throw error;
     signal?.throwIfAborted();
@@ -42,7 +42,7 @@ async function summarizePart(ask, messages, signal) {
         },
       ],
       signal,
-      { maxOutputTokens: 4096 },
+      { maxOutputTokens: 4096, thinking: false },
     );
   }
   signal?.throwIfAborted();
@@ -61,7 +61,7 @@ async function summarizePart(ask, messages, signal) {
         },
       ],
       signal,
-      { maxOutputTokens: 1536 },
+      { maxOutputTokens: 1536, thinking: false },
     );
     signal?.throwIfAborted();
   }
@@ -76,11 +76,23 @@ async function summarizePart(ask, messages, signal) {
 export async function prepareLongContext(text, ask, signal, options = {}) {
   signal?.throwIfAborted();
   if (options.validateFormulas !== false) assertReadableContext(text);
-  if (text.length <= 18000) return text;
+  const contextLimit = Number.isInteger(options.maxContextChars)
+    ? Math.max(18000, Math.min(30000, options.maxContextChars))
+    : 18000;
+  if (text.length <= contextLimit) return text;
   const { db, courseId, chapterId, onProgress } = options;
   const purpose = options.purpose === 'outline' ? 'outline' : 'knowledge';
   const hash = createHash('sha256')
-    .update('chapter-context-v4:' + purpose + ':' + (options.model || 'deepseek-chat') + ':' + text)
+    .update(
+      'chapter-context-v5:' +
+        contextLimit +
+        ':' +
+        purpose +
+        ':' +
+        (options.model || 'deepseek-chat') +
+        ':' +
+        text,
+    )
     .digest('hex');
   if (db && courseId) {
     const [cached] = chapterId
@@ -101,7 +113,7 @@ export async function prepareLongContext(text, ask, signal, options = {}) {
   const controller = new AbortController();
   signal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
   let context = text;
-  for (let level = 0; context.length > 18000 && level < 6; level++) {
+  for (let level = 0; context.length > contextLimit && level < 6; level++) {
     const parts = splitContext(context),
       results = new Array(parts.length);
     let next = 0,
@@ -145,7 +157,8 @@ export async function prepareLongContext(text, ask, signal, options = {}) {
     if (reduced.length >= context.length) throw new Error('长章节整理未能缩减内容，请重试');
     context = reduced;
   }
-  if (context.length > 18000) throw new Error('资料过长，分段整理未完成，请缩小章节范围后重试');
+  if (context.length > contextLimit)
+    throw new Error('资料过长，分段整理未完成，请缩小章节范围后重试');
   const result =
     '以下为覆盖全部资料片段的整理结果；为压缩后的资料要点，不能视为逐字原文。\n' + context;
   signal?.throwIfAborted();

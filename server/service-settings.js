@@ -5,6 +5,27 @@ import nodemailer from 'nodemailer';
 import { z } from 'zod';
 
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
+const AI_HTTP_MESSAGES = {
+  400: 'AI 请求参数不被当前服务接受，请检查模型及配置',
+  401: 'AI 服务鉴权失败',
+  402: 'AI 服务额度不足，请检查账户额度',
+  403: 'AI 服务权限不足，请检查接口权限',
+  404: 'AI 接口或模型不可用，请检查设置',
+  429: 'AI 服务请求受限，请稍后重试',
+};
+function aiRequestFailure(error, callerSignal, requestSignal) {
+  callerSignal?.throwIfAborted();
+  const timeout = requestSignal.aborted || error.name === 'TimeoutError';
+  return Object.assign(
+    fail(
+      timeout
+        ? 'AI 请求超时，请稍后重试；已完成的资料识别仍会保留'
+        : 'AI 网络连接失败，请检查服务连接后重试',
+      502,
+    ),
+    { code: timeout ? 'AI_TIMEOUT' : 'AI_CONNECTION' },
+  );
+}
 const decode = (value) => (typeof value === 'string' ? JSON.parse(value) : value);
 const kinds = ['ai', 'mail'];
 const aiSchema = z.object({
@@ -171,46 +192,61 @@ export class ServiceSettings {
     const config = this.snapshot('ai');
     if (!this.configured('ai'))
       throw fail(config.enabled ? '尚未配置 AI 服务' : 'AI 服务已暂停', 503);
-    const response = await this.fetcher(config.baseUrl, {
-      method: 'POST',
-      signal: signal
-        ? AbortSignal.any([signal, AbortSignal.timeout(config.timeoutMs)])
-        : AbortSignal.timeout(config.timeoutMs),
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${config.apiKey}` },
-      body: JSON.stringify({
-        model:
-          !model ||
-          model === 'configured' ||
-          model === 'deepseek-chat' ||
-          !config.baseUrl.includes('api.deepseek.com/')
-            ? config.model
-            : model,
-        temperature: 0.35,
-        ...(Number.isInteger(options.maxOutputTokens) &&
-        options.maxOutputTokens >= 128 &&
-        options.maxOutputTokens <= 8192
-          ? { max_tokens: options.maxOutputTokens }
-          : {}),
-        messages,
-      }),
+    const requestSignal = signal
+      ? AbortSignal.any([signal, AbortSignal.timeout(config.timeoutMs)])
+      : AbortSignal.timeout(config.timeoutMs);
+    let response;
+    try {
+      response = await this.fetcher(config.baseUrl, {
+        method: 'POST',
+        signal: requestSignal,
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${config.apiKey}` },
+        body: JSON.stringify({
+          model:
+            !model ||
+            model === 'configured' ||
+            model === 'deepseek-chat' ||
+            !config.baseUrl.includes('api.deepseek.com/')
+              ? config.model
+              : model,
+          temperature: 0.35,
+          ...(Number.isInteger(options.maxOutputTokens) &&
+          options.maxOutputTokens >= 128 &&
+          options.maxOutputTokens <= 32768
+            ? { max_tokens: options.maxOutputTokens }
+            : {}),
+          ...(new URL(config.baseUrl).hostname === 'api.deepseek.com' && options.thinking === false
+            ? { thinking: { type: 'disabled' } }
+            : {}),
+          ...(new URL(config.baseUrl).hostname === 'api.deepseek.com' && options.jsonObject === true
+            ? { response_format: { type: 'json_object' } }
+            : {}),
+          messages,
+        }),
+      });
+    } catch (error) {
+      throw aiRequestFailure(error, signal, requestSignal);
+    }
+    const result = await response.json().catch((error) => {
+      signal?.throwIfAborted();
+      if (!response.ok) return {};
+      if (error instanceof SyntaxError)
+        throw Object.assign(fail('AI 服务返回了无法读取的数据，请检查服务连接后重试', 502), {
+          code: 'AI_INVALID_RESPONSE',
+        });
+      throw aiRequestFailure(error, signal, requestSignal);
     });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok)
-      throw fail(
-        response.status === 401
-          ? 'AI 服务鉴权失败'
-          : response.status === 429
-            ? 'AI 服务请求受限'
-            : 'AI 服务暂时无法回答',
-        502,
-      );
+    signal?.throwIfAborted();
+    if (!response.ok) throw fail(AI_HTTP_MESSAGES[response.status] || 'AI 服务暂时无法回答', 502);
     if (options.maxOutputTokens && result?.choices?.[0]?.finish_reason === 'length') {
       const error = fail('AI 资料整理输出达到长度上限，请重试', 502);
       error.code = 'AI_OUTPUT_LIMIT';
       throw error;
     }
-    const content = result?.choices?.[0]?.message?.content?.trim();
-    if (!content) throw fail('AI 服务未返回有效内容', 502);
+    const rawContent = result?.choices?.[0]?.message?.content;
+    const content = typeof rawContent === 'string' ? rawContent.trim() : '';
+    if (!content)
+      throw Object.assign(fail('AI 服务未返回有效内容', 502), { code: 'AI_EMPTY_RESPONSE' });
     return content;
   }
   async askStream(messages, model, signal, onChunk) {

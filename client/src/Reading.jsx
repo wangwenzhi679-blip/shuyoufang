@@ -4,6 +4,7 @@ import PaperDialog from './PaperDialog.jsx';
 import { activePreferences, registerAccountGuard } from './account-state.js';
 import { createPortal } from 'react-dom';
 import React, { useEffect, useRef, useState } from 'react';
+import DocumentZoom from './DocumentZoom.jsx';
 const root = `${API_ROOT}/`;
 export function readingApi(token, path, body, method = 'POST') {
   return requestJson(path, {
@@ -34,7 +35,9 @@ export function ReadingArea({
   bookmarkPosition,
   onProgress,
   completed = false,
+  zoomable = false,
 }) {
+  const [zoom, setZoom] = useState(100);
   const box = useRef(null),
     state = useRef({
       ready: false,
@@ -157,6 +160,14 @@ export function ReadingArea({
         position.offset * el.offsetHeight;
     restoredTop.current = box.current.scrollTop;
     setRestored(true);
+  };
+  const changeZoom = (value) => {
+    const position = restored && box.current ? currentPosition() : null;
+    setZoom(value);
+    if (position)
+      requestAnimationFrame(() => {
+        if (box.current) restore(position);
+      });
   };
   const flush = async () => {
     const s = state.current;
@@ -300,7 +311,10 @@ export function ReadingArea({
     }
   };
   return (
-    <div className="reading-tracker">
+    <div
+      className="reading-tracker"
+      style={zoomable ? { '--book-page-width': `${zoom}%` } : undefined}
+    >
       <div className="reading-tools">
         <small role="status">{status}</small>
         {!materialId && (
@@ -320,6 +334,7 @@ export function ReadingArea({
           添加书签
         </button>
         <button onClick={() => setModal({ type: 'list' })}>书签（{marks.length}）</button>
+        {zoomable && <DocumentZoom value={zoom} onChange={changeZoom} />}
       </div>
       {error && (
         <p className="form-error" role="alert">
@@ -569,9 +584,15 @@ export function PagedMaterialReader({
         onPage={setPage}
         pageReady={loaded}
         bookmarkPosition={bookmarkPosition}
+        zoomable
       >
         {url ? (
-          <img src={url} alt={`原资料第 ${page} 页`} onLoad={() => setLoaded(true)} />
+          <img
+            className="document-scaled-page"
+            src={url}
+            alt={`原资料第 ${page} 页`}
+            onLoad={() => setLoaded(true)}
+          />
         ) : (
           <p>正在加载原页…</p>
         )}

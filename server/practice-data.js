@@ -3,6 +3,12 @@ import { ensureAttemptRequests } from './attempt-requests.js';
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function createPracticeData({ db }) {
   async function ensurePracticeTables() {
+    // 页码映射随草稿采用进入正式章节；旧章节保持原来的文字阅读方式。
+    for (const table of ['course_chapter_drafts', 'course_chapters']) {
+      const [columns] = await db.query(`SHOW COLUMNS FROM ${table} LIKE 'source_regions_json'`);
+      if (!columns.length)
+        await db.query(`ALTER TABLE ${table} ADD COLUMN source_regions_json JSON NULL`);
+    }
     await db.query(`CREATE TABLE IF NOT EXISTS learning_progress (
     user_id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
     course_id BIGINT UNSIGNED NOT NULL,

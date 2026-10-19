@@ -386,12 +386,14 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
         if (state?.status !== 'running') throw new Error('任务已停止');
         controller.signal.throwIfAborted();
         await app.locals.contentControl?.assertCourse(req.user.sub, req.params.courseId, true);
+        const askForUser = (messages, signal, options) =>
+          askAi(messages, signal, { ...options, userId: req.user.sub });
         const sourceText = generating
-          ? await prepareLongContext(parsed.data.text, askAi, controller.signal, {
+          ? await prepareLongContext(parsed.data.text, askForUser, controller.signal, {
               db,
               courseId: req.params.courseId,
               chapterId: req.params.chapterId,
-              model: 'deepseek-chat',
+              model: askAi.modelKey ? await askAi.modelKey(req.user.sub) : 'configured',
               onProgress: async (stage) => {
                 await db.execute(
                   "UPDATE note_ai_jobs SET progress_text=? WHERE id=? AND status='running'",
@@ -400,7 +402,7 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
               },
             })
           : parsed.data.text;
-        const result = await askAi(
+        const result = await askForUser(
           [
             {
               role: 'system',

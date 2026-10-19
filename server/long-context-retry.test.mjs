@@ -39,6 +39,7 @@ test('持续扩写时有限失败，不截断后伪装成功', async () => {
 test('超过六千字但已有效压缩的片段可参与后续整理', async () => {
   const result = await prepareLongContext(text, async (_messages, _signal, options) => {
     assert.ok(options.maxOutputTokens > 0);
+    assert.equal(options.thinking, false);
     return '资料要点'.repeat(1600);
   });
   assert.ok(result.includes('资料要点'));
@@ -48,6 +49,7 @@ test('超过六千字但已有效压缩的片段可参与后续整理', async ()
 test('接口截断时从原资料重试，不将不完整回答加入上下文', async () => {
   let initial = 0;
   const result = await prepareLongContext(text, async (messages, _signal, options) => {
+    assert.equal(options.thinking, false);
     if (options.maxOutputTokens === 2048) {
       initial++;
       throw Object.assign(new Error('truncated'), { code: 'AI_OUTPUT_LIMIT' });

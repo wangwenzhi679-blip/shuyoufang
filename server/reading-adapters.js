@@ -10,7 +10,7 @@ import { registerLearningNotes } from './learning-notes.js';
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function registerReadingAdapters(
   app,
-  { getOwnedMaterial, previewRoot, uploadRoot, db, auth, asyncRoute, askDeepSeek },
+  { getOwnedMaterial, previewRoot, uploadRoot, db, auth, asyncRoute, askDeepSeek, getAiModel },
 ) {
   async function readingPdfPath(req) {
     const { material } = await getOwnedMaterial(
@@ -68,50 +68,43 @@ export function registerReadingAdapters(
     },
   );
 
-  registerLearningNotes(
-    app,
-    db,
-    auth,
-    asyncRoute,
-    (messages, signal, options) =>
-      askDeepSeek(
-        messages,
-        'deepseek-chat',
-        signal
-          ? AbortSignal.any([signal, AbortSignal.timeout(180000)])
-          : AbortSignal.timeout(180000),
-        options,
-      ),
-    async (courseId, chapterId) => {
-      const [chapters] = await db.execute(
-        'SELECT id,title,description,sort_order FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
-        [courseId],
-      );
-      const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
-      if (index < 0) return '';
-      const [materials] = await db.execute(
-        'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
-        [courseId],
-      );
-      let sections = materials
-        .map((m) => ({
-          materialId: m.id,
-          name: m.original_name,
-          content: sliceChapterText(
-            m.extracted_text || '',
-            chapters[index],
-            chapters.slice(index + 1),
-          ),
-        }))
-        .filter((s) => s.content);
-      if (!sections.length)
-        sections = selectChapterQuestions(materials, chapters[index]).map((s) => ({
-          materialId: s.materialId,
-          name: s.materialName,
-          content: s.content,
-        }));
-      sections = await applyChapterCorrections(db, courseId, chapterId, sections);
-      return sections.map((s) => `【${s.name}】\n${s.content}`).join('\n\n');
-    },
-  );
+  const askNotes = (messages, signal, options) =>
+    askDeepSeek(
+      messages,
+      undefined,
+      signal ? AbortSignal.any([signal, AbortSignal.timeout(180000)]) : AbortSignal.timeout(180000),
+      options,
+    );
+  askNotes.modelKey = getAiModel;
+  registerLearningNotes(app, db, auth, asyncRoute, askNotes, async (courseId, chapterId) => {
+    const [chapters] = await db.execute(
+      'SELECT id,title,description,sort_order FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+      [courseId],
+    );
+    const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
+    if (index < 0) return '';
+    const [materials] = await db.execute(
+      'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      [courseId],
+    );
+    let sections = materials
+      .map((m) => ({
+        materialId: m.id,
+        name: m.original_name,
+        content: sliceChapterText(
+          m.extracted_text || '',
+          chapters[index],
+          chapters.slice(index + 1),
+        ),
+      }))
+      .filter((s) => s.content);
+    if (!sections.length)
+      sections = selectChapterQuestions(materials, chapters[index]).map((s) => ({
+        materialId: s.materialId,
+        name: s.materialName,
+        content: s.content,
+      }));
+    sections = await applyChapterCorrections(db, courseId, chapterId, sections);
+    return sections.map((s) => `【${s.name}】\n${s.content}`).join('\n\n');
+  });
 }

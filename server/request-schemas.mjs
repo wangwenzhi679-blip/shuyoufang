@@ -17,6 +17,7 @@ export const chapterSchema = z.object({
   title: z.string().trim().min(1, '请输入章节名称').max(120, '章节名称不超过 120 个字'),
   description: z.string().trim().max(500, '章节说明不超过 500 个字').optional().default(''),
 });
+export const MAX_CHAPTER_DRAFTS = 300;
 export const questionTypes = ['单选题', '多选题', '判断题', '填空题', '简答题'];
 export const questionItemSchema = z.object({
   type: z.enum(questionTypes),

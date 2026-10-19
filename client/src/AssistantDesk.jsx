@@ -205,9 +205,7 @@ export default function AssistantDesk({
   };
   useEffect(() => {
     alive.current = true;
-    const unlisten = listenPreferences((p) =>
-      setModel((current) => (detail?.messages.length ? current : p.defaultModel)),
-    );
+    const unlisten = listenPreferences((p) => setModel(p.defaultModel));
     const unguard = registerAccountGuard(async () => {
       await flushDraft();
     });

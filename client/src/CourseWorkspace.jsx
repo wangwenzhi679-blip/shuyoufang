@@ -1,4 +1,5 @@
 import { ConfirmModal, NameEditor } from './CourseDialogs.jsx';
+import { MaterialImportTasks, useMaterialImports } from './MaterialImportTasks.jsx';
 import { requestJson as request } from './api-client.mjs';
 import AccountPanel, { AccountEntry } from './AccountPanel.jsx';
 import AnnouncementBanner from './AnnouncementBanner.jsx';
@@ -50,6 +51,13 @@ export function CourseWorkspace({
   const [aiJobs, setAiJobs] = useState([]);
   const [aiNotice, setAiNotice] = useState('');
   const observedJobs = useRef(new Map());
+  const materialImports = useMaterialImports(token, async (courseId) => {
+    await loadCourses();
+    const data = await request(`courses/${courseId}`, { token });
+    setActiveCourse((current) =>
+      Number(current?.course?.id) === Number(courseId) ? data : current,
+    );
+  });
   const refreshGenerationJobs = async () => {
     const { jobs } = await request('generation-jobs', { token });
     setAiJobs(jobs);
@@ -335,15 +343,10 @@ export function CourseWorkspace({
   const createCourse = async (values) => {
     const { files, ...courseValues } = values;
     const data = await request('courses', { token, method: 'POST', body: courseValues });
-    try {
-      await uploadFiles(`courses/${data.course.id}/materials`, { token, files });
-      setCreating(false);
-      await loadCourses();
-      await openCourse(data.course.id);
-    } catch (reason) {
-      await request(`courses/${data.course.id}`, { token, method: 'DELETE' });
-      throw reason;
-    }
+    materialImports.upload(data.course.id, courseValues.title, files);
+    setCreating(false);
+    setAiNotice('课程已创建，资料正在后台导入。');
+    void loadCourses().catch((reason) => setError(reason.message));
   };
 
   const uploadMaterials = async (files) => {
@@ -938,6 +941,12 @@ export function CourseWorkspace({
           </div>
         )}
         <div className="background-tasks">
+          <MaterialImportTasks
+            jobs={materialImports.jobs}
+            onAction={materialImports.act}
+            onOpen={openCourse}
+            onError={setError}
+          />
           {aiJobs.length > 0 && (
             <details className="generation-tray">
               <summary>

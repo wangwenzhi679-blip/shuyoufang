@@ -1,4 +1,6 @@
 import { createPracticeData } from './practice-data.js';
+import { MaterialImportJobs, registerMaterialImportJobs } from './material-import-jobs.js';
+import { UserAiContext } from './user-ai-context.js';
 import { createMaterialService } from './material-service.js';
 import { createAccountService } from './account-service.js';
 import { createCourseData } from './course-data.js';
@@ -57,6 +59,10 @@ const db = mysql.createPool({
 });
 const secret = process.env.JWT_SECRET;
 const serviceSettings = new ServiceSettings(db, secret);
+const userAi = new UserAiContext({
+  services: serviceSettings,
+  readPreferences: async (userId) => (await readPreferences(db, userId)).preferences,
+});
 const runtime = new RuntimeLimits(db);
 app.locals.runtime = runtime;
 
@@ -83,7 +89,10 @@ const backups = new AdminBackups(db, {
   imageRoot: path.resolve('storage', 'note-images'),
 });
 const auth = sessionAuth(db, secret);
-const asyncRoute = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+const asyncRoute = (fn) => (req, res, next) =>
+  Promise.resolve()
+    .then(() => userAi.run(req.user?.sub, () => fn(req, res, next)))
+    .catch(next);
 app.get('/api/platform/limits', auth, (req, res) => res.json(runtime.snapshot()));
 app.use((req, res, next) => {
   const p = req.path.toLowerCase().replace(/\/+$/, '');
@@ -113,8 +122,14 @@ const contentControl = createContentControl(db);
 app.locals.contentControl = contentControl;
 const { ensurePracticeTables, getCourseChapterSummaries, getCoursePracticeData } =
   createPracticeData({ db });
-const { normalizeUploadedName, removeMaterialFiles, upload, processMaterial, buildVisionPages } =
-  createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot });
+const {
+  normalizeUploadedName,
+  removeMaterialFiles,
+  upload,
+  processMaterial,
+  buildVisionPages,
+  preparePdfOutline,
+} = createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot });
 const { issue, userView, findUserByEmail, sendCode, consumeCode, recordLearningLogin } =
   createAccountService({ secret, db, serviceSettings });
 const { parseId, getOwnedCourse, getCourseMaterials, getOwnedMaterial } = createCourseData({
@@ -184,17 +199,19 @@ registerUserAccount(app, db, auth, asyncRoute, {
 chapterImages.register(app, auth, asyncRoute);
 courseCovers.register(app, auth, asyncRoute);
 registerProgress(app, db, auth, asyncRoute);
-registerLearningPlans(app, db, auth, asyncRoute, (messages, signal) =>
+registerLearningPlans(app, db, auth, asyncRoute, (messages, signal, options) =>
   askDeepSeek(
     messages,
-    'deepseek-chat',
+    undefined,
     signal ? AbortSignal.any([signal, AbortSignal.timeout(180000)]) : AbortSignal.timeout(180000),
+    options,
   ),
 );
 registerWrongReview(app, db, auth, asyncRoute);
 registerReviewSchedules(app, db, auth, asyncRoute);
 registerSearch(app, db, auth, asyncRoute);
 registerReadingAdapters(app, {
+  getAiModel: (userId) => userAi.run(userId, () => userAi.fingerprint()),
   getOwnedMaterial,
   previewRoot,
   uploadRoot,
@@ -204,20 +221,22 @@ registerReadingAdapters(app, {
   askDeepSeek,
 });
 
-function generationSignal(req, res) {
+function generationSignal(req, res, { timeoutMs = 180000 } = {}) {
   if (req.generationSignal)
-    return AbortSignal.any([req.generationSignal, AbortSignal.timeout(180000)]);
+    return AbortSignal.any([req.generationSignal, AbortSignal.timeout(timeoutMs)]);
   const controller = new AbortController();
   const cancel = () => {
     if (!res.writableEnded) controller.abort();
   };
   res.once('close', cancel);
   res.once('finish', () => res.removeListener('close', cancel));
-  return AbortSignal.any([controller.signal, AbortSignal.timeout(180000)]);
+  return AbortSignal.any([controller.signal, AbortSignal.timeout(timeoutMs)]);
 }
 
 async function askDeepSeek(messages, model, signal, options) {
-  return runtime.run(() => serviceSettings.ask(messages, model, signal, options), signal);
+  return userAi.run(options?.userId, () =>
+    runtime.run(() => userAi.ask(messages, model, signal, options), signal),
+  );
 }
 
 registerAuthRoutes(app, {
@@ -258,7 +277,7 @@ const assistantSessions = new AssistantSessions(db, {
   }),
   ask: askDeepSeek,
   stream: (messages, model, signal, onChunk) =>
-    runtime.run(() => serviceSettings.askStream(messages, model, signal, onChunk), signal),
+    runtime.run(() => userAi.askStream(messages, model, signal, onChunk), signal),
   assertCourse: (...args) => contentControl.assertCourse(...args),
   assertModel: (model) => {
     if (!accountModels().some((m) => m.id === model))
@@ -272,6 +291,7 @@ const assistantSessions = new AssistantSessions(db, {
 assistantSessions.register(app, auth, asyncRoute);
 
 const { questionsGenerate, practiceCreate } = registerPracticeRoutes(app, {
+  getAiModel: () => userAi.fingerprint(),
   generationSignal,
   parseId,
   validationError,
@@ -306,6 +326,8 @@ registerMaterialReadingRoutes(app, {
 });
 
 const { summaryGenerate, chaptersSuggest } = registerChapterGenerationRoutes(app, {
+  getAiModel: () => userAi.fingerprint(),
+  preparePdfOutline,
   generationSignal,
   parseId,
   getOwnedCourse,
@@ -318,7 +340,17 @@ const { summaryGenerate, chaptersSuggest } = registerChapterGenerationRoutes(app
   validationError,
 });
 
+const importJobs = new MaterialImportJobs({
+  db,
+  uploadRoot,
+  previewRoot,
+  processMaterial,
+  normalizeUploadedName,
+  getOwnedCourse,
+});
+registerMaterialImportJobs(app, { db, auth, asyncRoute, importJobs });
 registerMaterialRoutes(app, {
+  importJobs,
   auth,
   asyncRoute,
   parseId,
@@ -335,6 +367,8 @@ registerMaterialRoutes(app, {
 });
 
 registerCourseRoutes(app, {
+  cancelCourseGeneration: (courseId) => app.locals.adminTasks?.course?.abortCourse(courseId),
+  importJobs,
   db,
   auth,
   asyncRoute,
@@ -346,6 +380,7 @@ registerCourseRoutes(app, {
 });
 
 registerGenerationRunner(app, {
+  runAsAiUser: (userId, action) => userAi.run(userId, action),
   db,
   auth,
   asyncRoute,
@@ -394,6 +429,7 @@ ensurePracticeTables()
   .then(() => backfillStudyDays(db))
   .then(() => chapterImages.init())
   .then(() => courseCovers.init())
+  .then(() => importJobs.init())
   .then(() => app.listen(process.env.PORT || 8005, () => console.log('auth api ready')))
   .catch((error) => {
     console.error('无法初始化练习数据表', error);

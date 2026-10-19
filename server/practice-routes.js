@@ -30,6 +30,7 @@ export function registerPracticeRoutes(
     db,
     askDeepSeek,
     serviceSettings,
+    getAiModel,
     auth,
     asyncRoute,
   },
@@ -88,7 +89,9 @@ export function registerPracticeRoutes(
         db,
         courseId,
         chapterId: chapter.id,
-        model: serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model,
+        model: getAiModel
+          ? await getAiModel()
+          : serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model,
         onProgress: req.updateProgress,
       },
     );
@@ -107,9 +110,7 @@ export function registerPracticeRoutes(
           content: `课程：${course.title}\n当前章节：${chapter.title}${chapter.description ? `（${chapter.description}）` : ''}\n难度：${parsed.data.difficulty}\n题型与数量：${requestedTypes}\n补充要求：${parsed.data.requirements || '无'}\n\n课程资料：\n${context}`,
         },
       ],
-      new URL(serviceSettings.snapshot('ai').baseUrl).hostname === 'api.deepseek.com'
-        ? process.env.DEEPSEEK_VISION_MODEL || 'deepseek-flash'
-        : undefined,
+      undefined,
       signal,
     );
     signal.throwIfAborted();

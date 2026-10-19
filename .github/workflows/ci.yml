@@ -48,5 +48,12 @@ jobs:
           server/route-modules.test.mjs
           server/long-context.test.mjs server/long-context-retry.test.mjs
           server/ai-output-budget.test.mjs
+          server/chapter-generation.test.mjs
+          server/pdf-outline.test.mjs
+          server/pdf-page-images.test.mjs
+          server/material-import-jobs.test.mjs
+          server/pdf-text-worker.test.mjs
+          server/generation-delete.test.mjs
+          server/user-ai-context.test.mjs
       - name: Build frontend
         run: npm --prefix client run build

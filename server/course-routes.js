@@ -13,6 +13,8 @@ export function registerCourseRoutes(
     getOwnedCourse,
     courseCovers,
     removeMaterialFiles,
+    importJobs,
+    cancelCourseGeneration,
   },
 ) {
   app.put(
@@ -44,9 +46,13 @@ export function registerCourseRoutes(
         'SELECT id,stored_name,preview_name FROM course_materials WHERE course_id=?',
         [courseId],
       );
+      const importingFiles = (await importJobs?.courseFiles(courseId, req.user.sub)) || [];
       const result = await courseCovers.removeCourse(courseId, req.user.sub);
       if (!result.affectedRows) return res.status(404).json({ message: '课程不存在或无权访问' });
-      const cleanupFailed = removeMaterialFiles(materials) || result.cleanupFailed;
+      importJobs?.cancelCourse(courseId);
+      cancelCourseGeneration?.(courseId);
+      const cleanupFailed =
+        removeMaterialFiles([...materials, ...importingFiles]) || result.cleanupFailed;
       res.json({ deleted: true, cleanupFailed });
     }),
   );

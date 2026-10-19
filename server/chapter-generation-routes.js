@@ -1,9 +1,30 @@
-import { chapterSchema, chapterSummaryResultSchema } from './request-schemas.mjs';
+import {
+  chapterSchema,
+  chapterSummaryResultSchema,
+  MAX_CHAPTER_DRAFTS,
+} from './request-schemas.mjs';
 import { sliceChapterText } from './chapter-text.mjs';
 import { selectChapterQuestions } from './material-text.mjs';
 import { applyChapterCorrections } from './chapter-corrections.js';
 import { prepareLongContext } from './long-context.js';
 import { z } from 'zod';
+import { createHash } from 'node:crypto';
+import { pdfChapterSchema, validatePdfChapterSources } from './pdf-chapter-sources.js';
+
+// 只纳入会影响生成结果的资料字段；预览文件可在阅读时创建，不应使任务失效。
+const materialVersion = (materials) =>
+  createHash('sha256')
+    .update(
+      JSON.stringify(
+        materials.map((item) => [
+          Number(item.id),
+          item.original_name,
+          item.stored_name,
+          item.extracted_text || '',
+        ]),
+      ),
+    )
+    .digest('hex');
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function registerChapterGenerationRoutes(
@@ -15,9 +36,11 @@ export function registerChapterGenerationRoutes(
     db,
     askDeepSeek,
     serviceSettings,
+    getAiModel,
     auth,
     asyncRoute,
     buildVisionPages,
+    preparePdfOutline,
     validationError,
   },
 ) {
@@ -79,7 +102,9 @@ export function registerChapterGenerationRoutes(
         db,
         courseId,
         chapterId: chapter.id,
-        model: serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model,
+        model: getAiModel
+          ? await getAiModel()
+          : serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model,
         onProgress: req.updateProgress,
       },
     );
@@ -140,7 +165,8 @@ export function registerChapterGenerationRoutes(
   app.post('/api/courses/:courseId/chapters/:chapterId/summary', auth, asyncRoute(summaryGenerate));
 
   const chaptersSuggest = async (req, res) => {
-    const signal = generationSignal(req, res);
+    // 逐页图片识别可能包含多个批次；单次模型请求仍受服务自身超时限制。
+    const signal = generationSignal(req, res, { timeoutMs: 30 * 60 * 1000 });
     const courseId = parseId(res, req.params.courseId);
     if (!courseId) return;
     const input = z
@@ -150,71 +176,216 @@ export function registerChapterGenerationRoutes(
     const course = await getOwnedCourse(req.user.sub, courseId);
     if (!course) return res.status(404).json({ message: '课程不存在或无权访问' });
     const [materials] = await db.execute(
-      'SELECT original_name,stored_name,preview_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      'SELECT id,original_name,stored_name,preview_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
       [course.id],
     );
     if (!materials.length)
       return res.status(400).json({ message: '请先导入学习资料，再生成章节目录' });
-    const context = await prepareLongContext(
-      materials
+    const sourceVersion = materialVersion(materials);
+    // 文件显示名称可被用户重命名，处理方式以保存时保留的真实扩展名为准。
+    const isPdf = (material) => /\.pdf$/i.test(material.stored_name || material.original_name);
+    const pdfMaterials = materials.filter(isPdf);
+    const textMaterials = materials.filter((material) => !isPdf(material));
+    const model = getAiModel
+      ? await getAiModel()
+      : serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model;
+    let pdfSources = [];
+    const imageOutline = pdfMaterials.length
+      ? await preparePdfOutline(pdfMaterials, {
+          onSources: (sources) => {
+            pdfSources = sources;
+          },
+          courseId: course.id,
+          model,
+          signal,
+          onProgress: req.updateProgress,
+          ask: (messages, partSignal, options) =>
+            askDeepSeek(messages, undefined, partSignal, options),
+        })
+      : '';
+    const sourceText = [
+      imageOutline,
+      textMaterials
         .map(
           (item) =>
             `【${item.original_name}】\n${item.extracted_text || '（未识别到可复制文字，请结合资料页面图片整理）'}`,
         )
         .join('\n\n'),
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    await req.updateProgress?.(
+      pdfMaterials.length ? 'PDF 图片识别已完成，正在汇总章节目录' : '正在汇总课程资料',
+    );
+    const context = await prepareLongContext(
+      sourceText,
       (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
       signal,
       {
         db,
         courseId: course.id,
         purpose: 'outline',
-        model: serviceSettings.snapshot('ai').baseUrl + '|' + serviceSettings.snapshot('ai').model,
+        model,
+        maxContextChars: pdfMaterials.length ? 30000 : 18000,
         validateFormulas: false,
         onProgress: req.updateProgress,
       },
     );
-    const vision = await buildVisionPages(materials);
-    const raw = await askDeepSeek(
-      [
-        {
-          role: 'system',
-          content:
-            '你是课程结构设计助手。仅依据资料文字和页面图像生成单层章节目录，不补充资料外的知识。参考用户的整理要求，但要求与资料冲突时以资料为准。图片可能含公式、图表和扫描文字。只输出 JSON，不要 Markdown。格式：{"chapters":[{"title":"不超过120字","description":"不超过500字"}]}',
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: `课程名称：${course.title}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料文字：\n${context}`,
-            },
-            ...vision.parts,
-          ],
-        },
-      ],
-      undefined,
-      signal,
-    );
-    signal.throwIfAborted();
-    const jsonText = raw.match(/\{[\s\S]*\}/)?.[0];
-    let suggested;
-    try {
-      suggested = JSON.parse(jsonText);
-    } catch {
-      return res.status(502).json({ message: 'AI 返回的章节目录格式无效，请重试' });
-    }
-    const parsed = z
-      .object({ chapters: z.array(chapterSchema).min(1, 'AI 未生成章节').max(20, '章节数量过多') })
-      .safeParse(suggested);
-    if (!parsed.success)
-      return res.status(502).json({ message: 'AI 返回的章节目录不符合要求，请重试' });
-    await req.beginSave?.();
-    await db.execute('DELETE FROM course_chapter_drafts WHERE course_id=?', [course.id]);
-    for (const [index, chapter] of parsed.data.chapters.entries())
-      await db.execute(
-        'INSERT INTO course_chapter_drafts(course_id,title,description,sort_order) VALUES(?,?,?,?)',
-        [course.id, chapter.title, chapter.description, index + 1],
+    const vision = textMaterials.length ? await buildVisionPages(textMaterials) : { parts: [] };
+    const messages = [
+      {
+        role: 'system',
+        content: `你是课程结构设计助手。仅依据资料文字、逐页图片分区摘要和页面图像生成单层章节目录，不补充资料外的知识。PDF 已按原页码识别上下重叠区域，汇总时合并重叠内容，按原资料顺序组织章节；description简短写明资料名及原PDF页码范围，不把目录页当作正文。参考用户的整理要求，但要求与资料冲突时以资料为准。按资料真实结构组织，最多${MAX_CHAPTER_DRAFTS}章。只输出 JSON，不要 Markdown。格式：{"chapters":[{"title":"原文标题，不超过120字","description":"简短说明，尽量不超过80字","sourceRegions":[{"materialId":资料数字ID,"startPage":原PDF起始数字页码,"endPage":原PDF结束数字页码}]}]}。有PDF时每章必须包含sourceRegions，数字字段不能写字符串。没有PDF时省略sourceRegions。`,
+      },
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: `PDF图片章节映射要求：${pdfSources.length ? JSON.stringify(pdfSources) + '。每章增加sourceRegions数组，每项为{materialId,startPage,endPage}。按顺序完整分配上述PDF全部页码，禁止遗漏、重叠、越界。页码为原PDF物理页码，不是印刷页码。章节正文将直接显示这些页的图片。' : '无PDF'}\n课程名称：${course.title}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料文字：\n${context}`,
+          },
+          ...vision.parts,
+        ],
+      },
+    ];
+    let parsed;
+    const directoryHash = pdfSources.length
+      ? createHash('sha256')
+          .update(
+            JSON.stringify({
+              version: 'pdf-directory-v2',
+              model,
+              title: course.title,
+              requirements: input.data.requirements,
+              sourceText,
+              pdfSources,
+            }),
+          )
+          .digest('hex')
+      : null;
+    let cachedDirectory = false;
+    if (directoryHash) {
+      const [rows] = await db.execute(
+        'SELECT result_text FROM course_context_cache WHERE course_id=? AND purpose=? AND content_hash=?',
+        [course.id, 'pdf-directory-v2', directoryHash],
       );
+      if (rows.length)
+        try {
+          parsed = z
+            .object({ chapters: z.array(pdfChapterSchema).min(1).max(MAX_CHAPTER_DRAFTS) })
+            .safeParse(JSON.parse(rows[0].result_text));
+          if (parsed.success) {
+            validatePdfChapterSources(parsed.data.chapters, pdfSources);
+            cachedDirectory = true;
+          }
+        } catch {
+          parsed = undefined;
+        }
+    }
+    let validationMessage = 'AI 返回的章节目录格式无效';
+    for (let attempt = 0; !parsed?.success && attempt < 2; attempt++) {
+      signal.throwIfAborted();
+      await req.updateProgress?.(attempt ? '正在校验并修复章节页码' : '正在生成章节目录与页码映射');
+      let raw;
+      try {
+        raw = await askDeepSeek(
+          attempt
+            ? [
+                ...messages,
+                {
+                  role: 'user',
+                  content: `请重新输出完整JSON。上次校验失败：${validationMessage}。PDF每章必须包含sourceRegions数组，每项只含数字materialId、startPage、endPage。按资料顺序覆盖所有物理页，不遗漏不重叠。`,
+                },
+              ]
+            : messages,
+          undefined,
+          signal,
+          { maxOutputTokens: attempt ? 32768 : 16384, thinking: false, jsonObject: true },
+        );
+      } catch (error) {
+        if (!attempt && ['AI_OUTPUT_LIMIT', 'AI_EMPTY_RESPONSE'].includes(error.code)) {
+          validationMessage =
+            error.code === 'AI_OUTPUT_LIMIT'
+              ? '输出被截断，请精简章节说明并返回完整JSON'
+              : '没有返回目录内容，请返回完整JSON';
+          continue;
+        }
+        throw error;
+      }
+      signal.throwIfAborted();
+      try {
+        const suggested = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] || '');
+        parsed = z
+          .object({
+            chapters: z
+              .array(pdfSources.length ? pdfChapterSchema : chapterSchema)
+              .min(1)
+              .max(MAX_CHAPTER_DRAFTS),
+          })
+          .safeParse(suggested);
+        if (!parsed.success) {
+          validationMessage = parsed.error.issues
+            .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+            .join('; ')
+            .slice(0, 1500);
+          continue;
+        }
+        if (pdfSources.length) validatePdfChapterSources(parsed.data.chapters, pdfSources);
+        break;
+      } catch (error) {
+        parsed = undefined;
+        validationMessage = error instanceof SyntaxError ? 'JSON格式错误' : error.message;
+      }
+    }
+    if (!parsed?.success)
+      return res.status(502).json({ message: `AI 章节页码校验未通过：${validationMessage}` });
+    signal.throwIfAborted();
+    if (directoryHash && !cachedDirectory)
+      await db.execute(
+        'INSERT INTO course_context_cache(course_id,purpose,content_hash,result_text) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE content_hash=VALUES(content_hash),result_text=VALUES(result_text),updated_at=CURRENT_TIMESTAMP',
+        [course.id, 'pdf-directory-v2', directoryHash, JSON.stringify(parsed.data)],
+      );
+    const connection = await db.getConnection();
+    try {
+      await connection.beginTransaction();
+      // 锁定课程使保存与采用串行；失败时保留旧草稿，不留下半份目录。
+      const [owned] = await connection.execute(
+        'SELECT id FROM courses WHERE id=? AND user_id=? FOR UPDATE',
+        [course.id, req.user.sub],
+      );
+      if (!owned.length) throw Object.assign(new Error('课程已删除或不可访问'), { status: 404 });
+      const [currentMaterials] = await connection.execute(
+        'SELECT id,original_name,stored_name,preview_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id FOR UPDATE',
+        [course.id],
+      );
+      if (materialVersion(currentMaterials) !== sourceVersion)
+        throw Object.assign(new Error('资料已变化，本次结果未保存，请按最新资料重新生成'), {
+          status: 409,
+        });
+      signal.throwIfAborted();
+      await req.beginSave?.(connection);
+      await connection.execute('DELETE FROM course_chapter_drafts WHERE course_id=?', [course.id]);
+      for (const [index, chapter] of parsed.data.chapters.entries()) {
+        signal.throwIfAborted();
+        await connection.execute(
+          'INSERT INTO course_chapter_drafts(course_id,title,description,sort_order,source_regions_json) VALUES(?,?,?,?,?)',
+          [
+            course.id,
+            chapter.title,
+            chapter.description,
+            index + 1,
+            chapter.sourceRegions?.length ? JSON.stringify(chapter.sourceRegions) : null,
+          ],
+        );
+      }
+      signal.throwIfAborted();
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
     const [chapterDrafts] = await db.execute(
       'SELECT id,title,description,sort_order,created_at FROM course_chapter_drafts WHERE course_id=? ORDER BY sort_order,id',
       [course.id],
@@ -232,29 +403,67 @@ export function registerChapterGenerationRoutes(
       if (!courseId) return;
       const parsed = z
         .object({
-          chapters: z.array(chapterSchema).min(1, '请保留至少一个章节').max(20, '章节数量过多'),
+          chapters: z
+            .array(chapterSchema.extend({ id: z.coerce.number().int().positive().optional() }))
+            .min(1, '请保留至少一个章节')
+            .max(MAX_CHAPTER_DRAFTS, '章节数量过多')
+            .refine((chapters) => {
+              const ids = chapters.filter((chapter) => chapter.id).map((chapter) => chapter.id);
+              return new Set(ids).size === ids.length;
+            }, '不能重复采用同一章节草稿'),
           replaceExisting: z.boolean().optional().default(false),
         })
         .safeParse(req.body);
       if (!parsed.success) return validationError(res, parsed);
       const course = await getOwnedCourse(req.user.sub, courseId);
       if (!course) return res.status(404).json({ message: '课程不存在或无权访问' });
-      const [existing] = await db.execute(
-        'SELECT id FROM course_chapters WHERE course_id=? LIMIT 1',
-        [course.id],
-      );
-      if (existing.length && !parsed.data.replaceExisting)
-        return res.status(409).json({ message: '当前已有章节，请确认替换后再采用新目录' });
       const connection = await db.getConnection();
       try {
         await connection.beginTransaction();
+        const [owned] = await connection.execute(
+          'SELECT id FROM courses WHERE id=? AND user_id=? FOR UPDATE',
+          [course.id, req.user.sub],
+        );
+        if (!owned.length) throw Object.assign(new Error('课程已删除或不可访问'), { status: 404 });
+        const [existing] = await connection.execute(
+          'SELECT id FROM course_chapters WHERE course_id=? LIMIT 1',
+          [course.id],
+        );
+        if (existing.length && !parsed.data.replaceExisting)
+          throw Object.assign(new Error('当前已有章节，请确认替换后再采用新目录'), { status: 409 });
         if (existing.length)
           await connection.execute('DELETE FROM course_chapters WHERE course_id=?', [course.id]);
-        for (const [index, chapter] of parsed.data.chapters.entries())
+        const [savedDrafts] = await connection.execute(
+          'SELECT id,source_regions_json FROM course_chapter_drafts WHERE course_id=? FOR UPDATE',
+          [course.id],
+        );
+        const draftSources = new Map(
+          savedDrafts.map((draft) => [Number(draft.id), draft.source_regions_json]),
+        );
+        if (
+          savedDrafts.some((draft) => draft.source_regions_json) &&
+          parsed.data.chapters.some((chapter) => !chapter.id)
+        )
+          throw Object.assign(new Error('图片章节缺少草稿编号，请刷新后重新采用'), { status: 409 });
+        for (const [index, chapter] of parsed.data.chapters.entries()) {
+          if (chapter.id && !draftSources.has(chapter.id))
+            throw Object.assign(new Error('章节草稿已更新，请刷新后重新采用'), { status: 409 });
+          const sourceRegions = draftSources.get(chapter.id);
           await connection.execute(
-            'INSERT INTO course_chapters(course_id,title,description,sort_order) VALUES(?,?,?,?)',
-            [course.id, chapter.title, chapter.description, index + 1],
+            'INSERT INTO course_chapters(course_id,title,description,sort_order,source_regions_json) VALUES(?,?,?,?,?)',
+            [
+              course.id,
+              chapter.title,
+              chapter.description,
+              index + 1,
+              sourceRegions
+                ? typeof sourceRegions === 'string'
+                  ? sourceRegions
+                  : JSON.stringify(sourceRegions)
+                : null,
+            ],
           );
+        }
         await connection.execute('DELETE FROM course_chapter_drafts WHERE course_id=?', [
           course.id,
         ]);

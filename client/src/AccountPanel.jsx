@@ -609,7 +609,7 @@ export default function AccountPanel({
                     'defaultModel',
                     '默认模型',
                     models.map((m) => [m.id, m.label]),
-                    '新对话使用此模型',
+                    '对话与资料分析、章节整理、练习和笔记默认使用此模型',
                   )}
                   {select(
                     'imageModel',
