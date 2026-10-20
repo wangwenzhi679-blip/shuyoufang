@@ -2,6 +2,7 @@ import { requestJson } from './api-client.mjs';
 import PaperDialog from './PaperDialog.jsx';
 import './study-page-hero.css';
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import CourseCover from './CourseCover.jsx';
 import './learning-plans.css';
 
@@ -150,8 +151,8 @@ export function PlanTaskTray({ data, onOpen }) {
 }
 
 function Modal({ title, children, footer, onClose, busy, variant }) {
-  return (
-    <div className="modal-backdrop">
+  const content = (
+    <div className="modal-backdrop plan-modal-backdrop">
       <PaperDialog
         busy={busy}
         onDismiss={onClose}
@@ -171,6 +172,8 @@ function Modal({ title, children, footer, onClose, busy, variant }) {
       </PaperDialog>
     </div>
   );
+  // The plan page isolates its artwork; dialogs must escape that stacking context.
+  return typeof document === 'undefined' ? content : createPortal(content, document.body);
 }
 
 function PlanCourseBlock({

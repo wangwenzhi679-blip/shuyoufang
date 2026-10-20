@@ -1239,6 +1239,53 @@
 }
 
 @media (max-width: 700px) {
+  body .modal-backdrop.plan-modal-backdrop:has(.plan-dialog) {
+    padding: 12px !important;
+  }
+  body .plan-modal-backdrop .student-paper-dialog.plan-dialog {
+    width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow: hidden;
+  }
+  body .plan-modal-backdrop .plan-dialog .student-dialog-header {
+    padding: 14px 16px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog .student-dialog-header h2 {
+    font-size: 20px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog .student-dialog-body {
+    padding: 14px 16px;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  body .plan-modal-backdrop .plan-dialog .student-dialog-actions {
+    padding: 12px 16px !important;
+    flex-shrink: 0;
+  }
+  body .plan-modal-backdrop .plan-dialog .plan-dialog-body > label {
+    margin: 0 0 14px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog .plan-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  body .plan-modal-backdrop .plan-dialog .plan-fields > label {
+    margin: 0 !important;
+  }
+  body
+    .modal-backdrop.plan-modal-backdrop
+    .student-paper-dialog.plan-dialog
+    :is(input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea) {
+    font-size: 16px !important;
+  }
+  body .plan-modal-backdrop .student-paper-dialog.plan-dialog textarea {
+    height: 90px !important;
+    min-height: 80px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog .plan-preview-rows article {
+    min-width: 0;
+    padding: 12px;
+  }
   .workspace .learning-plans.plan-garden .plan-course-banner {
     grid-template-columns: 1fr;
     padding: 18px !important;
