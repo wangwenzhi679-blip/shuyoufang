@@ -597,7 +597,7 @@
   flex-wrap: wrap;
   gap: 8px 12px;
   min-width: 0;
-  flex: 1;
+  flex: 1 1 280px;
 }
 
 .rhy-detail-badge {
@@ -628,9 +628,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  max-width: 100%;
+  flex-wrap: wrap;
   font-size: 11.5px;
   color: #657158;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .rhy-stage-detail-side strong {
@@ -789,6 +791,35 @@
   }
   .rhy-stage-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Keep explanatory text above controls instead of squeezing it into a narrow column. */
+  .review-rhythm .rhy-stage-detail {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .review-rhythm .rhy-stage-detail-main {
+    display: block;
+    flex: none;
+    width: 100%;
+  }
+  .review-rhythm .rhy-detail-badge {
+    max-width: 100%;
+    white-space: normal;
+  }
+  .review-rhythm .rhy-stage-detail-main p {
+    margin-top: 8px;
+    overflow-wrap: break-word;
+  }
+  .review-rhythm .rhy-stage-detail-side {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px 12px;
+  }
+  .review-rhythm .rhy-stage-top,
+  .review-rhythm .rhy-stage-retention,
+  .review-rhythm .rhy-stage-counts {
+    flex-wrap: wrap;
   }
   .rhy-chart figcaption {
     flex-direction: column;
