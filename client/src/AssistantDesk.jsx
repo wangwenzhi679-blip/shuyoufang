@@ -17,7 +17,10 @@ export default function AssistantDesk({
   const key = 'scholar-assistant:' + userId;
   const [courseId, setCourseId] = useState(() => {
     const saved = sessionStorage.getItem(key + ':course');
-    return courses.some((c) => String(c.id) === saved) ? saved : String(courses[0]?.id || '');
+    // 刷新时课程列表尚未返回，不能提前丢掉来源课程并选中第一门课。
+    return saved && (!courses.length || courses.some((c) => String(c.id) === saved))
+      ? saved
+      : String(courses[0]?.id || '');
   });
   const [chapters, setChapters] = useState([]),
     [chapterId, setChapterId] = useState('');

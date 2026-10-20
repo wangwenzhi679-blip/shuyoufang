@@ -2,6 +2,20 @@
   overflow-anchor: none;
 }
 
+.assistant-return-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.assistant-return-bar > span {
+  color: var(--muted, #858a96);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
 /* 正常阅读保留页面结构，只增加正文的可视高度。 */
 .workspace .chapter-reading-panel .tracked-reading-scroll {
   height: clamp(560px, 85dvh, 1100px);

@@ -174,7 +174,7 @@ export function CourseWorkspace({
       window.location.href,
     );
   };
-  const showView = (view) => {
+  const showView = (view, historyDetails = {}) => {
     setReviewTarget(null);
     setSearchWrong(null);
     sessionStorage.removeItem('math-auth-active-course');
@@ -183,7 +183,7 @@ export function CourseWorkspace({
     setNavigationTarget(null);
     setActiveView(view);
     window.history.pushState(
-      { mathAuthView: view, searchCanGoBack: view === 'search' },
+      { ...historyDetails, mathAuthView: view, searchCanGoBack: view === 'search' },
       '',
       window.location.href,
     );
@@ -312,7 +312,10 @@ export function CourseWorkspace({
         request(`courses/${state.courseId}`, { token })
           .then((data) => {
             setActiveCourse(data);
-            setNavigationTarget(state.navigationTarget || { chapterId: state.chapterId });
+            setNavigationTarget({
+              ...(state.navigationTarget || { chapterId: state.chapterId }),
+              returnLocation: state.returnLocation,
+            });
           })
           .catch(() => {
             sessionStorage.removeItem('math-auth-active-course');
@@ -1069,14 +1072,26 @@ export function CourseWorkspace({
             }}
           />
         ) : activeView === 'assistant' ? (
-          <AssistantLanding
-            user={user}
-            onOpenCourse={openCourse}
-            onOpenNotes={(courseId, chapterId) => openCourse(courseId, { chapterId, notes: true })}
-            courses={courses}
-            token={token}
-            onCourses={() => showView('courses')}
-          />
+          <>
+            {window.history.state?.assistantReturn && (
+              <div className="assistant-return-bar">
+                <button type="button" className="back-link" onClick={() => window.history.back()}>
+                  ← 返回学习位置
+                </button>
+                <span>{window.history.state.assistantReturn.title}</span>
+              </div>
+            )}
+            <AssistantLanding
+              user={user}
+              onOpenCourse={openCourse}
+              onOpenNotes={(courseId, chapterId) =>
+                openCourse(courseId, { chapterId, notes: true })
+              }
+              courses={courses}
+              token={token}
+              onCourses={() => showView('courses')}
+            />
+          </>
         ) : activeCourse ? (
           <CourseDetail
             token={token}
@@ -1134,7 +1149,9 @@ export function CourseWorkspace({
                   `${key}:new-draft:${course.id}`,
                   `关于《${chapter?.title || course.title}》中的这段内容：\n> ${excerpt}\n\n请帮我详细讲解一下：`,
                 );
-              showView('assistant');
+              showView('assistant', {
+                assistantReturn: { courseId: course.id, title: chapter?.title || course.title },
+              });
             }}
           />
         ) : activeView === 'home' ? (

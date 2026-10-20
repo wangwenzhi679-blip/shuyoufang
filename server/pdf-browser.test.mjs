@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { withPdfBrowser } from './pdf-browser.js';
 
-const profileRoot = fs.mkdtempSync(path.resolve('storage', 'qa-pdf-'));
+const profileRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'shuyoufang-qa-pdf-'));
 const configuredPath = fileURLToPath(import.meta.url);
-const fallbackPath = path.resolve('pdf-browser.js');
+const fallbackPath = fileURLToPath(new URL('./pdf-browser.js', import.meta.url));
 const attempts = [];
 let closed = 0;
 const browser = {

@@ -19,6 +19,7 @@ import {
   PracticeRemovalModal,
 } from './PracticeWorkspace.jsx';
 import { MaterialNoteExcerpt, ChapterMaterialContent } from './MaterialContent.jsx';
+import { captureLearningReturn, restoreLearningViewport } from './learning-return.mjs';
 
 export function CourseDetail({
   onSetChapterProgress,
@@ -50,6 +51,11 @@ export function CourseDetail({
   onOpenMaterialFile,
   onAskAssistant,
 }) {
+  const learningRoot = useRef(null);
+  const assistantReturnLocation = useRef(navigationTarget?.returnLocation || null);
+  const [readingReturn, setReadingReturn] = useState(
+    navigationTarget?.returnLocation?.reading || null,
+  );
   const [chapterTitle, setChapterTitle] = useState('');
   const [addingChapter, setAddingChapter] = useState(false);
   const [renameTarget, setRenameTarget] = useState(null);
@@ -131,11 +137,9 @@ export function CourseDetail({
       if (activePractice.history_view) target.attempt = activePractice.latest_attempt;
     }
     // 刷新恢复当前内容，不能继续使用最初从首页或搜索进入时的目标。
-    window.history.replaceState(
-      { ...state, chapterId: selectedChapterId, navigationTarget: target },
-      '',
-      window.location.href,
-    );
+    const nextState = { ...state, chapterId: selectedChapterId, navigationTarget: target };
+    delete nextState.returnLocation;
+    window.history.replaceState(nextState, '', window.location.href);
   }, [selectedChapterId, activeTab, practiceMode, activePractice, courseData.course.id]);
   const [practiceRemoval, setPracticeRemoval] = useState(null);
   const [chapterDraftPreview, setChapterDraftPreview] = useState(false);
@@ -332,6 +336,16 @@ export function CourseDetail({
     selectedChapterIndex >= 0 && selectedChapterIndex < courseData.chapters.length - 1
       ? courseData.chapters[selectedChapterIndex + 1]
       : null;
+  const isCurrentContent = selectedChapter && chapterContent?.chapter?.id === selectedChapter.id;
+  useEffect(() => {
+    const location = assistantReturnLocation.current;
+    if (!location || (activeTab === 'materials' && (loadingChapter || !isCurrentContent))) return;
+    const frame = requestAnimationFrame(() => {
+      restoreLearningViewport(learningRoot.current, location);
+      assistantReturnLocation.current = null;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeTab, loadingChapter, isCurrentContent]);
   const selectAndScrollChapter = (chapter) => {
     if (!chapter) return;
     setSelectedChapterId(chapter.id);
@@ -342,7 +356,6 @@ export function CourseDetail({
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
     );
   };
-  const isCurrentContent = selectedChapter && chapterContent?.chapter?.id === selectedChapter.id;
   // 新增、改名或重排章节会改变正文边界，资料导入完成也需要刷新当前内容。
   const contentRevision = JSON.stringify({
     chapters: courseData.chapters.map((chapter) => [chapter.id, chapter.title]),
@@ -444,7 +457,7 @@ export function CourseDetail({
           ← 返回我的课程
         </button>
       </div>
-      <section className="course-learning-layout">
+      <section ref={learningRoot} className="course-learning-layout">
         <aside className="chapter-outline">
           <div className="chapter-outline-head">
             <div>
@@ -626,6 +639,15 @@ export function CourseDetail({
                     title="围绕本章内容向学习助手提问（若已划选正文会自动带入）"
                     onClick={() => {
                       const excerpt = window.getSelection?.()?.toString().trim() || '';
+                      // 在离开前保留这一条历史记录，返回时不依赖异步位置保存是否已完成。
+                      window.history.replaceState(
+                        {
+                          ...window.history.state,
+                          returnLocation: captureLearningReturn(learningRoot.current),
+                        },
+                        '',
+                        window.location.href,
+                      );
                       onAskAssistant?.(courseData.course, selectedChapter, excerpt);
                     }}
                   >
@@ -737,6 +759,17 @@ export function CourseDetail({
                         courseId={courseData.course.id}
                         chapterId={selectedChapter.id}
                         title={selectedChapter.title}
+                        bookmarkPosition={
+                          Number(selectedChapter.id) === Number(navigationTarget?.chapterId)
+                            ? readingReturn?.position
+                            : undefined
+                        }
+                        initialZoom={
+                          Number(selectedChapter.id) === Number(navigationTarget?.chapterId)
+                            ? readingReturn?.zoom
+                            : undefined
+                        }
+                        onPositionRestored={() => setReadingReturn(null)}
                         endContent={chapterNavigation}
                         zoomable={chapterContent.sections.some(
                           (section) => section.originalPages?.length,

@@ -38,10 +38,12 @@ export function ReadingArea({
   zoomable = false,
   endContent,
   fullscreenEnabled = true,
+  initialZoom = 100,
+  onPositionRestored,
 }) {
   const viewport = useRef(null);
   const fullscreen = useReadingFullscreen(viewport);
-  const [zoom, setZoom] = useState(100);
+  const [zoom, setZoom] = useState(initialZoom);
   const box = useRef(null),
     state = useRef({
       ready: false,
@@ -243,6 +245,7 @@ export function ReadingArea({
         if (s.pending) flush();
         setStatus(d.position ? '已恢复上次阅读位置' : '阅读时自动保存位置');
         restore(bookmarkPosition || (activePreferences.restoreReading ? d.position : null));
+        onPositionRestored?.();
       })
       .catch((e) => {
         if (s.live) {
