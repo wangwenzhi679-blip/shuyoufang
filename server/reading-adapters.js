@@ -11,7 +11,17 @@ import { registerLearningNotes } from './learning-notes.js';
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function registerReadingAdapters(
   app,
-  { getOwnedMaterial, previewRoot, uploadRoot, db, auth, asyncRoute, askDeepSeek, getAiModel },
+  {
+    getOwnedMaterial,
+    previewRoot,
+    uploadRoot,
+    db,
+    auth,
+    asyncRoute,
+    askDeepSeek,
+    getAiModel,
+    readChapterSummarySource,
+  },
 ) {
   const readOriginalPage = createPdfPageImages({ uploadRoot, previewRoot });
   const readPreviewPage = createPdfPageImages({ uploadRoot: previewRoot, previewRoot });
@@ -63,27 +73,36 @@ export function registerReadingAdapters(
   askNotes.modelKey = getAiModel;
   registerLearningNotes(app, db, auth, asyncRoute, askNotes, async (courseId, chapterId) => {
     const [chapters] = await db.execute(
-      'SELECT id,title,description,sort_order FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+      'SELECT id,title,description,sort_order,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
       [courseId],
     );
     const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
     if (index < 0) return '';
     const [materials] = await db.execute(
-      'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
       [courseId],
     );
-    let sections = materials
-      .map((m) => ({
-        materialId: m.id,
-        name: m.original_name,
-        content: sliceChapterText(
-          m.extracted_text || '',
-          chapters[index],
-          chapters.slice(index + 1),
-        ),
-      }))
-      .filter((s) => s.content);
-    if (!sections.length)
+    const corrections =
+      chapters[index].source_regions_json != null
+        ? await applyChapterCorrections(db, courseId, chapterId, [])
+        : [];
+    const pageSections = readChapterSummarySource
+      ? await readChapterSummarySource(chapters[index], materials, undefined, corrections)
+      : null;
+    let sections =
+      pageSections ??
+      materials
+        .map((m) => ({
+          materialId: m.id,
+          name: m.original_name,
+          content: sliceChapterText(
+            m.extracted_text || '',
+            chapters[index],
+            chapters.slice(index + 1),
+          ),
+        }))
+        .filter((s) => s.content);
+    if (!sections.length && pageSections === null)
       sections = selectChapterQuestions(materials, chapters[index]).map((s) => ({
         materialId: s.materialId,
         name: s.materialName,

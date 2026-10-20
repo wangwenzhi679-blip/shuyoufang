@@ -1,4 +1,5 @@
 import { prepareLongContext } from './long-context.js';
+import { generateValidated, generationError } from './ai-generation.js';
 import { cleanAiNoteText } from '../shared/note-document.mjs';
 import { z } from 'zod';
 import multer from 'multer';
@@ -402,8 +403,17 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
               },
             })
           : parsed.data.text;
-        const result = await askForUser(
-          [
+        const result = await generateValidated({
+          ask: askForUser,
+          signal: controller.signal,
+          label: '学习笔记',
+          jsonObject: false,
+          maxOutputTokens: 8192,
+          validate: (text) => {
+            if (!text.trim() || text.length > 100000) throw new Error('结果过长或为空');
+            return text;
+          },
+          messages: [
             {
               role: 'system',
               content: generating
@@ -415,9 +425,8 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
               content: `${generating ? '生成' : '整理'}要求：${parsed.data.requirements || '整理结构，突出重点，保留原意'}\n\n${generating ? '本章资料' : '笔记'}：\n${sourceText}`,
             },
           ],
-          controller.signal,
-        );
-        if (!result || result.length > 100000) throw new Error('结果过长或为空');
+        });
+        controller.signal.throwIfAborted();
         await db.execute(
           "UPDATE note_ai_jobs SET status='done',result_text=? WHERE id=? AND status='running'",
           [cleanAiNoteText(result), created.insertId],
@@ -427,9 +436,7 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
         await db.execute(
           "UPDATE note_ai_jobs SET status='failed',error_text=? WHERE id=? AND status='running'",
           [
-            error.status === 422
-              ? error.message
-              : 'AI 笔记任务失败，请检查模型服务后重试；原笔记已保留',
+            generationError(error, 'AI 笔记任务失败，请检查模型服务后重试；原笔记已保留'),
             created.insertId,
           ],
         );

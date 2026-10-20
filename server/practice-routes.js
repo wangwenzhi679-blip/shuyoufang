@@ -18,6 +18,7 @@ import { randomUUID } from 'node:crypto';
 import { getOverview } from './overview.js';
 import { z } from 'zod';
 import { gradeAnswer } from './wrong-review.js';
+import { generateValidated } from './ai-generation.js';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function registerPracticeRoutes(
@@ -31,6 +32,7 @@ export function registerPracticeRoutes(
     askDeepSeek,
     serviceSettings,
     getAiModel,
+    readChapterSummarySource,
     auth,
     asyncRoute,
   },
@@ -44,13 +46,13 @@ export function registerPracticeRoutes(
     const course = await getOwnedCourse(req.user.sub, courseId);
     if (!course) return res.status(404).json({ message: '课程不存在或无权访问' });
     const [rows] = await db.execute(
-      'SELECT id,title,description FROM course_chapters WHERE id=? AND course_id=? LIMIT 1',
+      'SELECT id,title,description,source_regions_json FROM course_chapters WHERE id=? AND course_id=? LIMIT 1',
       [parsed.data.chapterId, course.id],
     );
     const chapter = rows[0] || null;
     if (!chapter) return res.status(404).json({ message: '章节不存在' });
     const [materials] = await db.execute(
-      'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
       [course.id],
     );
     if (!materials.length) return res.status(400).json({ message: '请先导入学习资料，再生成题目' });
@@ -59,18 +61,28 @@ export function registerPracticeRoutes(
       [course.id],
     );
     const chapterIndex = chapters.findIndex((item) => Number(item.id) === Number(chapter.id));
-    let chapterSources = materials
-      .map((item) => ({
-        materialId: item.id,
-        name: item.original_name,
-        content: sliceChapterText(
-          item.extracted_text || '',
-          chapter,
-          chapters.slice(chapterIndex + 1),
-        ),
-      }))
-      .filter((item) => item.content);
-    if (!chapterSources.length)
+    await req.updateProgress?.('正在读取本章资料');
+    const corrections =
+      chapter.source_regions_json != null
+        ? await applyChapterCorrections(db, course.id, chapter.id, [])
+        : [];
+    const pageSections = readChapterSummarySource
+      ? await readChapterSummarySource(chapter, materials, signal, corrections)
+      : null;
+    let chapterSources =
+      pageSections ??
+      materials
+        .map((item) => ({
+          materialId: item.id,
+          name: item.original_name,
+          content: sliceChapterText(
+            item.extracted_text || '',
+            chapter,
+            chapters.slice(chapterIndex + 1),
+          ),
+        }))
+        .filter((item) => item.content);
+    if (!chapterSources.length && pageSections === null)
       chapterSources = selectChapterQuestions(materials, chapter).map((item) => ({
         materialId: item.materialId,
         name: item.materialName,
@@ -98,50 +110,48 @@ export function registerPracticeRoutes(
     const requestedTypes = parsed.data.questionCounts
       .map((item) => `${item.type} ${item.count} 道`)
       .join('；');
-    const raw = await askDeepSeek(
-      [
-        {
-          role: 'system',
-          content:
-            '你是严谨的课程练习出题助手。仅依据当前章节相关资料出题，不补充资料外知识。只输出 JSON，不要 Markdown。格式：{"questions":[{"type":"单选题","question":"题干","options":["A. 选项","B. 选项","C. 选项","D. 选项"],"answer":"答案","analysis":"简明解析"}]}。单选题和多选题必须有4个选项；判断题必须有“正确”“错误”两个选项；填空题和简答题 options 使用空数组。题型和数量必须严格符合用户要求。',
+    const messages = [
+      {
+        role: 'system',
+        content:
+          '你是严谨的课程练习出题助手。仅依据当前章节相关资料出题，不补充资料外知识。只输出 JSON，不要 Markdown。格式：{"questions":[{"type":"单选题","question":"题干","options":["A. 选项","B. 选项","C. 选项","D. 选项"],"answer":"答案","analysis":"简明解析"}]}。单选题和多选题必须有4个选项；判断题必须有“正确”“错误”两个选项；填空题和简答题 options 使用空数组。题型和数量必须严格符合用户要求。',
+      },
+      {
+        role: 'user',
+        content: `课程：${course.title}\n当前章节：${chapter.title}${chapter.description ? `（${chapter.description}）` : ''}\n难度：${parsed.data.difficulty}\n题型与数量：${requestedTypes}\n补充要求：${parsed.data.requirements || '无'}\n\n课程资料：\n${context}`,
+      },
+    ];
+    const questionCount = parsed.data.questionCounts.reduce((sum, item) => sum + item.count, 0);
+    const checked = {
+      data: await generateValidated({
+        ask: (messages, signal, options) => askDeepSeek(messages, undefined, signal, options),
+        messages,
+        signal,
+        label: '练习题目',
+        maxOutputTokens: Math.max(3072, questionCount * 600),
+        validate: (result) => {
+          const data = z
+            .object({ questions: z.array(questionItemSchema).min(1).max(20) })
+            .parse(result);
+          for (const item of parsed.data.questionCounts)
+            if (data.questions.filter((q) => q.type === item.type).length !== item.count)
+              throw new Error('题型数量与要求不符');
+          if (data.questions.length !== questionCount) throw new Error('题目总数与要求不符');
+          if (!validGeneratedQuestions(data.questions)) throw new Error('选项或答案不符合题型要求');
+          return data;
         },
-        {
-          role: 'user',
-          content: `课程：${course.title}\n当前章节：${chapter.title}${chapter.description ? `（${chapter.description}）` : ''}\n难度：${parsed.data.difficulty}\n题型与数量：${requestedTypes}\n补充要求：${parsed.data.requirements || '无'}\n\n课程资料：\n${context}`,
-        },
-      ],
-      undefined,
-      signal,
-    );
-    signal.throwIfAborted();
-    const jsonText = raw.replace(/^```json\s*|\s*```$/g, '').trim();
-    let result;
-    try {
-      result = JSON.parse(jsonText);
-    } catch {
-      return res.status(502).json({ message: 'AI 返回的题目格式无效，请重新生成' });
-    }
-    const checked = z
-      .object({ questions: z.array(questionItemSchema).min(1).max(20) })
-      .safeParse(result);
-    if (!checked.success)
-      return res.status(502).json({ message: 'AI 返回的题目不符合要求，请重新生成' });
-    for (const item of parsed.data.questionCounts)
-      if (checked.data.questions.filter((q) => q.type === item.type).length !== item.count)
-        return res.status(502).json({ message: 'AI 返回的题型数量不符合要求，请重新生成' });
-    if (
-      checked.data.questions.length !==
-      parsed.data.questionCounts.reduce((sum, item) => sum + item.count, 0)
-    )
-      return res.status(502).json({ message: 'AI 返回的题目数量不符合要求，请重新生成' });
-    if (!validGeneratedQuestions(checked.data.questions))
-      return res.status(502).json({ message: 'AI 返回的选项或答案不符合题型要求，请重新生成' });
+      }),
+    };
     const multiple = checked.data.questions
       .map((q, index) => ({ ...q, index }))
       .filter((q) => q.type === '多选题');
     if (multiple.length) {
-      const verifiedRaw = await askDeepSeek(
-        [
+      const verifiedAnswers = await generateValidated({
+        ask: (messages, signal, options) => askDeepSeek(messages, undefined, signal, options),
+        signal,
+        label: '多选题答案核对',
+        maxOutputTokens: Math.max(2048, multiple.length * 400),
+        messages: [
           {
             role: 'system',
             content:
@@ -149,39 +159,33 @@ export function registerPracticeRoutes(
           },
           { role: 'user', content: JSON.stringify({ material: context, questions: multiple }) },
         ],
-        undefined,
-        signal,
-      );
-      signal.throwIfAborted();
-      let verified;
-      try {
-        verified = JSON.parse(verifiedRaw.replace(/^```json\s*|\s*```$/g, '').trim());
-      } catch {
-        return res.status(502).json({ message: '多选题答案核对失败，请重新生成' });
-      }
-      const parsedAnswers = z
-        .object({
-          answers: z.array(
-            z.object({
-              index: z.number().int().nonnegative(),
-              answer: z.string().regex(/^[ABCD]+$/),
-              analysis: z.string().trim().min(1).max(2000),
-            }),
-          ),
-        })
-        .safeParse(verified);
-      if (
-        !parsedAnswers.success ||
-        parsedAnswers.data.answers.length !== multiple.length ||
-        new Set(parsedAnswers.data.answers.map((a) => a.index)).size !== multiple.length ||
-        parsedAnswers.data.answers.some(
-          (a) =>
-            !multiple.some((q) => q.index === a.index) ||
-            new Set(a.answer).size !== a.answer.length,
-        )
-      )
-        return res.status(502).json({ message: '多选题答案核对不完整，请重新生成' });
-      for (const item of parsedAnswers.data.answers)
+        validate: (verified) => {
+          const parsedAnswers = z
+            .object({
+              answers: z.array(
+                z.object({
+                  index: z.number().int().nonnegative(),
+                  answer: z.string().regex(/^[ABCD]+$/),
+                  analysis: z.string().trim().min(1).max(2000),
+                }),
+              ),
+            })
+            .safeParse(verified);
+          if (
+            !parsedAnswers.success ||
+            parsedAnswers.data.answers.length !== multiple.length ||
+            new Set(parsedAnswers.data.answers.map((a) => a.index)).size !== multiple.length ||
+            parsedAnswers.data.answers.some(
+              (a) =>
+                !multiple.some((q) => q.index === a.index) ||
+                new Set(a.answer).size !== a.answer.length,
+            )
+          )
+            throw new Error('多选题答案核对不完整');
+          return parsedAnswers.data.answers;
+        },
+      });
+      for (const item of verifiedAnswers)
         Object.assign(checked.data.questions[item.index], {
           answer: item.answer,
           analysis: item.analysis,
@@ -203,7 +207,7 @@ export function registerPracticeRoutes(
     res.json({
       questions: checked.data.questions,
       settings,
-      sources: materials.map((item) => item.original_name),
+      sources: [...new Set(chapterSources.map((item) => item.name))],
     });
   };
 

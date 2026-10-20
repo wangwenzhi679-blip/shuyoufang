@@ -46,6 +46,7 @@ export function createAssistantContext({
   selectChapterQuestions,
   applyChapterCorrections,
   readPreferences,
+  readChapterSummarySource,
 }) {
   return async (userId, courseId, chapterId, question, model, signal) => {
     signal.throwIfAborted();
@@ -56,7 +57,7 @@ export function createAssistantContext({
     ]);
     if (!course) throw fail('课程不存在', 404);
     const [materials] = await db.execute(
-      'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
       [courseId],
     );
     if (!materials.length) throw fail('请先导入课程资料，再开始研习');
@@ -68,20 +69,29 @@ export function createAssistantContext({
       chapter;
     if (chapterId) {
       const [chapters] = await db.execute(
-        'SELECT id,title,description FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+        'SELECT id,title,description,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
         [courseId],
       );
       const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
       chapter = chapters[index];
       if (!chapter) throw fail('本对话的章节已删除，请新建对话选择范围', 404);
-      sections = materials
-        .map((m) => ({
-          materialId: m.id,
-          name: m.original_name,
-          content: sliceChapterText(m.extracted_text || '', chapter, chapters.slice(index + 1)),
-        }))
-        .filter((s) => s.content);
-      if (!sections.length)
+      const corrections =
+        chapter.source_regions_json != null
+          ? await applyChapterCorrections(db, courseId, chapterId, [])
+          : [];
+      const pageSections = readChapterSummarySource
+        ? await readChapterSummarySource(chapter, materials, signal, corrections)
+        : null;
+      sections =
+        pageSections ??
+        materials
+          .map((m) => ({
+            materialId: m.id,
+            name: m.original_name,
+            content: sliceChapterText(m.extracted_text || '', chapter, chapters.slice(index + 1)),
+          }))
+          .filter((s) => s.content);
+      if (!sections.length && pageSections === null)
         sections = selectChapterQuestions(materials, chapter).map((s) => ({
           materialId: s.materialId,
           name: s.materialName,

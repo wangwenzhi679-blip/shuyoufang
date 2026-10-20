@@ -1,6 +1,7 @@
 import { randomUUID, createHash } from 'node:crypto';
 import { z } from 'zod';
 import { validGeneratedQuestions } from './generated-questions.js';
+import { generateValidated } from './ai-generation.js';
 
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
 const json = (value) => (typeof value === 'string' ? JSON.parse(value) : value);
@@ -590,8 +591,13 @@ export class AssistantSessions {
           input.model,
           signal,
         );
-        const raw = await this.ask(
-          [
+        const parsed = await generateValidated({
+          ask: (messages, signal, options) =>
+            this.ask(messages, input.model, signal, { ...options, userId }),
+          signal,
+          label: '助手练习',
+          maxOutputTokens: Math.max(3072, input.count * 600),
+          messages: [
             {
               role: 'system',
               content:
@@ -602,19 +608,20 @@ export class AssistantSessions {
               content: `${context.text}\n讨论回答（仅供确定主题）：${message.content.slice(0, 8000)}\n生成 ${input.count} 道题，难度：${input.difficulty}。资料与主题不相关时返回 {"questions":[]}。`,
             },
           ],
-          input.model,
-          signal,
-        );
-        const checked = z
-          .object({ questions: z.array(this.questionSchema).length(input.count) })
-          .safeParse(JSON.parse(raw.replace(/^```(?:json)?\s*|\s*```$/g, '').trim()));
-        if (!checked.success) throw fail('AI 返回的题目数量或格式不符合要求，请重新生成', 502);
-        const parsed = checked.data;
-        if (
-          parsed.questions.some((q) => !['单选题', '判断题', '简答题'].includes(q.type)) ||
-          !validGeneratedQuestions(parsed.questions)
-        )
-          throw fail('生成的题目不符合要求，请重试', 502);
+          validate: (value) => {
+            const checked = z
+              .object({ questions: z.array(this.questionSchema).length(input.count) })
+              .safeParse(value);
+            if (!checked.success) throw fail('AI 返回的题目数量或格式不符合要求，请重新生成', 502);
+            const parsed = checked.data;
+            if (
+              parsed.questions.some((q) => !['单选题', '判断题', '简答题'].includes(q.type)) ||
+              !validGeneratedQuestions(parsed.questions)
+            )
+              throw fail('生成的题目不符合要求，请重试', 502);
+            return parsed;
+          },
+        });
         signal.throwIfAborted();
         await this.activeUser(userId, version);
         await this.assertCourse(userId, thread.course_id, true);

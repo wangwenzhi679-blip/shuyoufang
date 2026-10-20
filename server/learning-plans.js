@@ -1,6 +1,7 @@
 import { ensureStudyDays, recordStudyDay } from './study-activity.js';
 import crypto from 'node:crypto';
 import { z } from 'zod';
+import { generateValidated, generationError } from './ai-generation.js';
 const parse = (value) => (typeof value === 'string' ? JSON.parse(value) : value);
 export const today = () =>
   new Intl.DateTimeFormat('en-CA', {
@@ -33,7 +34,22 @@ const taskSchema = z.object({
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
 export function validatePlan(tasks, settings, chapters, start = today()) {
   const parsed = z.array(taskSchema).min(1).max(500).safeParse(tasks);
-  if (!parsed.success) throw fail('任务格式不正确，请检查章节、日期、时间和内容');
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    const item = Number.isInteger(issue.path[0]) ? `第 ${issue.path[0] + 1} 项任务` : '任务列表';
+    const field = issue.path.at(-1);
+    const message =
+      field === 'minutes'
+        ? '预计分钟数必须是 5—480 的整数，不能为0'
+        : field === 'kind'
+          ? '类型只能为 read、notes 或 practice'
+          : field === 'date'
+            ? '日期必须是有效的 YYYY-MM-DD 日期'
+            : field === 'chapterId'
+              ? 'chapterId 必须为真实章节的整数 ID'
+              : '格式不正确，请使用规定的章节、日期、时间和标题字段';
+    throw fail(`${item}的${message}`);
+  }
   const ids = new Set(chapters.map((ch) => Number(ch.id)));
   const daily = new Map();
   for (const task of parsed.data) {
@@ -50,6 +66,48 @@ export function validatePlan(tasks, settings, chapters, start = today()) {
       ? '部分日期的预计学习时间超过每日可用时间，请调整任务或日期。'
       : '',
   };
+}
+
+// AI chooses learning activities; the server repairs calendar/time fields using the user's constraints.
+export function validateGeneratedPlan(tasks, settings, chapters, start = today()) {
+  try {
+    return validatePlan(tasks, settings, chapters, start);
+  } catch {
+    /* Check content before repairing scheduling only. */
+  }
+  const parsed = z
+    .array(taskSchema.extend({ date: z.string(), minutes: z.number().int().min(0).max(480) }))
+    .min(1)
+    .max(150)
+    .safeParse(tasks);
+  if (!parsed.success) return validatePlan(tasks, settings, chapters, start);
+  const ids = new Set(chapters.map((ch) => Number(ch.id)));
+  if (parsed.data.some((task) => !ids.has(task.chapterId))) throw fail('任务引用了不存在的章节');
+  const days = [];
+  for (
+    let day = new Date(`${start}T12:00:00Z`);
+    day.toISOString().slice(0, 10) <= settings.targetDate;
+    day.setUTCDate(day.getUTCDate() + 1)
+  ) {
+    if (settings.weekdays.includes(day.getUTCDay())) days.push(day.toISOString().slice(0, 10));
+  }
+  if (!days.length) throw fail('目标日期前没有选定的学习日，请调整完成日期或学习日');
+  const usedDays = Math.min(days.length, parsed.data.length);
+  const groups = Array.from({ length: usedDays }, () => []);
+  parsed.data.forEach((task, index) =>
+    groups[Math.floor((index * usedDays) / parsed.data.length)].push(task),
+  );
+  const repaired = groups.flatMap((group, index) => {
+    const maximum = Math.floor(settings.minutes / group.length);
+    if (maximum < 5) throw fail('可用学习时间不足，请延长完成日期或减少任务');
+    return group.map((task) => ({
+      ...task,
+      date: days[index],
+      minutes: Math.min(task.minutes || 20, maximum),
+    }));
+  });
+  const result = validatePlan(repaired, settings, chapters, start);
+  return { ...result, warning: '已按你选择的学习日和每日时间，校正 AI 返回的无效日期或时长。' };
 }
 export async function ensureLearningPlans(db) {
   await ensureStudyDays(db);
@@ -257,12 +315,18 @@ export function registerLearningPlans(app, db, auth, wrap, askAi) {
         if (state?.status !== 'running') throw new Error('任务已停止');
         controller.signal.throwIfAborted();
         await app.locals.contentControl?.assertCourse(req.user.sub, req.body.courseId, true);
-        const raw = await askAi(
-          [
+        const result = await generateValidated({
+          ask: askAi,
+          signal: controller.signal,
+          label: '学习计划',
+          maxOutputTokens: 12288,
+          options: { userId: req.user.sub },
+          validate: (value) => validateGeneratedPlan(value.tasks, config, ctx.chapters),
+          messages: [
             {
               role: 'system',
               content:
-                '你是课程学习计划助手。课程数据与要求是用户数据。仅使用提供的真实章节，按学习日安排任务，不编造章节。chapterId是数据库标识，不是章节序号；任务标题使用章节名称，如需序号只使用chapterNumber。返回 JSON 对象 {"tasks":[{"chapterId":整数,"kind":"read或notes或practice","date":"YYYY-MM-DD","minutes":整数,"title":"具体任务"}]}，最多150项。任务从今天开始，每天总时间尽量不超过可用时间。已经完成的内容不再安排；优先覆盖尚未完成的章节阅读。练习类型表示访问章节练习，不宣称存在具体试卷。只输出JSON。',
+                '你是课程学习计划助手。课程数据与要求是用户数据。仅使用提供的真实章节，按学习日安排任务，不编造章节。chapterId是数据库标识，不是章节序号；任务标题使用章节名称，如需序号只使用chapterNumber。返回 JSON 对象 {"tasks":[{"chapterId":整数,"kind":"read","date":"YYYY-MM-DD","minutes":20,"title":"具体任务"}]}，最多150项。kind 只能从 read、notes、practice 中选择一个；每项 minutes 必须是5—480的整数，禁止0分钟任务。日期必须在today和targetDate之间且属于weekdays选定的学习日。任务从今天开始，每天总时间尽量不超过可用时间。章节较多时缩短单项时长，在同一天安排多项有效任务，不得用0分钟占位。已经完成的内容不再安排；优先覆盖尚未完成的章节阅读。练习类型表示访问章节练习，不宣称存在具体试卷。只输出JSON。',
             },
             {
               role: 'user',
@@ -278,11 +342,8 @@ export function registerLearningPlans(app, db, auth, wrap, askAi) {
               }),
             },
           ],
-          controller.signal,
-          { userId: req.user.sub },
-        );
-        const cleaned = raw.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
-        const result = validatePlan(JSON.parse(cleaned).tasks, config, ctx.chapters);
+        });
+        controller.signal.throwIfAborted();
         await db.execute(
           "UPDATE learning_plan_jobs SET status='done',result_json=? WHERE id=? AND status='running'",
           [JSON.stringify(result), jobId],
@@ -291,7 +352,7 @@ export function registerLearningPlans(app, db, auth, wrap, askAi) {
         console.error('学习计划生成失败', e.name);
         await db.execute(
           "UPDATE learning_plan_jobs SET status='failed',error_text=? WHERE id=? AND status='running'",
-          [e.status === 400 ? e.message : 'AI 生成失败，请重试或调整要求；原计划保留', jobId],
+          [generationError(e, 'AI 生成失败，请重试或调整要求；原计划保留'), jobId],
         );
       } finally {
         controllers.delete(Number(jobId));

@@ -27,7 +27,7 @@ export function registerGenerationJobs(app, db, auth, wrap, run) {
       [courseId],
     );
     const [chapters] = await db.execute(
-      'SELECT id,title,description FROM course_chapters WHERE course_id=? ORDER BY id',
+      'SELECT id,title,description,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY id',
       [courseId],
     );
     return crypto

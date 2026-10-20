@@ -213,6 +213,7 @@ registerReviewSchedules(app, db, auth, asyncRoute);
 registerSearch(app, db, auth, asyncRoute);
 registerReadingAdapters(app, {
   getAiModel: (userId) => userAi.run(userId, () => userAi.fingerprint()),
+  readChapterSummarySource,
   getOwnedMaterial,
   previewRoot,
   uploadRoot,
@@ -275,6 +276,7 @@ const assistantSessions = new AssistantSessions(db, {
     selectChapterQuestions,
     applyChapterCorrections,
     readPreferences,
+    readChapterSummarySource,
   }),
   ask: askDeepSeek,
   stream: (messages, model, signal, onChunk) =>
@@ -292,6 +294,7 @@ const assistantSessions = new AssistantSessions(db, {
 assistantSessions.register(app, auth, asyncRoute);
 
 const { questionsGenerate, practiceCreate } = registerPracticeRoutes(app, {
+  readChapterSummarySource,
   getAiModel: () => userAi.fingerprint(),
   generationSignal,
   parseId,

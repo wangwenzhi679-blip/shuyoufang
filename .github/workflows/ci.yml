@@ -50,6 +50,7 @@ jobs:
           server/ai-output-budget.test.mjs
           server/chapter-generation.test.mjs
           server/chapter-summary.test.mjs
+          server/ai-generation.test.mjs server/generation-sources.test.mjs
           server/pdf-outline.test.mjs
           server/pdf-page-images.test.mjs
           server/material-import-jobs.test.mjs
