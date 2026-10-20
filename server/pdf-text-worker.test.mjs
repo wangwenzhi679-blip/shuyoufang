@@ -28,6 +28,12 @@ test('轻量 PDF 提取保留首尾全部页文字，解析期间主线程仍可
   const selected = await extractPdfText(file, { pageNumbers: [15, 16, 19] });
   assert.ok(selected.includes('PageAnchor15End') && selected.includes('PageAnchor19End'));
   assert.ok(!selected.includes('PageAnchor14End') && !selected.includes('PageAnchor20End'));
+  const pageTexts = await extractPdfText(file, { pageNumbers: [15, 19], returnPages: true });
+  assert.deepEqual(
+    pageTexts.map((item) => item.page),
+    [15, 19],
+  );
+  assert.ok(pageTexts[0].text.includes('PageAnchor15End'));
   await assert.rejects(extractPdfText(file, { pageNumbers: [26] }), /超出/);
   assert.throws(() => extractPdfText(file, { pageNumbers: [0] }), /页码无效/);
 });

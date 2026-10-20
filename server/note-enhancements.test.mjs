@@ -186,8 +186,16 @@ try {
           'POST',
         )
       ).status,
-      400,
+      202,
     );
+    for (let i = 0; i < 20; i++) {
+      jobs = (await request(`${origin}/api/notes/jobs`, null, 'GET')).data.jobs;
+      if (jobs[0]?.status === 'failed') break;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    assert.equal(jobs[0].status, 'failed');
+    assert.match(jobs[0].error_text, /没有识别到可用文字/);
+    assert.equal((await request(base, null, 'GET')).data.note.version, 3);
   } finally {
     await new Promise((resolve) => local.close(resolve));
   }

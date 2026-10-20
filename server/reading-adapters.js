@@ -71,44 +71,57 @@ export function registerReadingAdapters(
       options,
     );
   askNotes.modelKey = getAiModel;
-  registerLearningNotes(app, db, auth, asyncRoute, askNotes, async (courseId, chapterId) => {
-    const [chapters] = await db.execute(
-      'SELECT id,title,description,sort_order,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
-      [courseId],
-    );
-    const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
-    if (index < 0) return '';
-    const [materials] = await db.execute(
-      'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
-      [courseId],
-    );
-    const corrections =
-      chapters[index].source_regions_json != null
-        ? await applyChapterCorrections(db, courseId, chapterId, [])
-        : [];
-    const pageSections = readChapterSummarySource
-      ? await readChapterSummarySource(chapters[index], materials, undefined, corrections)
-      : null;
-    let sections =
-      pageSections ??
-      materials
-        .map((m) => ({
-          materialId: m.id,
-          name: m.original_name,
-          content: sliceChapterText(
-            m.extracted_text || '',
+  registerLearningNotes(
+    app,
+    db,
+    auth,
+    asyncRoute,
+    askNotes,
+    async (courseId, chapterId, options = {}) => {
+      const [chapters] = await db.execute(
+        'SELECT id,title,description,sort_order,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+        [courseId],
+      );
+      const index = chapters.findIndex((ch) => Number(ch.id) === Number(chapterId));
+      if (index < 0) return '';
+      const [materials] = await db.execute(
+        'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+        [courseId],
+      );
+      const corrections =
+        chapters[index].source_regions_json != null
+          ? await applyChapterCorrections(db, courseId, chapterId, [])
+          : [];
+      const pageSections = readChapterSummarySource
+        ? await readChapterSummarySource(
             chapters[index],
-            chapters.slice(index + 1),
-          ),
-        }))
-        .filter((s) => s.content);
-    if (!sections.length && pageSections === null)
-      sections = selectChapterQuestions(materials, chapters[index]).map((s) => ({
-        materialId: s.materialId,
-        name: s.materialName,
-        content: s.content,
-      }));
-    sections = await applyChapterCorrections(db, courseId, chapterId, sections);
-    return sections.map((s) => `【${s.name}】\n${s.content}`).join('\n\n');
-  });
+            materials,
+            options.signal,
+            corrections,
+            options.onProgress,
+          )
+        : null;
+      let sections =
+        pageSections ??
+        materials
+          .map((m) => ({
+            materialId: m.id,
+            name: m.original_name,
+            content: sliceChapterText(
+              m.extracted_text || '',
+              chapters[index],
+              chapters.slice(index + 1),
+            ),
+          }))
+          .filter((s) => s.content);
+      if (!sections.length && pageSections === null)
+        sections = selectChapterQuestions(materials, chapters[index]).map((s) => ({
+          materialId: s.materialId,
+          name: s.materialName,
+          content: s.content,
+        }));
+      sections = await applyChapterCorrections(db, courseId, chapterId, sections);
+      return sections.map((s) => `【${s.name}】\n${s.content}`).join('\n\n');
+    },
+  );
 }

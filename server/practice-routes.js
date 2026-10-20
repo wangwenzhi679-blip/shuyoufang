@@ -67,7 +67,7 @@ export function registerPracticeRoutes(
         ? await applyChapterCorrections(db, course.id, chapter.id, [])
         : [];
     const pageSections = readChapterSummarySource
-      ? await readChapterSummarySource(chapter, materials, signal, corrections)
+      ? await readChapterSummarySource(chapter, materials, signal, corrections, req.updateProgress)
       : null;
     let chapterSources =
       pageSections ??

@@ -339,12 +339,6 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
     if (!parsed.success)
       return res.status(400).json({ message: '请输入有效笔记及整理要求（笔记最多五万字）' });
     if (generating) {
-      const source = await chapterSource?.(req.params.courseId, req.params.chapterId);
-      if (!source?.trim())
-        return res
-          .status(400)
-          .json({ message: '未找到本章可读取的资料，请补充资料或调整章节名称' });
-      parsed.data.text = source;
       parsed.data.selection = null;
       parsed.data.mode = 'generate';
     } else if (!parsed.data.text.trim())
@@ -354,10 +348,7 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
         'SELECT version FROM chapter_notes WHERE chapter_id=? AND user_id=?',
         [req.params.chapterId, req.user.sub],
       );
-      if (
-        (note?.version || 0) !== req.adminRetryExpected.version ||
-        (generating && parsed.data.text !== req.adminRetryExpected.text)
-      )
+      if ((note?.version || 0) !== req.adminRetryExpected.version)
         return res.status(409).json({ message: '笔记或资料已变化，请学习者重新生成' });
     }
     const [running] = await db.execute(
@@ -387,6 +378,34 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
         if (state?.status !== 'running') throw new Error('任务已停止');
         controller.signal.throwIfAborted();
         await app.locals.contentControl?.assertCourse(req.user.sub, req.params.courseId, true);
+        const reportProgress = async (stage) => {
+          controller.signal.throwIfAborted();
+          const [changed] = await db.execute(
+            "UPDATE note_ai_jobs SET progress_text=? WHERE id=? AND status='running'",
+            [stage, created.insertId],
+          );
+          if (!changed.affectedRows) throw new Error('笔记任务已停止');
+        };
+        if (generating) {
+          await reportProgress('正在读取本章资料');
+          const source = await chapterSource?.(req.params.courseId, req.params.chapterId, {
+            signal: AbortSignal.any([controller.signal, AbortSignal.timeout(180000)]),
+            onProgress: reportProgress,
+          });
+          if (!source?.trim())
+            throw Object.assign(
+              new Error('本章原页没有识别到可用文字，请检查扫描清晰度或补充本章文字'),
+              { status: 422 },
+            );
+          if (req.adminRetryExpected && source !== req.adminRetryExpected.text)
+            throw Object.assign(new Error('资料已变化，请学习者重新生成'), { status: 409 });
+          parsed.data.text = source;
+          controller.signal.throwIfAborted();
+          await db.execute("UPDATE note_ai_jobs SET input_json=? WHERE id=? AND status='running'", [
+            JSON.stringify(parsed.data),
+            created.insertId,
+          ]);
+        }
         const askForUser = (messages, signal, options) =>
           askAi(messages, signal, { ...options, userId: req.user.sub });
         const sourceText = generating
@@ -395,12 +414,7 @@ export function registerNoteEnhancements(app, db, auth, asyncRoute, askAi, chapt
               courseId: req.params.courseId,
               chapterId: req.params.chapterId,
               model: askAi.modelKey ? await askAi.modelKey(req.user.sub) : 'configured',
-              onProgress: async (stage) => {
-                await db.execute(
-                  "UPDATE note_ai_jobs SET progress_text=? WHERE id=? AND status='running'",
-                  [stage, created.insertId],
-                );
-              },
+              onProgress: reportProgress,
             })
           : parsed.data.text;
         const result = await generateValidated({

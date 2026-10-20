@@ -15,7 +15,7 @@ const regionsSchema = z
 
 // Physical page mappings are authoritative: never substitute title matches or the whole book.
 export function createChapterSummarySource({ uploadRoot, readPdfText = extractPdfText }) {
-  return async (chapter, materials, signal, corrections = []) => {
+  return async (chapter, materials, signal, corrections = [], onProgress) => {
     signal?.throwIfAborted();
     let regions = chapter.source_regions_json;
     if (regions == null) return null;
@@ -56,13 +56,12 @@ export function createChapterSummarySource({ uploadRoot, readPdfText = extractPd
       const content = await readPdfText(path.join(uploadRoot, material.stored_name), {
         signal,
         pageNumbers: [...pages].sort((a, b) => a - b),
+        onProgress,
       });
       signal?.throwIfAborted();
       if (!content.trim())
         throw Object.assign(
-          new Error(
-            '本章原页没有可读取的文字，可能是扫描图片；请先补充本章文字或完成 OCR 识别后生成总结',
-          ),
+          new Error('本章原页没有可用文字，请检查扫描清晰度、OCR 识别结果或补充本章文字后重试'),
           { status: 422 },
         );
       sections.push({ materialId: id, name: material.original_name, content });

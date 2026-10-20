@@ -25,7 +25,7 @@ async function completePng(filename) {
   }
 }
 
-export function createPdfPageImages({ uploadRoot, previewRoot, render = runPdfTool }) {
+export function createPdfPageImages({ uploadRoot, previewRoot, render = runPdfTool, dpi = 130 }) {
   return async (material, page) => {
     if (
       !Number.isSafeInteger(Number(material.id)) ||
@@ -59,7 +59,7 @@ export function createPdfPageImages({ uploadRoot, previewRoot, render = runPdfTo
             '-singlefile',
             '-png',
             '-r',
-            '130',
+            String(Number.isInteger(dpi) && dpi >= 72 && dpi <= 300 ? dpi : 130),
             source,
             prefix,
           ],

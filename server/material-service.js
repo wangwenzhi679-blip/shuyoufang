@@ -8,6 +8,7 @@ import { OfficeParser } from 'officeparser';
 import { createPdfOutlineReader } from './pdf-outline.js';
 import { extractPdfText } from './pdf-text-worker.mjs';
 import { createChapterSummarySource } from './chapter-summary-source.js';
+import { createPdfOcrReader } from './pdf-ocr.js';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function createMaterialService({
@@ -188,6 +189,12 @@ export function createMaterialService({
     processMaterial,
     buildVisionPages,
     preparePdfOutline,
-    readChapterSummarySource: createChapterSummarySource({ uploadRoot, readPdfText }),
+    readChapterSummarySource: createChapterSummarySource({
+      uploadRoot,
+      readPdfText: createPdfOcrReader({
+        cacheRoot: path.join(previewRoot || path.resolve('storage', 'previews'), 'ocr-text'),
+        readPdfText,
+      }),
+    }),
   };
 }

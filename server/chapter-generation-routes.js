@@ -75,7 +75,7 @@ export function registerChapterGenerationRoutes(
         ? await applyChapterCorrections(db, course.id, chapter.id, [])
         : [];
     const pageSections = readChapterSummarySource
-      ? await readChapterSummarySource(chapter, materials, signal, corrections)
+      ? await readChapterSummarySource(chapter, materials, signal, corrections, req.updateProgress)
       : null;
     let sections =
       pageSections ??
