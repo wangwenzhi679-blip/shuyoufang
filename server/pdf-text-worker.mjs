@@ -67,7 +67,15 @@ if (!isMainThread) {
     }
     parentPort.postMessage({ text: pages.join('\n\n') });
   } catch (error) {
-    parentPort.postMessage({ error: error.message || 'PDF 无法读取' });
+    const message =
+      error.name === 'PasswordException'
+        ? 'PDF 已加密或需要密码，请先解除文件密码后重新导入'
+        : error.name === 'InvalidPDFException'
+          ? 'PDF 文件结构无效或已损坏，请确认文件能正常打开后重新导入'
+          : error.code === 'ENOENT'
+            ? '原 PDF 文件不存在，请重新上传后重试'
+            : error.message || 'PDF 无法读取，请检查文件后重试';
+    parentPort.postMessage({ error: message });
   } finally {
     await document?.destroy();
   }

@@ -53,6 +53,8 @@ jobs:
           server/pdf-page-images.test.mjs
           server/material-import-jobs.test.mjs
           server/pdf-text-worker.test.mjs
+          server/answer-grading.test.mjs server/generated-questions.test.mjs
+          server/pdf-tools.test.mjs server/pdf-browser.test.mjs
           server/generation-delete.test.mjs
           server/user-ai-context.test.mjs
       - name: Build frontend

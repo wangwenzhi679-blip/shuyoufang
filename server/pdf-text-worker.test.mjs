@@ -32,7 +32,8 @@ test('PDF 提取能立即取消，损坏的文件不能当作空白导入成功'
   t.after(() => fs.rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'broken.pdf');
   await fs.writeFile(file, 'broken PDF');
-  await assert.rejects(extractPdfText(file));
+  await assert.rejects(extractPdfText(file), /PDF 文件结构无效或已损坏/);
+  await assert.rejects(extractPdfText(path.join(root, 'missing.pdf')), /原 PDF 文件不存在/);
   const controller = new AbortController();
   const parsing = extractPdfText(file, { signal: controller.signal });
   controller.abort(new Error('test cancellation'));

@@ -115,6 +115,35 @@
   }
 }
 
+/* 平板也使用横向章节卡片，避免窄侧栏将长课文标题挤成竖排。 */
+@media (max-width: 900px) {
+  .workspace .course-learning-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .workspace .chapter-outline {
+    position: static;
+  }
+
+  .workspace .chapter-outline .outline-list {
+    display: flex;
+    max-height: 180px;
+    overflow: auto;
+  }
+
+  .workspace .chapter-outline .outline-item {
+    flex: 0 0 240px;
+    min-width: 0;
+  }
+
+  .workspace .chapter-outline .outline-chapter strong {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+}
+
 @media (max-width: 760px) {
   .workspace .reading-tracker.is-reading-fullscreen,
   .paged-material-reader.is-reading-fullscreen {
