@@ -33,7 +33,7 @@ export function ChapterDraftPreviewModal({ chapters, onClose, onAdopt }) {
             <p className="eyebrow">AI 整理章节 · 目录建议</p>
             <h2>查看建议目录</h2>
             <small>
-              采用目录会替换原有章节，新章节从未完成开始，原章节的完成标记不会继承。请先确认内容。
+              采用目录会替换原有章节，并清除其笔记、书签、练习、答卷及关联复习记录；原资料保留。已有学习记录时，请先备份再采用。
             </small>
           </div>
           <button className="icon-close" type="button" onClick={onClose} aria-label="关闭">

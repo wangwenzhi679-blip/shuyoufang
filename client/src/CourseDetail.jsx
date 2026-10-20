@@ -223,6 +223,7 @@ export function CourseDetail({
   const readMaterial = async (material, page = null, bookmarkPosition = null) => {
     const result = await onOpenMaterialPreview(material);
     if (result) {
+      setMaterialsOpen(false);
       window.history.pushState(
         {
           ...window.history.state,
@@ -334,7 +335,7 @@ export function CourseDetail({
   const selectAndScrollChapter = (chapter) => {
     if (!chapter) return;
     setSelectedChapterId(chapter.id);
-    if (activeTab === 'materials') readChapter(chapter);
+    if (activeTab === 'materials' && chapter.id === selectedChapterId) readChapter(chapter);
     requestAnimationFrame(() =>
       document
         .querySelector('.reading-header')
@@ -342,10 +343,19 @@ export function CourseDetail({
     );
   };
   const isCurrentContent = selectedChapter && chapterContent?.chapter?.id === selectedChapter.id;
+  // 新增、改名或重排章节会改变正文边界，资料导入完成也需要刷新当前内容。
+  const contentRevision = JSON.stringify({
+    chapters: courseData.chapters.map((chapter) => [chapter.id, chapter.title]),
+    materials: courseData.materials.map((material) => [
+      material.id,
+      material.text_length,
+      material.updated_at,
+    ]),
+  });
   useEffect(() => {
     if (selectedChapterId && activeTab === 'materials')
       readChapter(courseData.chapters.find((ch) => ch.id === selectedChapterId));
-  }, [selectedChapterId, activeTab]);
+  }, [selectedChapterId, activeTab, contentRevision]);
   const selectedPractices = selectedChapter
     ? (courseData.practices || []).filter(
         (item) => Number(item.chapter_id) === Number(selectedChapter.id),
@@ -356,6 +366,77 @@ export function CourseDetail({
         (item) => Number(item.chapterId) === Number(selectedChapter.id),
       )
     : null;
+  const chapterNavigation =
+    selectedChapter && activeTab === 'materials' ? (
+      <footer className="chapter-progression-bar" aria-label="章节连贯翻页">
+        <div className="progression-side">
+          {prevChapter ? (
+            <button
+              type="button"
+              className="progression-step-btn is-prev"
+              onClick={() => selectAndScrollChapter(prevChapter)}
+            >
+              <span className="progression-arrow">←</span>
+              <span className="progression-meta">
+                <small>上一章 · 第 {selectedChapterIndex} 章</small>
+                <strong>{prevChapter.title}</strong>
+              </span>
+            </button>
+          ) : (
+            <span className="progression-boundary">已至首章</span>
+          )}
+        </div>
+        <div className="progression-center">
+          {activeTab === 'materials' && (
+            <button
+              type="button"
+              className={
+                selectedChapter.completed_at
+                  ? 'progression-complete-btn is-done'
+                  : 'progression-complete-btn'
+              }
+              disabled={progressBusy}
+              aria-pressed={Boolean(selectedChapter.completed_at)}
+              onClick={toggleProgress}
+            >
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path
+                  d="m5 10 3.2 3.2L15 6.5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>
+                {progressBusy
+                  ? '保存中…'
+                  : selectedChapter.completed_at
+                    ? '本章已学完'
+                    : '标记本章学完'}
+              </span>
+            </button>
+          )}
+        </div>
+        <div className="progression-side is-end">
+          {nextChapter ? (
+            <button
+              type="button"
+              className="progression-step-btn is-next"
+              onClick={() => selectAndScrollChapter(nextChapter)}
+            >
+              <span className="progression-meta">
+                <small>下一章 · 第 {selectedChapterIndex + 2} 章</small>
+                <strong>{nextChapter.title}</strong>
+              </span>
+              <span className="progression-arrow">→</span>
+            </button>
+          ) : (
+            <span className="progression-boundary">已至末章</span>
+          )}
+        </div>
+      </footer>
+    ) : null;
   return (
     <>
       <div className="course-detail-backbar">
@@ -375,6 +456,9 @@ export function CourseDetail({
             </button>
           </div>
           <div className="chapter-ai-actions">
+            <button type="button" onClick={openMaterials}>
+              资料库 · {courseData.materials?.length || 0}
+            </button>
             <button
               type="button"
               disabled={!courseData.materials?.length}
@@ -653,6 +737,7 @@ export function CourseDetail({
                         courseId={courseData.course.id}
                         chapterId={selectedChapter.id}
                         title={selectedChapter.title}
+                        endContent={chapterNavigation}
                         zoomable={chapterContent.sections.some(
                           (section) => section.originalPages?.length,
                         )}
@@ -737,82 +822,6 @@ export function CourseDetail({
                       </button>
                     </div>
                   )}
-                  {!(activeTab === 'practice' && practiceMode === 'answering') && (
-                    <footer className="chapter-progression-bar" aria-label="章节连贯翻页">
-                      <div className="progression-side">
-                        {prevChapter ? (
-                          <button
-                            type="button"
-                            className="progression-step-btn is-prev"
-                            onClick={() => selectAndScrollChapter(prevChapter)}
-                          >
-                            <span className="progression-arrow">←</span>
-                            <span className="progression-meta">
-                              <small>上一章 · 第 {selectedChapterIndex} 章</small>
-                              <strong>{prevChapter.title}</strong>
-                            </span>
-                          </button>
-                        ) : (
-                          <span className="progression-boundary">已至首章</span>
-                        )}
-                      </div>
-                      <div className="progression-center">
-                        {activeTab === 'materials' && (
-                          <button
-                            type="button"
-                            className={
-                              selectedChapter.completed_at
-                                ? 'progression-complete-btn is-done'
-                                : 'progression-complete-btn'
-                            }
-                            disabled={progressBusy}
-                            aria-pressed={Boolean(selectedChapter.completed_at)}
-                            onClick={toggleProgress}
-                          >
-                            <svg
-                              width="14"
-                              height="14"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              aria-hidden="true"
-                            >
-                              <path
-                                d="m5 10 3.2 3.2L15 6.5"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                            <span>
-                              {progressBusy
-                                ? '保存中…'
-                                : selectedChapter.completed_at
-                                  ? '本章已学完'
-                                  : '标记本章学完'}
-                            </span>
-                          </button>
-                        )}
-                      </div>
-                      <div className="progression-side is-end">
-                        {nextChapter ? (
-                          <button
-                            type="button"
-                            className="progression-step-btn is-next"
-                            onClick={() => selectAndScrollChapter(nextChapter)}
-                          >
-                            <span className="progression-meta">
-                              <small>下一章 · 第 {selectedChapterIndex + 2} 章</small>
-                              <strong>{nextChapter.title}</strong>
-                            </span>
-                            <span className="progression-arrow">→</span>
-                          </button>
-                        ) : (
-                          <span className="progression-boundary">已至末章</span>
-                        )}
-                      </div>
-                    </footer>
-                  )}
                 </div>
                 {activeTab === 'materials' && sideNotesOpen && (
                   <aside
@@ -850,12 +859,16 @@ export function CourseDetail({
             </>
           ) : (
             <div className="reading-state">
-              <strong>选择一个章节</strong>
-              <p>从左侧目录快速切换，即可在这里展开内容。</p>
+              <strong>从学习资料开始</strong>
+              <p>可以先阅读原资料，再添加章节或用 AI 整理目录。</p>
+              <button type="button" onClick={openMaterials}>
+                {courseData.materials?.length ? '阅读已导入资料' : '导入学习资料'}
+              </button>
             </div>
           )}
         </section>
       </section>
+      <footer className="course-reading-footer">数有方 · 让学习有迹可循</footer>
       {practiceRemoval && (
         <PracticeRemovalModal
           removal={practiceRemoval}
@@ -1091,24 +1104,17 @@ export function CourseDetail({
             </div>
           </header>
           <main>
-            {selectedChapter ? (
-              <PagedMaterialReader
-                key={`${selectedChapter.id}:${documentPreview.material.id}`}
-                token={token}
-                courseId={courseData.course.id}
-                chapterId={selectedChapter.id}
-                material={documentPreview.material}
-                title={documentPreview.material.original_name}
-                initialPage={documentPreview.initialPage}
-                bookmarkPosition={documentPreview.bookmarkPosition}
-                originalUrl={documentPreview.url}
-              />
-            ) : (
-              <iframe
-                title={`阅读 ${documentPreview.material.original_name}`}
-                src={documentPreview.url}
-              />
-            )}
+            <PagedMaterialReader
+              key={`${selectedChapter?.id || 'unassigned'}:${documentPreview.material.id}`}
+              token={token}
+              courseId={courseData.course.id}
+              chapterId={selectedChapter?.id}
+              material={documentPreview.material}
+              title={documentPreview.material.original_name}
+              initialPage={documentPreview.initialPage}
+              bookmarkPosition={documentPreview.bookmarkPosition}
+              originalUrl={documentPreview.url}
+            />
           </main>
         </section>
       )}

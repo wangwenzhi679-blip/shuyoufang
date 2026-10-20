@@ -5,6 +5,13 @@ import { activePreferences, registerAccountGuard } from './account-state.js';
 import { createPortal } from 'react-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import DocumentZoom from './DocumentZoom.jsx';
+import { ReadingFullscreenButton, useReadingFullscreen } from './ReadingFullscreen.jsx';
+import {
+  hashReadingText as hash,
+  captureReadingPosition,
+  applyReadingPosition,
+  stableReadingPosition,
+} from './reading-position.mjs';
 const root = `${API_ROOT}/`;
 export function readingApi(token, path, body, method = 'POST') {
   return requestJson(path, {
@@ -16,11 +23,6 @@ export function readingApi(token, path, body, method = 'POST') {
   });
 }
 
-const hash = (s) => {
-  let h = 2166136261;
-  for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
-  return (h >>> 0).toString(16);
-};
 export function ReadingArea({
   token,
   courseId,
@@ -36,7 +38,11 @@ export function ReadingArea({
   onProgress,
   completed = false,
   zoomable = false,
+  endContent,
+  fullscreenEnabled = true,
 }) {
+  const viewport = useRef(null);
+  const fullscreen = useReadingFullscreen(viewport);
   const [zoom, setZoom] = useState(100);
   const box = useRef(null),
     state = useRef({
@@ -58,6 +64,9 @@ export function ReadingArea({
     [restored, setRestored] = useState(false);
   const deferred = useRef(null),
     restoredTop = useRef(null);
+  const layoutPosition = useRef(null);
+  const userScroll = useRef(false);
+  const userScrollTimer = useRef(null);
   const [ready, setReady] = useState(false),
     [loadAttempt, setLoadAttempt] = useState(0);
   const [readingPercent, setReadingPercent] = useState(0);
@@ -81,11 +90,6 @@ export function ReadingArea({
       );
     } catch {}
   };
-  const blocks = () => [
-    ...(box.current?.querySelectorAll(
-      '.imported-introduction,.imported-question,.original-pdf-page',
-    ) || []),
-  ];
   const current = () => {
     if (!materialId) {
       const pos = currentPosition();
@@ -93,41 +97,9 @@ export function ReadingArea({
     }
     return currentPosition();
   };
-  const currentPosition = () => {
-    if (page)
-      return {
-        page,
-        index: 0,
-        anchor: '',
-        offset: Math.min(
-          1,
-          Math.max(
-            0,
-            box.current.scrollTop /
-              Math.max(1, box.current.scrollHeight - box.current.clientHeight),
-          ),
-        ),
-      };
-    const nodes = blocks(),
-      top = box.current.getBoundingClientRect().top;
-    let index = 0;
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].getBoundingClientRect().top <= top + 12) index = i;
-      else break;
-    }
-    const el = nodes[index];
-    return {
-      index,
-      anchor: el ? hash(el.textContent) : '',
-      offset: el
-        ? Math.min(
-            1,
-            Math.max(0, (top - el.getBoundingClientRect().top) / Math.max(1, el.offsetHeight)),
-          )
-        : 0,
-    };
-  };
+  const currentPosition = () => captureReadingPosition(box.current, page);
   const restore = (position) => {
+    userScroll.current = false;
     if (!position) {
       setRestored(true);
       return;
@@ -139,25 +111,23 @@ export function ReadingArea({
         return;
       }
       if (!pageReady) return;
-      box.current.scrollTop =
-        position.offset * Math.max(1, box.current.scrollHeight - box.current.clientHeight);
+      applyReadingPosition(box.current, position);
       deferred.current = null;
+      layoutPosition.current = captureReadingPosition(box.current, page);
       restoredTop.current = box.current.scrollTop;
       setRestored(true);
       return;
     }
-    const nodes = blocks();
-    const el = position.anchor
-      ? nodes.find((n) => hash(n.textContent) === position.anchor)
-      : nodes[position.index];
-    if (!el) {
+    const stablePosition = stableReadingPosition(box.current, position);
+    if (!stablePosition || !applyReadingPosition(box.current, stablePosition)) {
       setError('原阅读位置已失效，资料可能有变化；已从开头展示。');
+      setStatus('未能恢复阅读位置');
+      layoutPosition.current = null;
       box.current.scrollTop = 0;
-    } else
-      box.current.scrollTop +=
-        el.getBoundingClientRect().top -
-        box.current.getBoundingClientRect().top +
-        position.offset * el.offsetHeight;
+    } else {
+      // 用固定原页标识升级旧记录，后续图片加载与尺寸变化不再依赖加载文字。
+      layoutPosition.current = stablePosition;
+    }
     restoredTop.current = box.current.scrollTop;
     setRestored(true);
   };
@@ -169,6 +139,47 @@ export function ReadingArea({
         if (box.current) restore(position);
       });
   };
+  useEffect(() => {
+    const container = box.current;
+    let frame;
+    const align = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const position = layoutPosition.current;
+        if (!position || !pageReady || (position.page && position.page !== page)) return;
+        if (applyReadingPosition(container, position)) restoredTop.current = container.scrollTop;
+      });
+    };
+    // 图片懒加载、缩放、全屏与并排笔记都会改变布局，始终按同一原页及页内比例校准。
+    const resize = new ResizeObserver(align);
+    const observeContent = () => {
+      resize.observe(container);
+      for (const child of container.children) resize.observe(child);
+    };
+    const mutations = new MutationObserver(() => {
+      observeContent();
+      align();
+    });
+    observeContent();
+    mutations.observe(container, { childList: true, subtree: true });
+    const resetIntent = (event) => {
+      if (!container.contains(event.target)) userScroll.current = false;
+    };
+    const onResize = () => {
+      userScroll.current = false;
+      align();
+    };
+    document.addEventListener('pointerdown', resetIntent, true);
+    window.addEventListener('resize', onResize);
+    return () => {
+      resize.disconnect();
+      mutations.disconnect();
+      cancelAnimationFrame(frame);
+      clearTimeout(userScrollTimer.current);
+      document.removeEventListener('pointerdown', resetIntent, true);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [page, pageReady]);
   const flush = async () => {
     const s = state.current;
     if (!s.ready || s.saving || !s.pending || s.stopped) return;
@@ -260,7 +271,8 @@ export function ReadingArea({
       restore(deferred.current);
     } else if (page && restored) {
       box.current.scrollTop = 0;
-      state.current.pending = { page, index: 0, anchor: '', offset: 0 };
+      layoutPosition.current = { page, index: 0, anchor: 'pdf-page', offset: 0 };
+      state.current.pending = layoutPosition.current;
       flush();
     }
   }, [page, pageReady]);
@@ -270,8 +282,13 @@ export function ReadingArea({
       return;
     }
     restoredTop.current = null;
-    if (!state.current.ready || !restored || !pageReady) return;
+    if (!state.current.ready || !restored || !pageReady || !userScroll.current) return;
     state.current.pending = current();
+    layoutPosition.current = state.current.pending;
+    clearTimeout(userScrollTimer.current);
+    userScrollTimer.current = setTimeout(() => {
+      userScroll.current = false;
+    }, 150);
     cache();
     setStatus('正在记录阅读位置…');
     clearTimeout(state.current.timer);
@@ -312,7 +329,8 @@ export function ReadingArea({
   };
   return (
     <div
-      className="reading-tracker"
+      ref={viewport}
+      className={`reading-tracker ${fullscreen.fullscreen ? 'is-reading-fullscreen' : ''}`}
       style={zoomable ? { '--book-page-width': `${zoom}%` } : undefined}
     >
       <div className="reading-tools">
@@ -335,6 +353,7 @@ export function ReadingArea({
         </button>
         <button onClick={() => setModal({ type: 'list' })}>书签（{marks.length}）</button>
         {zoomable && <DocumentZoom value={zoom} onChange={changeZoom} />}
+        {fullscreenEnabled && <ReadingFullscreenButton {...fullscreen} />}
       </div>
       {error && (
         <p className="form-error" role="alert">
@@ -364,8 +383,30 @@ export function ReadingArea({
         aria-label="可滚动阅读内容"
         className="tracked-reading-scroll"
         onScroll={scroll}
+        onWheel={() => {
+          userScroll.current = true;
+        }}
+        onTouchStart={() => {
+          userScroll.current = true;
+        }}
+        onPointerDown={() => {
+          userScroll.current = true;
+        }}
+        onKeyDown={(event) => {
+          userScroll.current = [
+            'ArrowUp',
+            'ArrowDown',
+            'PageUp',
+            'PageDown',
+            'Home',
+            'End',
+            ' ',
+            'Tab',
+          ].includes(event.key);
+        }}
       >
         {children}
+        {endContent}
       </div>
       {modal &&
         createPortal(
@@ -469,6 +510,28 @@ export function ReadingArea({
     </div>
   );
 }
+// 课程尚未分章时仍可读原页，不向需要章节归属的定位和书签接口发送请求。
+function UnassignedMaterialPage({ children, page }) {
+  const [zoom, setZoom] = useState(100);
+  return (
+    <div className="reading-tracker" style={{ '--book-page-width': `${zoom}%` }}>
+      <div className="reading-tools">
+        <small>分章后可保存阅读位置和书签</small>
+        <DocumentZoom value={zoom} onChange={setZoom} />
+      </div>
+      <div
+        key={page}
+        className="tracked-reading-scroll"
+        tabIndex={0}
+        role="region"
+        aria-label="可滚动阅读内容"
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function PagedMaterialReader({
   token,
   courseId,
@@ -479,7 +542,11 @@ export function PagedMaterialReader({
   bookmarkPosition,
   originalUrl,
 }) {
+  const viewport = useRef(null);
+  const fullscreen = useReadingFullscreen(viewport);
   const [original, setOriginal] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [imagePage, setImagePage] = useState(null);
   const [page, setPage] = useState(initialPage || 1),
     [count, setCount] = useState(null),
     [entry, setEntry] = useState('1'),
@@ -498,16 +565,18 @@ export function PagedMaterialReader({
     return () => {
       live = false;
     };
-  }, []);
+  }, [loadAttempt]);
   useEffect(() => {
     let live = true,
       imageUrl;
+    const controller = new AbortController();
     setUrl('');
     setLoaded(false);
     setEntry(String(page));
     setError('');
     fetch(root + `courses/${courseId}/materials/${material.id}/reading-page/${page}`, {
       headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal,
     })
       .then(async (r) => {
         if (!r.ok) throw new Error((await r.json()).message);
@@ -515,30 +584,54 @@ export function PagedMaterialReader({
       })
       .then((blob) => {
         imageUrl = URL.createObjectURL(blob);
-        if (live) setUrl(imageUrl);
-        else URL.revokeObjectURL(imageUrl);
+        if (live) {
+          setImagePage(page);
+          setUrl(imageUrl);
+        } else URL.revokeObjectURL(imageUrl);
       })
       .catch((e) => {
         if (live) setError(e.message);
       });
     return () => {
       live = false;
+      controller.abort();
       if (imageUrl) URL.revokeObjectURL(imageUrl);
     };
-  }, [page]);
+  }, [page, loadAttempt]);
+  const pageImage =
+    url && imagePage === page ? (
+      <img
+        key={page}
+        className="document-scaled-page"
+        src={url}
+        alt={`原资料第 ${page} 页`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError('原页图片加载失败，请重新加载')}
+      />
+    ) : (
+      <p>{error ? '原页暂不可用' : '正在加载原页…'}</p>
+    );
   if (original)
     return (
-      <div className="paged-material-reader">
+      <div
+        ref={viewport}
+        className={`paged-material-reader ${fullscreen.fullscreen ? 'is-reading-fullscreen' : ''}`}
+      >
         <div className="pdf-page-controls">
           <button onClick={() => setOriginal(false)}>返回分页阅读</button>
+          <ReadingFullscreenButton {...fullscreen} />
           <small>原文件预览支持文字选择；此模式只保留分页阅读时的位置。</small>
         </div>
         <iframe title="原文件预览" src={originalUrl} />
       </div>
     );
   return (
-    <div className="paged-material-reader">
+    <div
+      ref={viewport}
+      className={`paged-material-reader ${fullscreen.fullscreen ? 'is-reading-fullscreen' : ''}`}
+    >
       <div className="pdf-page-controls">
+        <ReadingFullscreenButton {...fullscreen} />
         {originalUrl && <button onClick={() => setOriginal(true)}>原文件预览</button>}
         <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
           上一页
@@ -572,31 +665,34 @@ export function PagedMaterialReader({
           下一页
         </button>
       </div>
-      {error && <p className="form-error">{error}</p>}
-      <ReadingArea
-        key={material.id}
-        token={token}
-        courseId={courseId}
-        chapterId={chapterId}
-        materialId={material.id}
-        title={title}
-        page={page}
-        onPage={setPage}
-        pageReady={loaded}
-        bookmarkPosition={bookmarkPosition}
-        zoomable
-      >
-        {url ? (
-          <img
-            className="document-scaled-page"
-            src={url}
-            alt={`原资料第 ${page} 页`}
-            onLoad={() => setLoaded(true)}
-          />
-        ) : (
-          <p>正在加载原页…</p>
-        )}
-      </ReadingArea>
+      {error && (
+        <p className="form-error" role="alert">
+          {error}{' '}
+          <button type="button" onClick={() => setLoadAttempt((value) => value + 1)}>
+            重新加载原页
+          </button>
+        </p>
+      )}
+      {chapterId ? (
+        <ReadingArea
+          key={material.id}
+          token={token}
+          courseId={courseId}
+          chapterId={chapterId}
+          materialId={material.id}
+          title={title}
+          page={page}
+          onPage={setPage}
+          pageReady={loaded && imagePage === page}
+          fullscreenEnabled={false}
+          bookmarkPosition={bookmarkPosition}
+          zoomable
+        >
+          {pageImage}
+        </ReadingArea>
+      ) : (
+        <UnassignedMaterialPage page={page}>{pageImage}</UnassignedMaterialPage>
+      )}
     </div>
   );
 }

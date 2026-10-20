@@ -76,6 +76,41 @@ test('损坏缓存和渲染失败可恢复，不保留半成品或永久失败�
   assert.equal(calls, 2);
 });
 
+test('章节与分页阅读的独立入口共享同页渲染，不能读取半张缓存', async (t) => {
+  const { root, material } = await fixture(t);
+  let calls = 0,
+    started,
+    finish;
+  const ready = new Promise((resolve) => {
+    started = resolve;
+  });
+  const gate = new Promise((resolve) => {
+    finish = resolve;
+  });
+  const options = {
+    uploadRoot: root,
+    previewRoot: root,
+    render: async (_tool, args) => {
+      calls++;
+      await fs.writeFile(`${args.at(-1)}.png`, PNG.subarray(0, 8));
+      started();
+      await gate;
+      await fs.writeFile(`${args.at(-1)}.png`, PNG);
+    },
+  };
+  const chapterRead = createPdfPageImages(options);
+  const pagedRead = createPdfPageImages(options);
+  const first = chapterRead(material, 2);
+  await ready;
+  const second = pagedRead(material, 2);
+  await assert.rejects(fs.access(path.join(root, 'original-12-2.png')));
+  finish();
+  const files = await Promise.all([first, second]);
+  assert.equal(calls, 1);
+  assert.equal(files[0], files[1]);
+  assert.deepEqual(await fs.readFile(files[1]), PNG);
+});
+
 test('原资料在渲染期间被删除时不能发布孤立缓存', async (t) => {
   const { root, material } = await fixture(t);
   const read = createPdfPageImages({

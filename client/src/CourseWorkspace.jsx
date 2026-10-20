@@ -384,7 +384,8 @@ export function CourseWorkspace({
     setConfirmAction({
       eyebrow: '课程结构',
       title: '采用 AI 整理的目录？',
-      message: '采用新目录会替换当前所有章节。',
+      message:
+        '采用新目录会替换当前所有章节，并清除原章节的笔记、书签、阅读位置、练习、答卷及关联复习记录。原资料保留，此操作无法在页面内撤销，请先确认已备份。',
       confirmText: '采用目录',
       danger: true,
       onConfirm: () => applyDraft(chapters, replaceExisting),

@@ -275,6 +275,7 @@ PDF 原页阅读需要 Poppler。后端优先使用 `PDFINFO_PATH`、`PDFTOPPM_P
 
 ## 相关说明
 
+- [语文教材完整评审流程与修复记录](docs/review-acceptance-2026-10-20.md)
 - [系统技术文档（PDF）](docs/数有方_研习空间_技术文档.pdf)
 - [技术文档 HTML 源稿](docs/数有方_研习空间_技术文档.html)
 - [项目改动与本轮更新记录](docs/change-log.md)

@@ -3,6 +3,8 @@ import path from 'node:path';
 import { runPdfTool } from './pdf-tools.mjs';
 
 const PNG_SIGNATURE = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+// 章节原页与分页阅读共用生成任务，不同入口不能同时写入同一缓存文件。
+const pending = new Map();
 
 async function completePng(filename) {
   let file;
@@ -24,7 +26,6 @@ async function completePng(filename) {
 }
 
 export function createPdfPageImages({ uploadRoot, previewRoot, render = runPdfTool }) {
-  const pending = new Map();
   return async (material, page) => {
     if (
       !Number.isSafeInteger(Number(material.id)) ||

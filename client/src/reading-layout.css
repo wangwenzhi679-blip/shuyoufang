@@ -1,0 +1,127 @@
+.tracked-reading-scroll {
+  overflow-anchor: none;
+}
+
+/* 正常阅读保留页面结构，只增加正文的可视高度。 */
+.workspace .chapter-reading-panel .tracked-reading-scroll {
+  height: clamp(560px, 85dvh, 1100px);
+  min-height: 0;
+  max-height: none;
+}
+
+.workspace .chapter-reading-panel.reading-notes-layout {
+  position: static;
+  height: clamp(820px, 115dvh, 1400px);
+}
+
+.workspace .reading-notes-layout .tracked-reading-scroll {
+  height: auto;
+}
+
+.workspace .tracked-reading-scroll > .chapter-progression-bar {
+  margin: 24px 28px 12px;
+}
+
+.course-reading-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 24px auto 0;
+  padding: 16px 0 8px;
+  color: var(--muted, #858a96);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.course-reading-footer::before,
+.course-reading-footer::after {
+  content: '';
+  width: 48px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.reading-fullscreen-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+/* 容器查询会约束内部固定定位，全屏时解除这层约束。 */
+.reading-with-notes:has(.reading-tracker.is-reading-fullscreen) {
+  container-type: normal;
+}
+
+.workspace .reading-tracker.is-reading-fullscreen,
+.paged-material-reader.is-reading-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0 !important;
+  max-width: none;
+  margin: 0;
+  padding: 16px 24px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: var(--paper, #faf9f6);
+  box-sizing: border-box;
+}
+
+.is-reading-fullscreen > .reading-tools,
+.is-reading-fullscreen > .pdf-page-controls {
+  flex-shrink: 0;
+}
+
+.paged-material-reader.is-reading-fullscreen > .reading-tracker {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workspace .reading-tracker.is-reading-fullscreen > .tracked-reading-scroll,
+.paged-material-reader.is-reading-fullscreen .tracked-reading-scroll {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.paged-material-reader.is-reading-fullscreen > iframe {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+
+@media (max-width: 1200px) {
+  .workspace .chapter-reading-panel.reading-notes-layout {
+    height: auto;
+  }
+
+  .workspace .reading-notes-layout .reading-with-notes.notes-open {
+    grid-template-rows: minmax(560px, 85dvh) minmax(440px, 70dvh);
+  }
+}
+
+@media (max-width: 760px) {
+  .workspace .reading-tracker.is-reading-fullscreen,
+  .paged-material-reader.is-reading-fullscreen {
+    padding: 8px;
+  }
+
+  .workspace .tracked-reading-scroll > .chapter-progression-bar {
+    margin: 20px 16px 12px;
+  }
+}

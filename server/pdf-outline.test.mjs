@@ -86,7 +86,7 @@ test('模型返回后若已取消，图片识别不再当作成功结果', async
   );
 });
 
-test('图片章节必须按原顺序覆盖全部页码，拒绝越界、遗漏和重复', () => {
+test('图片章节必须按原顺序覆盖全部页码，拒绝越界、遗漏和跨章大段重复', () => {
   const sources = [
     { materialId: 4, pages: 3 },
     { materialId: 8, pages: 1 },
@@ -96,12 +96,23 @@ test('图片章节必须按原顺序覆盖全部页码，拒绝越界、遗漏�
     sourceRegions: [{ materialId, startPage, endPage }],
   });
   validatePdfChapterSources([chapter(4, 1, 2), chapter(4, 3, 3), chapter(8, 1, 1)], sources);
+  validatePdfChapterSources([chapter(4, 1, 2), chapter(4, 2, 3), chapter(8, 1, 1)], sources);
   for (const chapters of [
     [chapter(4, 1, 4)],
     [chapter(99, 1, 1)],
     [chapter(4, 3, 1)],
     [chapter(4, 1, 2), chapter(8, 1, 1)],
-    [chapter(4, 1, 3), chapter(4, 3, 3), chapter(8, 1, 1)],
+    [chapter(4, 1, 3), chapter(4, 2, 3), chapter(8, 1, 1)],
+    [
+      {
+        title: '同章重复',
+        sourceRegions: [
+          { materialId: 4, startPage: 1, endPage: 2 },
+          { materialId: 4, startPage: 2, endPage: 3 },
+        ],
+      },
+      chapter(8, 1, 1),
+    ],
     [chapter(8, 1, 1), chapter(4, 1, 3)],
   ])
     assert.throws(() => validatePdfChapterSources(chapters, sources));

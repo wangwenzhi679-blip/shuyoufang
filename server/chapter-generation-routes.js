@@ -235,14 +235,14 @@ export function registerChapterGenerationRoutes(
     const messages = [
       {
         role: 'system',
-        content: `你是课程结构设计助手。仅依据资料文字、逐页图片分区摘要和页面图像生成单层章节目录，不补充资料外的知识。PDF 已按原页码识别上下重叠区域，汇总时合并重叠内容，按原资料顺序组织章节；description简短写明资料名及原PDF页码范围，不把目录页当作正文。参考用户的整理要求，但要求与资料冲突时以资料为准。按资料真实结构组织，最多${MAX_CHAPTER_DRAFTS}章。只输出 JSON，不要 Markdown。格式：{"chapters":[{"title":"原文标题，不超过120字","description":"简短说明，尽量不超过80字","sourceRegions":[{"materialId":资料数字ID,"startPage":原PDF起始数字页码,"endPage":原PDF结束数字页码}]}]}。有PDF时每章必须包含sourceRegions，数字字段不能写字符串。没有PDF时省略sourceRegions。`,
+        content: `你是课程结构设计助手。仅依据资料文字、逐页图片分区摘要和页面图像生成单层章节目录，不补充资料外的知识。PDF 已按原页码识别上下重叠区域，汇总时合并重叠内容，按原资料顺序组织章节；description简短写明资料名及原PDF页码范围。每份PDF的第一页到最后一页必须全部分配：第一段startPage必须为1，最后一段endPage必须等于该PDF总页数，中间连续覆盖，相邻两章允许共用一张交界原页，不能大段重叠。封面、版权、目录、空白和后记只能并入相邻章节，不要单独成章，不能因此丢掉页码。参考用户的整理要求，但要求与资料冲突时以资料为准。按资料真实结构组织，最多${MAX_CHAPTER_DRAFTS}章。只输出 JSON，不要 Markdown。格式：{"chapters":[{"title":"原文标题，不超过120字","description":"简短说明，尽量不超过80字","sourceRegions":[{"materialId":资料数字ID,"startPage":原PDF起始数字页码,"endPage":原PDF结束数字页码}]}]}。有PDF时每章必须包含sourceRegions，数字字段不能写字符串。没有PDF时省略sourceRegions。`,
       },
       {
         role: 'user',
         content: [
           {
             type: 'text',
-            text: `PDF图片章节映射要求：${pdfSources.length ? JSON.stringify(pdfSources) + '。每章增加sourceRegions数组，每项为{materialId,startPage,endPage}。按顺序完整分配上述PDF全部页码，禁止遗漏、重叠、越界。页码为原PDF物理页码，不是印刷页码。章节正文将直接显示这些页的图片。' : '无PDF'}\n课程名称：${course.title}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料文字：\n${context}`,
+            text: `PDF图片章节映射要求：${pdfSources.length ? JSON.stringify(pdfSources) + '。每章增加sourceRegions数组，每项为{materialId,startPage,endPage}。按顺序完整分配上述PDF全部页码，禁止遗漏、越界和大段重叠，相邻两章可共用一张交界原页。页码为原PDF物理页码，不是印刷页码。章节正文将直接显示这些页的图片。封面、版权、目录、空白和附录不要单独成章，应并入相邻章节，仍须覆盖它们的物理页码；同页跨两篇课文时，两章可共用这一页以保持原文完整；保持用户指定的划分粒度。' : '无PDF'}\n课程名称：${course.title}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料文字：\n${context}\n\n再次核对本次要求：${input.data.requirements || '按资料真实结构划分'}。必须保持用户指定的章节粒度，不得为了修正页码擅自合并章节。`,
           },
           ...vision.parts,
         ],
@@ -253,7 +253,7 @@ export function registerChapterGenerationRoutes(
       ? createHash('sha256')
           .update(
             JSON.stringify({
-              version: 'pdf-directory-v2',
+              version: 'pdf-directory-v3',
               model,
               title: course.title,
               requirements: input.data.requirements,
@@ -267,7 +267,7 @@ export function registerChapterGenerationRoutes(
     if (directoryHash) {
       const [rows] = await db.execute(
         'SELECT result_text FROM course_context_cache WHERE course_id=? AND purpose=? AND content_hash=?',
-        [course.id, 'pdf-directory-v2', directoryHash],
+        [course.id, 'pdf-directory-v3', directoryHash],
       );
       if (rows.length)
         try {
@@ -283,6 +283,7 @@ export function registerChapterGenerationRoutes(
         }
     }
     let validationMessage = 'AI 返回的章节目录格式无效';
+    let previousAnswer;
     for (let attempt = 0; !parsed?.success && attempt < 2; attempt++) {
       signal.throwIfAborted();
       await req.updateProgress?.(attempt ? '正在校验并修复章节页码' : '正在生成章节目录与页码映射');
@@ -292,9 +293,10 @@ export function registerChapterGenerationRoutes(
           attempt
             ? [
                 ...messages,
+                ...(previousAnswer ? [{ role: 'assistant', content: previousAnswer }] : []),
                 {
                   role: 'user',
-                  content: `请重新输出完整JSON。上次校验失败：${validationMessage}。PDF每章必须包含sourceRegions数组，每项只含数字materialId、startPage、endPage。按资料顺序覆盖所有物理页，不遗漏不重叠。`,
+                  content: `请重新输出完整JSON。上次校验失败：${validationMessage}。PDF每章必须包含sourceRegions数组，每项只含数字materialId、startPage、endPage。按资料顺序覆盖所有物理页，不遗漏，仅允许相邻两章共用一张交界页。每份PDF首段startPage必须改为1，末段endPage必须等于该资料总页数；封面、目录、空白页并入首尾相邻章节，不新增无关标题。请逐项修正上面列出的缺页。`,
                 },
               ]
             : messages,
@@ -312,6 +314,7 @@ export function registerChapterGenerationRoutes(
         }
         throw error;
       }
+      previousAnswer = raw;
       signal.throwIfAborted();
       try {
         const suggested = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] || '');
@@ -343,7 +346,7 @@ export function registerChapterGenerationRoutes(
     if (directoryHash && !cachedDirectory)
       await db.execute(
         'INSERT INTO course_context_cache(course_id,purpose,content_hash,result_text) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE content_hash=VALUES(content_hash),result_text=VALUES(result_text),updated_at=CURRENT_TIMESTAMP',
-        [course.id, 'pdf-directory-v2', directoryHash, JSON.stringify(parsed.data)],
+        [course.id, 'pdf-directory-v3', directoryHash, JSON.stringify(parsed.data)],
       );
     const connection = await db.getConnection();
     try {

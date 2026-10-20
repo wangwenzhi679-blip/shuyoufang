@@ -45,7 +45,19 @@ export function findChapterPosition(text, title, after = 0) {
     if (match.index < after) continue;
     const line = match[0].trim();
     // 只匹配完整标题行，正文中的提及、点线目录和带页码目录都不作为起点。
-    if (normalizeChapterTitle(line) !== cleanTitle) continue;
+    // 教材标题常带自读星号或独立脚注字母；只去除标题边缘的标记，不能模糊匹配正文。
+    const nextLine =
+      text
+        .slice(match.index + match[0].length)
+        .match(/^\r?\n([^\r\n]*)/)?.[1]
+        ?.trim() || '';
+    const hasAttribution = /^(?:《[^》]{1,40}》|[\u4e00-\u9fff·]{2,16})$/.test(nextLine);
+    const markedHeading = line.replace(/^[*＊]\s*/, '');
+    const heading = hasAttribution
+      ? markedHeading.replace(/([\u4e00-\u9fff》）])\s+[a-z①-⑳]$/u, '$1')
+      : markedHeading;
+    if (normalizeChapterTitle(line) !== cleanTitle && normalizeChapterTitle(heading) !== cleanTitle)
+      continue;
     const actualNumber = chapterHeadingNumber(line);
     if (expectedNumber !== null && actualNumber !== null && expectedNumber !== actualNumber)
       continue;

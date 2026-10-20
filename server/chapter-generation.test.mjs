@@ -220,6 +220,23 @@ test('取消在目录重试前生效，不继续请求模型或保存', async ()
   assert.equal(f.state.cache, null);
 });
 
+test('页码校验失败时携带上一份目录及具体缺页反馈，修正后才保存', async () => {
+  const f = fixture({
+    ask: ({ state, generated, messages }) => {
+      if (state.calls.length === 1) return JSON.stringify({ chapters: generated.slice(1) });
+      assert.equal(messages.at(-2).role, 'assistant');
+      assert.deepEqual(JSON.parse(messages.at(-2).content).chapters, generated.slice(1));
+      assert.match(messages.at(-1).content, /7:1/);
+      return JSON.stringify({ chapters: generated });
+    },
+  });
+  const res = f.response();
+  await f.suggest(f.request(), res);
+  assert.equal(res.code, 201);
+  assert.equal(f.state.calls.length, 2);
+  assert.equal(f.state.saves, 1);
+});
+
 test('采用目录仍有合理数量边界，超过300章在写入前拒绝', async () => {
   const f = fixture();
   const res = f.response();

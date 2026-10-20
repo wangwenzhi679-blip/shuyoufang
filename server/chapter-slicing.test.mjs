@@ -29,3 +29,32 @@ assert.equal(slice('相关文字：学习内容的一些讨论。'.repeat(30), {
 console.log(
   'PASS: undotted contents, complete heading, Chinese chapter numbers and missing next course chapter',
 );
+
+const annotatedText = [
+  '目录',
+  '子路、曾皙、冉有、公西华侍坐 /《论语》 2',
+  '* 齐桓晋文之事 /《孟子》 4',
+  '子路、曾皙、冉有、公西华侍坐 a',
+  '《论语》',
+  '第一篇课文正文。'.repeat(20),
+  '* 齐桓晋文之事 a',
+  '《孟子》',
+  '第二篇课文正文。'.repeat(20),
+].join('\n');
+const annotated = slice(annotatedText, { title: '子路、曾皙、冉有、公西华侍坐' }, [
+  { title: '齐桓晋文之事' },
+]);
+assert.ok(annotated.startsWith('子路、曾皙、冉有、公西华侍坐 a'));
+assert.ok(annotated.includes('第一篇课文正文'));
+assert.ok(!annotated.includes('第二篇课文正文'));
+assert.ok(!annotated.includes('/《论语》 2'));
+assert.equal(
+  slice('正文提及齐桓晋文之事 a\n' + '正文。'.repeat(40), { title: '齐桓晋文之事' }, []),
+  null,
+);
+const variableTitle = '函数 a\n' + '函数正文。'.repeat(20);
+assert.ok(slice(variableTitle, { title: '函数 a' }, []).startsWith('函数 a'));
+assert.equal(slice(variableTitle, { title: '函数' }, []), null);
+console.log(
+  'PASS: annotated textbook headings keep the original lesson boundary and reject body mentions',
+);

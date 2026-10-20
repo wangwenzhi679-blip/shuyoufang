@@ -7,7 +7,7 @@ import { z } from 'zod';
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
 const AI_HTTP_MESSAGES = {
   400: 'AI 请求参数不被当前服务接受，请检查模型及配置',
-  401: 'AI 服务鉴权失败',
+  401: 'AI 服务鉴权失败，请联系管理员检查 API 密钥及服务地址',
   402: 'AI 服务额度不足，请检查账户额度',
   403: 'AI 服务权限不足，请检查接口权限',
   404: 'AI 接口或模型不可用，请检查设置',

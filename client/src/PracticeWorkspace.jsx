@@ -333,6 +333,7 @@ export function PracticeAnswering({
                         key={optionIndex}
                         type="button"
                         disabled={Boolean(gradedAttempt)}
+                        aria-pressed={picked}
                         onClick={() => choose(question, index, option, optionIndex)}
                       >
                         <b>{letter}</b>

@@ -7,6 +7,7 @@ export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) 
   const element = useRef(null);
   const [visible, setVisible] = useState(false);
   const [url, setUrl] = useState('');
+  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
   const [retry, setRetry] = useState(0);
   useEffect(() => {
@@ -30,6 +31,7 @@ export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) 
     if (!visible) return;
     setError('');
     setUrl('');
+    setLoaded(false);
     let alive = true;
     let objectUrl;
     const controller = new AbortController();
@@ -53,7 +55,13 @@ export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) 
     };
   }, [courseId, materialId, page, retry, visible]);
   return (
-    <figure ref={element} className="original-pdf-page" style={{ minHeight: 300 }}>
+    <figure
+      ref={element}
+      className="original-pdf-page"
+      data-reading-anchor={`pdf:${materialId}:${page}`}
+      data-reading-state={loaded ? 'ready' : error ? 'error' : 'loading'}
+      style={{ minHeight: 300 }}
+    >
       <figcaption>原资料 · 第 {page} 页</figcaption>
       {error ? (
         <div>
@@ -72,7 +80,8 @@ export function OriginalPdfPage({ courseId, materialId, page, onReadOriginal }) 
       ) : url ? (
         <img
           src={url}
-          alt={`原资料第 ${page} 页，保留公式和矩阵排版`}
+          alt={`原资料第 ${page} 页，保留原文与排版`}
+          onLoad={() => setLoaded(true)}
           onError={() => setError('原页暂时无法显示，请重试或阅读原文。')}
         />
       ) : (

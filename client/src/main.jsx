@@ -36,6 +36,7 @@ import './CourseForm.jsx';
 import './AssistantDesk.jsx';
 import './AtelierBamboo.jsx';
 import './student-dialogs.css';
+import './reading-layout.css';
 import { App } from './StudentApp.jsx';
 
 const AdminApp = React.lazy(() => import('./AdminApp.jsx'));

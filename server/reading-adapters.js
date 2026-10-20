@@ -5,6 +5,7 @@ import { registerReading } from './reading.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import { runPdfTool } from './pdf-tools.mjs';
+import { createPdfPageImages } from './pdf-page-images.js';
 import { registerLearningNotes } from './learning-notes.js';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
@@ -12,6 +13,8 @@ export function registerReadingAdapters(
   app,
   { getOwnedMaterial, previewRoot, uploadRoot, db, auth, asyncRoute, askDeepSeek, getAiModel },
 ) {
+  const readOriginalPage = createPdfPageImages({ uploadRoot, previewRoot });
+  const readPreviewPage = createPdfPageImages({ uploadRoot: previewRoot, previewRoot });
   async function readingPdfPath(req) {
     const { material } = await getOwnedMaterial(
       req.user.sub,
@@ -43,28 +46,10 @@ export function registerReadingAdapters(
       const page = Number(req.params.page);
       if (!Number.isInteger(page) || page < 1 || page > 2000)
         throw Object.assign(new Error('页码无效'), { status: 400 });
-      const { file, material } = await readingPdfPath(req);
-      const prefix = path.join(previewRoot, `reading-${material.id}-${page}`);
-      if (!fs.existsSync(prefix + '.png'))
-        await runPdfTool(
-          'pdftoppm',
-          [
-            '-f',
-            String(page),
-            '-l',
-            String(page),
-            '-singlefile',
-            '-png',
-            '-r',
-            '110',
-            file,
-            prefix,
-          ],
-          { timeout: 30000 },
-        );
-      if (!fs.existsSync(prefix + '.png'))
-        throw Object.assign(new Error('该页不存在'), { status: 404 });
-      return prefix + '.png';
+      const { material } = await readingPdfPath(req);
+      return material.preview_name
+        ? readPreviewPage({ ...material, stored_name: material.preview_name }, page)
+        : readOriginalPage(material, page);
     },
   );
 
