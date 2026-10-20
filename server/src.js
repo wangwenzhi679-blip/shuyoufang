@@ -128,6 +128,7 @@ const {
   upload,
   processMaterial,
   buildVisionPages,
+  readChapterSummarySource,
   preparePdfOutline,
 } = createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot });
 const { issue, userView, findUserByEmail, sendCode, consumeCode, recordLearningLogin } =
@@ -337,6 +338,7 @@ const { summaryGenerate, chaptersSuggest } = registerChapterGenerationRoutes(app
   auth,
   asyncRoute,
   buildVisionPages,
+  readChapterSummarySource,
   validationError,
 });
 

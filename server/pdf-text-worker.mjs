@@ -4,10 +4,21 @@ import { fileURLToPath } from 'node:url';
 
 // 只提取 PDF 自带文字，不构建版面 AST、不解码插图，也不启动整本 OCR。
 // 独立线程使解析和取消不会阻塞网站请求。
-export function extractPdfText(filename, { signal, timeoutMs = 120000 } = {}) {
+export function extractPdfText(filename, { signal, timeoutMs = 120000, pageNumbers } = {}) {
   signal?.throwIfAborted();
+  if (
+    pageNumbers !== undefined &&
+    (!Array.isArray(pageNumbers) ||
+      !pageNumbers.length ||
+      pageNumbers.length > 300 ||
+      pageNumbers.some((page) => !Number.isInteger(page) || page < 1))
+  )
+    throw new Error('PDF 章节页码无效');
   return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL(import.meta.url), { workerData: { filename }, execArgv: [] });
+    const worker = new Worker(new URL(import.meta.url), {
+      workerData: { filename, pageNumbers },
+      execArgv: [],
+    });
     let settled = false;
     const finish = (error, text) => {
       if (settled) return;
@@ -53,7 +64,11 @@ if (!isMainThread) {
       verbosity: 0,
     }).promise;
     const pages = [];
-    for (let number = 1; number <= document.numPages; number++) {
+    const numbers =
+      workerData.pageNumbers || Array.from({ length: document.numPages }, (_, index) => index + 1);
+    if (numbers.some((number) => number > document.numPages))
+      throw new Error('PDF 章节页码超出原资料范围，请重新划分章节');
+    for (const number of numbers) {
       const page = await document.getPage(number);
       const content = await page.getTextContent();
       pages.push(

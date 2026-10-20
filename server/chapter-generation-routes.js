@@ -41,6 +41,7 @@ export function registerChapterGenerationRoutes(
     asyncRoute,
     buildVisionPages,
     preparePdfOutline,
+    readChapterSummarySource,
     validationError,
   },
 ) {
@@ -56,31 +57,41 @@ export function registerChapterGenerationRoutes(
     const course = await getOwnedCourse(req.user.sub, courseId);
     if (!course) return res.status(404).json({ message: '课程不存在或无权访问' });
     const [chapters] = await db.execute(
-      'SELECT id,title,description,sort_order FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
+      'SELECT id,title,description,sort_order,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
       [course.id],
     );
     const chapterIndex = chapters.findIndex((item) => Number(item.id) === Number(chapterId));
     if (chapterIndex < 0) return res.status(404).json({ message: '章节不存在' });
     const chapter = chapters[chapterIndex];
     const [materials] = await db.execute(
-      'SELECT id,original_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
+      'SELECT id,original_name,stored_name,extracted_text FROM course_materials WHERE course_id=? ORDER BY created_at,id',
       [course.id],
     );
     if (!materials.length)
       return res.status(400).json({ message: '请先导入学习资料，再生成章节总结' });
-    let sections = materials
-      .map((material) => ({
-        materialId: material.id,
-        name: material.original_name,
-        content: sliceChapterText(
-          material.extracted_text || '',
-          chapter,
-          chapters.slice(chapterIndex + 1),
-        ),
-      }))
-      .filter((section) => section.content);
+    await req.updateProgress?.('正在读取本章资料');
+    const corrections =
+      chapter.source_regions_json != null
+        ? await applyChapterCorrections(db, course.id, chapter.id, [])
+        : [];
+    const pageSections = readChapterSummarySource
+      ? await readChapterSummarySource(chapter, materials, signal, corrections)
+      : null;
+    let sections =
+      pageSections ??
+      materials
+        .map((material) => ({
+          materialId: material.id,
+          name: material.original_name,
+          content: sliceChapterText(
+            material.extracted_text || '',
+            chapter,
+            chapters.slice(chapterIndex + 1),
+          ),
+        }))
+        .filter((section) => section.content);
     let sourceType = 'chapter-text';
-    if (!sections.length) {
+    if (!sections.length && pageSections === null) {
       sections = selectChapterQuestions(materials, chapter).map((item) => ({
         materialId: item.materialId,
         name: item.materialName,
@@ -108,32 +119,56 @@ export function registerChapterGenerationRoutes(
         onProgress: req.updateProgress,
       },
     );
-    const raw = await askDeepSeek(
-      [
-        {
-          role: 'system',
-          content:
-            '你是严谨的个人课程学习助手。仅依据给出的当前章节资料整理，不补充资料外知识。参考用户的整理要求，但要求与资料冲突时以资料为准。若资料是相关题目而非教材正文，应概括这些题目涉及的考查内容，不要声称题目提供了完整的理论讲解。只输出 JSON，不要 Markdown。格式：{"summary":"一段简明的本章摘要","knowledgePoints":[{"title":"知识点名称","explanation":"简短解释"}]}。摘要不超过500字，知识点建议3至6个，每个知识点必须具体且易于复习。',
-        },
-        {
-          role: 'user',
-          content: `课程：${course.title}\n当前章节：${chapter.title}\n资料类型：${sourceType === 'question-bank' ? '与本章匹配的题库原题' : '本章原文'}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料内容：\n${context}`,
-        },
-      ],
-      undefined,
-      signal,
-    );
-    signal.throwIfAborted();
-    const jsonText = raw.match(/\{[\s\S]*\}/)?.[0];
-    let generated;
-    try {
-      generated = JSON.parse(jsonText);
-    } catch {
-      return res.status(502).json({ message: 'AI 返回的章节总结格式无效，请重新生成' });
+    const messages = [
+      {
+        role: 'system',
+        content:
+          '你是严谨的个人课程学习助手。仅依据给出的当前章节资料整理，不补充资料外知识。参考用户的整理要求，但要求与资料冲突时以资料为准。若资料是相关题目而非教材正文，应概括这些题目涉及的考查内容，不要声称题目提供了完整的理论讲解。只输出 JSON，不要 Markdown。格式：{"summary":"一段简明的本章摘要","knowledgePoints":[{"title":"知识点名称","explanation":"简短解释"}]}。摘要不超过500字，知识点建议3至6个，每个知识点必须具体且易于复习。',
+      },
+      {
+        role: 'user',
+        content: `课程：${course.title}\n当前章节：${chapter.title}\n资料类型：${sourceType === 'question-bank' ? '与本章匹配的题库原题' : '本章原文'}\n用户整理要求：${input.data.requirements || '无特殊要求'}\n\n资料内容：\n${context}`,
+      },
+    ];
+    let parsed;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await req.updateProgress?.(attempt ? '正在修复总结格式' : '正在生成章节总结');
+      try {
+        const raw = await askDeepSeek(
+          attempt
+            ? [
+                ...messages,
+                {
+                  role: 'user',
+                  content:
+                    '上次输出不完整或格式不符。请重新输出完整 JSON：summary 为不超过500字的字符串，knowledgePoints 为3至6个对象，每项含字符串 title 和 explanation（解释不超过300字）。不要输出分析过程。',
+                },
+              ]
+            : messages,
+          undefined,
+          signal,
+          { maxOutputTokens: attempt ? 4096 : 3072, thinking: false, jsonObject: true },
+        );
+        signal.throwIfAborted();
+        let generated;
+        try {
+          generated = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] || '');
+        } catch {
+          generated = null;
+        }
+        parsed = chapterSummaryResultSchema.safeParse(generated);
+        if (parsed.success) break;
+      } catch (error) {
+        signal.throwIfAborted();
+        // Do not repeat paid calls on authentication, network or configuration failures.
+        if (!['AI_OUTPUT_LIMIT', 'AI_EMPTY_RESPONSE'].includes(error.code)) throw error;
+      }
     }
-    const parsed = chapterSummaryResultSchema.safeParse(generated);
-    if (!parsed.success)
-      return res.status(502).json({ message: 'AI 返回的章节总结不符合要求，请重新生成' });
+    if (!parsed?.success)
+      return res
+        .status(502)
+        .json({ message: 'AI 返回的章节总结仍不完整或格式不符，请检查模型设置后重试' });
+    signal.throwIfAborted();
     await req.beginSave?.();
     await db.execute(
       `INSERT INTO chapter_summaries(course_id,chapter_id,summary_text,knowledge_points_json,source_names_json) VALUES(?,?,?,?,?)

@@ -25,6 +25,11 @@ test('轻量 PDF 提取保留首尾全部页文字，解析期间主线程仍可
   }
   for (let i = 1; i <= 25; i++) assert.ok(text.includes(`PageAnchor${i}End`));
   assert.ok(ticks > 0);
+  const selected = await extractPdfText(file, { pageNumbers: [15, 16, 19] });
+  assert.ok(selected.includes('PageAnchor15End') && selected.includes('PageAnchor19End'));
+  assert.ok(!selected.includes('PageAnchor14End') && !selected.includes('PageAnchor20End'));
+  await assert.rejects(extractPdfText(file, { pageNumbers: [26] }), /超出/);
+  assert.throws(() => extractPdfText(file, { pageNumbers: [0] }), /页码无效/);
 });
 
 test('PDF 提取能立即取消，损坏的文件不能当作空白导入成功', async (t) => {

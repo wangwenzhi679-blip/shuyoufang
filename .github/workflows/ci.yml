@@ -49,6 +49,7 @@ jobs:
           server/long-context.test.mjs server/long-context-retry.test.mjs
           server/ai-output-budget.test.mjs
           server/chapter-generation.test.mjs
+          server/chapter-summary.test.mjs
           server/pdf-outline.test.mjs
           server/pdf-page-images.test.mjs
           server/material-import-jobs.test.mjs
