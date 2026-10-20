@@ -125,6 +125,24 @@ test('原资料在渲染期间被删除时不能发布孤立缓存', async (t) =
   assert.deepEqual(await fs.readdir(root), []);
 });
 
+test('已有完整缓存也不能掩盖原资料文件丢失，恢复原文件后可以重试', async (t) => {
+  const { root, material } = await fixture(t);
+  await fs.writeFile(path.join(root, 'original-12-1.png'), PNG);
+  await fs.rm(path.join(root, 'source.pdf'));
+  let calls = 0;
+  const read = createPdfPageImages({
+    uploadRoot: root,
+    previewRoot: root,
+    render: async () => {
+      calls++;
+    },
+  });
+  await assert.rejects(read(material, 1), { code: 'ENOENT' });
+  await fs.writeFile(path.join(root, 'source.pdf'), 'restored');
+  assert.deepEqual(await fs.readFile(await read(material, 1)), PNG);
+  assert.equal(calls, 0);
+});
+
 test('非法原页参数在渲染前拒绝', async (t) => {
   const { root, material } = await fixture(t);
   let calls = 0;

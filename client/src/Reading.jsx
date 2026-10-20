@@ -1,5 +1,4 @@
-import { requestJson } from './api-client.mjs';
-import { API_ROOT } from './api-base.mjs';
+import { requestJson, requestBlob } from './api-client.mjs';
 import PaperDialog from './PaperDialog.jsx';
 import { activePreferences, registerAccountGuard } from './account-state.js';
 import { createPortal } from 'react-dom';
@@ -12,7 +11,6 @@ import {
   applyReadingPosition,
   stableReadingPosition,
 } from './reading-position.mjs';
-const root = `${API_ROOT}/`;
 export function readingApi(token, path, body, method = 'POST') {
   return requestJson(path, {
     token,
@@ -532,7 +530,17 @@ function UnassignedMaterialPage({ children, page }) {
   );
 }
 
-export function PagedMaterialReader({
+export function PagedMaterialReader(props) {
+  // 新资料使用独立阅读状态，不能沿用上一本的页码、预览模式或未完成请求。
+  return (
+    <ScopedPagedMaterialReader
+      key={`${hash(props.token)}:${props.courseId}:${props.chapterId || 0}:${props.material.id}`}
+      {...props}
+    />
+  );
+}
+
+function ScopedPagedMaterialReader({
   token,
   courseId,
   chapterId,
@@ -555,7 +563,13 @@ export function PagedMaterialReader({
     [loaded, setLoaded] = useState(false);
   useEffect(() => {
     let live = true;
-    readingApi(token, `courses/${courseId}/materials/${material.id}/reading-info`)
+    const controller = new AbortController();
+    setCount(null);
+    requestJson(`courses/${courseId}/materials/${material.id}/reading-info`, {
+      token,
+      signal: controller.signal,
+      errorMessage: '无法读取资料页数，请重新加载',
+    })
       .then((d) => {
         if (live) setCount(d.pages);
       })
@@ -564,8 +578,9 @@ export function PagedMaterialReader({
       });
     return () => {
       live = false;
+      controller.abort();
     };
-  }, [loadAttempt]);
+  }, [token, courseId, material.id, loadAttempt]);
   useEffect(() => {
     let live = true,
       imageUrl;
@@ -574,14 +589,11 @@ export function PagedMaterialReader({
     setLoaded(false);
     setEntry(String(page));
     setError('');
-    fetch(root + `courses/${courseId}/materials/${material.id}/reading-page/${page}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    requestBlob(`courses/${courseId}/materials/${material.id}/reading-page/${page}`, {
+      token,
       signal: controller.signal,
+      errorMessage: '原页图片加载失败，请重新加载',
     })
-      .then(async (r) => {
-        if (!r.ok) throw new Error((await r.json()).message);
-        return r.blob();
-      })
       .then((blob) => {
         imageUrl = URL.createObjectURL(blob);
         if (live) {
@@ -597,7 +609,7 @@ export function PagedMaterialReader({
       controller.abort();
       if (imageUrl) URL.revokeObjectURL(imageUrl);
     };
-  }, [page, loadAttempt]);
+  }, [token, courseId, material.id, page, loadAttempt]);
   const pageImage =
     url && imagePage === page ? (
       <img

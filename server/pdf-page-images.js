@@ -41,6 +41,8 @@ export function createPdfPageImages({ uploadRoot, previewRoot, render = runPdfTo
     const image = path.join(previewRoot, `original-${Number(material.id)}-${page}.png`);
     if (pending.has(image)) return pending.get(image);
     const work = (async () => {
+      // 缓存不是资料副本：源文件删除或不可读后，不能继续返回残留原页。
+      await fs.access(source);
       if (await completePng(image)) return image;
       await fs.mkdir(previewRoot, { recursive: true });
       const directory = await fs.mkdtemp(path.join(previewRoot, 'original-temp-'));
