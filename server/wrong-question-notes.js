@@ -5,7 +5,7 @@ const idSchema = z.coerce.number().int().positive().safe();
 const noteSchema = z
   .object({
     reason: z.string().trim().max(2000).default(''),
-    takeaway: z.string().trim().max(3000).default(''),
+    takeaway: z.string().trim().max(500).default(''),
     version: z.number().int().min(0).max(2147483646),
   })
   .refine((note) => note.reason || note.takeaway, '请至少填写错因批注或学习心得');
@@ -86,7 +86,7 @@ export function registerWrongQuestionNotes(app, db, auth, asyncRoute) {
       const id = idSchema.safeParse(req.params.questionId),
         input = noteSchema.safeParse(req.body);
       if (!id.success) throw fail('题目编号不正确', 400);
-      if (!input.success) throw fail('请填写批注或心得，错因最多2000字，心得最多3000字', 400);
+      if (!input.success) throw fail('请填写批注或心得，错因最多2000字，心得最多500字', 400);
       const connection = await db.getConnection();
       try {
         await connection.beginTransaction();

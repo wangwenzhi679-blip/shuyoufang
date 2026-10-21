@@ -115,7 +115,7 @@ for (const method of ['get', 'put'])
 for (const body of [
   { reason: '  ', version: 0 },
   { reason: 'x'.repeat(2001), version: 0 },
-  { takeaway: 'x'.repeat(3001), version: 0 },
+  { takeaway: 'x'.repeat(501), version: 0 },
   { reason: 'x', version: -1 },
 ]) {
   test('invalid note is rejected before opening transaction', async () => {
@@ -145,4 +145,14 @@ test('invalid pagination is rejected without querying database', async () => {
   const { calls, run } = setup();
   await assert.rejects(run('get', '', { query: { page: '0 OR 1=1' } }), { status: 400 });
   assert.equal(calls.length, 0);
+});
+
+test('500-character takeaway is accepted without truncation', async () => {
+  const { calls, run } = setup();
+  const takeaway = '悟'.repeat(500);
+  await run('put', '/:questionId', { body: { reason: '', takeaway, version: 0 } });
+  assert.equal(
+    calls.find((call) => call.sql?.startsWith('INSERT INTO wrong_question_notes')).args[2],
+    takeaway,
+  );
 });

@@ -145,9 +145,9 @@ function NoteEditor({ token, userId, questionId, ensureCollected, onSaved }) {
             />
           </label>
           <label>
-            学习心得 <span>（最多3000字）</span>
+            学习心得 <span>（最多500字）</span>
             <textarea
-              maxLength={3000}
+              maxLength={500}
               value={note.takeaway}
               disabled={busy || !loaded}
               onChange={(event) => update('takeaway', event.target.value)}
