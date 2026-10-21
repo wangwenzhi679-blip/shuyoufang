@@ -313,7 +313,7 @@ export function PracticeAnswering({
               </div>
               <p>{question.question}</p>
               {isChoice ? (
-                <div className="answer-options">
+                <div className="answer-options answer-state-options">
                   {options.map((option, optionIndex) => {
                     const letter = optionLetter(option, optionIndex);
                     const picked = selected.includes(letter);
@@ -337,7 +337,20 @@ export function PracticeAnswering({
                         onClick={() => choose(question, index, option, optionIndex)}
                       >
                         <b>{letter}</b>
-                        <span>{String(option).replace(/^[A-Z][、.．:：\s]*/i, '')}</span>
+                        <span className="answer-option-content">
+                          {String(option).replace(/^[A-Z][、.．:：\s]*/i, '')}
+                        </span>
+                        {status && (
+                          <small className="answer-option-state">
+                            {status === 'correct'
+                              ? picked
+                                ? '✓ 所选正确'
+                                : '✓ 正确答案'
+                              : status === 'wrong'
+                                ? '✕ 所选错误'
+                                : '已选'}
+                          </small>
+                        )}
                       </button>
                     );
                   })}

@@ -313,26 +313,26 @@ export default function WrongReview({
             <p className="wr-meta">本题采用标准答案文字比对，结果仅供参考。</p>
           )}
           {review.options?.length ? (
-            <div className="wr-options">
+            <div className="wr-options answer-state-options">
               {review.options.map((option, index) => {
                 const key = optionLetter(option, index);
                 const correct = expectedLetters.includes(key);
                 const picked = selectedLetters.includes(key);
+                const status = result
+                  ? correct
+                    ? 'right'
+                    : picked
+                      ? 'wrong'
+                      : ''
+                  : picked
+                    ? 'selected'
+                    : '';
                 return (
                   <button
                     key={index}
                     disabled={busy || result !== null}
-                    className={
-                      result
-                        ? correct
-                          ? 'right'
-                          : picked
-                            ? 'wrong'
-                            : ''
-                        : picked
-                          ? 'selected'
-                          : ''
-                    }
+                    className={status}
+                    aria-pressed={picked}
                     onClick={() =>
                       setAnswer(
                         review.question_type === '多选题'
@@ -343,7 +343,18 @@ export default function WrongReview({
                       )
                     }
                   >
-                    {option}
+                    <span className="answer-option-content">{option}</span>
+                    {status && (
+                      <small className="answer-option-state">
+                        {status === 'right'
+                          ? picked
+                            ? '✓ 所选正确'
+                            : '✓ 正确答案'
+                          : status === 'wrong'
+                            ? '✕ 所选错误'
+                            : '已选'}
+                      </small>
+                    )}
                   </button>
                 );
               })}
@@ -358,7 +369,7 @@ export default function WrongReview({
             />
           )}
           {result && (
-            <div className="wr-feedback">
+            <div className={`wr-feedback ${result.correct ? 'is-correct' : 'is-wrong'}`}>
               <strong>{result.correct ? '回答正确' : '本次未答对'}</strong>
               <p>正确答案：{review.answer_text}</p>
               <p>{review.analysis_text}</p>

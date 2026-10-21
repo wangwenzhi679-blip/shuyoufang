@@ -1,0 +1,110 @@
+/* 答题状态独立于主题强调色，选中不再被误认成答错。 */
+body .answer-state-options button {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body .answer-state-options button .answer-option-content {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body .answer-state-options button .answer-option-state {
+  flex: none;
+  align-self: center;
+  margin: 0;
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  color: inherit !important;
+  font: 400 12px/1.6 var(--atelier-serif, 'SimSun', serif);
+  white-space: nowrap;
+}
+
+body .answer-state-options button:focus-visible {
+  outline: 2px solid #59656d !important;
+  outline-offset: 3px;
+}
+
+body
+  .answer-state-options
+  button:not(.picked):not(.selected):not(.correct):not(.right):not(.wrong):hover:not(:disabled) {
+  background: #f0f1f0 !important;
+  border-color: #a5acaa !important;
+}
+
+body .answer-state-options button:is(.picked, .selected) {
+  border-color: #7c8588 !important;
+  background: #dfe1e1 !important;
+  color: #30383b !important;
+}
+
+body .answer-state-options button:is(.picked, .selected):hover:not(:disabled) {
+  border-color: #626d71 !important;
+  background: #d3d7d7 !important;
+}
+
+body .answer-state-options button:is(.picked, .selected) b {
+  border-color: #667175 !important;
+  background: #667175 !important;
+  color: #ffffff !important;
+}
+
+body .answer-state-options button:is(.correct, .right) {
+  border-color: #39794d !important;
+  background: #c9e4cf !important;
+  color: #154a29 !important;
+  opacity: 1 !important;
+}
+
+body .answer-state-options button:is(.correct, .right) b {
+  border-color: #25613a !important;
+  background: #25613a !important;
+  color: #ffffff !important;
+}
+
+body .answer-state-options button.wrong {
+  border-color: #ab4141 !important;
+  background: #edc7c7 !important;
+  color: #7e2020 !important;
+  opacity: 1 !important;
+}
+
+body .answer-state-options button.wrong b {
+  border-color: #9c2f2f !important;
+  background: #9c2f2f !important;
+  color: #ffffff !important;
+}
+
+body :is(.answer-feedback, .wr-feedback).is-correct {
+  border-left: 4px solid #39794d !important;
+  background: #d0e6d6 !important;
+  color: #154a29 !important;
+}
+
+body :is(.answer-feedback, .wr-feedback).is-wrong {
+  border-left: 4px solid #ab4141 !important;
+  background: #f0d1d1 !important;
+  color: #7e2020 !important;
+}
+
+body :is(.answer-feedback, .wr-feedback):is(.is-correct, .is-wrong) :is(strong, p, small, summary) {
+  color: inherit !important;
+}
+
+@media (max-width: 480px) {
+  body .answer-state-options button {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  body .answer-state-options button .answer-option-content {
+    flex-basis: 60%;
+  }
+
+  body .answer-state-options button .answer-option-state {
+    margin-left: auto;
+  }
+}
