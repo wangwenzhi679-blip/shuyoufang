@@ -335,6 +335,7 @@ export function ChapterSuggestModal({ onClose, onSuggest }) {
         busy={submitting}
         onDismiss={onClose}
         className="record-modal name-editor-modal chapter-requirements-modal"
+        aria-describedby="chapter-outline-page-limit"
         onSubmit={submit}
       >
         <div className="modal-header">
@@ -363,6 +364,13 @@ export function ChapterSuggestModal({ onClose, onSuggest }) {
             </svg>
           </button>
         </div>
+        <p className="chapter-outline-page-limit" id="chapter-outline-page-limit">
+          <strong>单次整理最多 300 页（含 300 页）</strong>
+          <span>
+            同一课程内的多份 PDF
+            按总页数计算。超过时，请减少本课程的资料范围，或拆分为不同课程后分别整理。
+          </span>
+        </p>
         <div className="requirement-tags-row">
           <span className="requirement-tags-label">推荐要求：</span>
           <div className="requirement-tags">

@@ -351,6 +351,24 @@ body .modal-backdrop .student-paper-dialog pre {
   white-space: pre-wrap;
   max-width: 100%;
 }
+body .modal-backdrop .student-paper-dialog .chapter-outline-page-limit {
+  margin: 0 0 18px;
+  padding: 11px 13px;
+  border: 1px solid #bdc8b8;
+  border-radius: 4px;
+  background: var(--wash);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.8;
+}
+body .modal-backdrop .student-paper-dialog .chapter-outline-page-limit strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+body .modal-backdrop .student-paper-dialog .chapter-outline-page-limit span {
+  display: block;
+}
 body .modal-backdrop .student-paper-dialog .requirement-tags-row {
   display: block;
   margin: 0 0 18px !important;
