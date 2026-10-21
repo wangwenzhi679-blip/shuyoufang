@@ -203,7 +203,10 @@ test('重启后未完成导入重新排队', async () => {
   const statements = [];
   const jobs = new MaterialImportJobs({
     db: {
-      query: async (sql) => statements.push(sql),
+      query: async (sql) => {
+        statements.push(sql);
+        return [[]];
+      },
       execute: async (sql) => statements.push(sql),
     },
   });
@@ -211,10 +214,82 @@ test('重启后未完成导入重新排队', async () => {
   try {
     await jobs.init();
     assert.ok(
+      statements.some((sql) =>
+        sql.startsWith('ALTER TABLE material_import_jobs ADD COLUMN progress_percent'),
+      ),
+    );
+    assert.ok(
       statements.some(
         (sql) => sql.includes("status='queued'") && sql.includes("WHERE status='running'"),
       ),
     );
+  } finally {
+    clearInterval(jobs.timer);
+  }
+});
+
+test('后台按真实页数保存进度，全部资料写入事务后才标记100%，旧字段存在时不重复迁移', async () => {
+  const progress = [],
+    statements = [],
+    events = [];
+  const connection = {
+    beginTransaction: async () => events.push('begin'),
+    commit: async () => events.push('commit'),
+    rollback: async () => events.push('rollback'),
+    release() {},
+    execute: async (sql) => {
+      if (sql.startsWith('SELECT')) return [[{ id: 8 }]];
+      if (sql.includes("status='done'")) {
+        assert.ok(sql.includes('progress_percent=100'));
+        assert.equal(progress.at(-1)[0], 99);
+        events.push('done');
+      }
+      return [{ insertId: 10 }];
+    },
+  };
+  const jobs = new MaterialImportJobs({
+    db: {
+      query: async (sql) => {
+        statements.push(sql);
+        return [[{ Field: 'progress_percent' }]];
+      },
+      execute: async (sql, args) => {
+        if (sql.includes('SET progress_percent=?')) progress.push(args);
+        return [{}];
+      },
+      getConnection: async () => connection,
+    },
+    uploadRoot: os.tmpdir(),
+    getOwnedCourse: async () => ({ id: 4 }),
+    normalizeUploadedName: (value) => value,
+    processMaterial: async (_file, _name, { onProgress }) => {
+      onProgress({ completed: 0, total: 10 });
+      onProgress({ completed: 5, total: 10 });
+      onProgress({ completed: 10, total: 10 });
+      return { extractedText: '正文', previewName: null };
+    },
+  });
+  jobs.kick = () => {};
+  try {
+    await jobs.init();
+    assert.ok(!statements.some((sql) => sql.startsWith('ALTER')));
+    await jobs.processJob({
+      id: 8,
+      user_id: 2,
+      course_id: 4,
+      files_json: [
+        { filename: 'a.pdf', originalname: 'a.pdf' },
+        { filename: 'b.pdf', originalname: 'b.pdf' },
+      ],
+    });
+    assert.ok(progress.some(([percent, text]) => percent === 24 && text.includes('5/10 页')));
+    assert.ok(progress.some(([percent, text]) => percent === 74 && text.includes('5/10 页')));
+    assert.ok(
+      progress.every(
+        ([percent], index) => percent < 100 && (index === 0 || percent >= progress[index - 1][0]),
+      ),
+    );
+    assert.deepEqual(events, ['begin', 'done', 'commit']);
   } finally {
     clearInterval(jobs.timer);
   }

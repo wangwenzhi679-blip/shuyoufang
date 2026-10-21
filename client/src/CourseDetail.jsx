@@ -20,8 +20,10 @@ import {
 } from './PracticeWorkspace.jsx';
 import { MaterialNoteExcerpt, ChapterMaterialContent } from './MaterialContent.jsx';
 import { captureLearningReturn, restoreLearningViewport } from './learning-return.mjs';
+import { MaterialImportTasks } from './MaterialImportTasks.jsx';
 
 export function CourseDetail({
+  materialImports,
   onSetChapterProgress,
   token,
   courseData,
@@ -982,10 +984,20 @@ export function CourseDetail({
                       }
                     }}
                   />
-                  {uploading ? '正在解析…' : '导入资料'}
+                  {uploading ? '正在提交…' : '导入资料'}
                 </label>
               </div>
               {uploadError && <p className="form-error">{uploadError}</p>}
+              <MaterialImportTasks
+                jobs={
+                  materialImports?.jobs.filter(
+                    (job) => Number(job.course_id) === Number(courseData.course.id),
+                  ) || []
+                }
+                onAction={materialImports?.act}
+                onOpen={closeMaterials}
+                onError={setUploadError}
+              />
               {courseData.materials?.length ? (
                 <div className="library-files">
                   {courseData.materials.map((material) => (

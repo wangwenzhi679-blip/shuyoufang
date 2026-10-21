@@ -52,3 +52,52 @@ export async function requestBlob(path, options = {}) {
   const response = await sendRequest(path, options);
   return response.blob();
 }
+
+// 上传需要浏览器提供的字节进度；普通 JSON 请求继续使用 fetch。
+export function requestUpload(path, { token, body, onProgress, signal } = {}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    let settled = false;
+    const finish = (error, data) => {
+      if (settled) return;
+      settled = true;
+      signal?.removeEventListener('abort', abort);
+      if (error) reject(error);
+      else resolve(data);
+    };
+    const abort = () => xhr.abort();
+    if (signal?.aborted) {
+      finish(new DOMException('上传已取消', 'AbortError'));
+      return;
+    }
+    xhr.open('POST', `${API_ROOT}/${path.replace(/^\/+/, '')}`);
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    // 不设置 Content-Type，让浏览器生成 multipart 边界。
+    xhr.upload.onprogress = (event) => {
+      if (!settled)
+        onProgress?.(
+          event.lengthComputable && event.total > 0
+            ? Math.min(99, Math.floor((event.loaded / event.total) * 100))
+            : null,
+        );
+    };
+    xhr.onload = async () => {
+      try {
+        if (!xhr.status) throw new Error('网络连接中断，资料上传失败，请重试');
+        const data = await readJson(
+          new Response(xhr.responseText || null, { status: xhr.status }),
+          '资料上传失败，请检查文件大小或稍后重试',
+        );
+        onProgress?.(100);
+        finish(null, data);
+      } catch (error) {
+        finish(error);
+      }
+    };
+    xhr.onerror = () => finish(new Error('网络连接中断，资料上传失败，请重试'));
+    xhr.ontimeout = () => finish(new Error('资料上传超时，请重试'));
+    xhr.onabort = () => finish(new DOMException('上传已取消', 'AbortError'));
+    signal?.addEventListener('abort', abort, { once: true });
+    xhr.send(body);
+  });
+}

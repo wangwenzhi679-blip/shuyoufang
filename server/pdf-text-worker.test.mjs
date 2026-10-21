@@ -18,13 +18,22 @@ test('轻量 PDF 提取保留首尾全部页文字，解析期间主线程仍可
   let ticks = 0;
   const timer = setInterval(() => ticks++, 5);
   let text;
+  const progress = [];
   try {
-    text = await extractPdfText(file);
+    text = await extractPdfText(file, { onProgress: (value) => progress.push(value) });
   } finally {
     clearInterval(timer);
   }
   for (let i = 1; i <= 25; i++) assert.ok(text.includes(`PageAnchor${i}End`));
   assert.ok(ticks > 0);
+  assert.deepEqual(progress[0], { completed: 0, total: 25 });
+  assert.deepEqual(progress.at(-1), { completed: 25, total: 25 });
+  assert.ok(
+    progress.every(
+      (value, index) =>
+        value.total === 25 && (index === 0 || value.completed >= progress[index - 1].completed),
+    ),
+  );
   const selected = await extractPdfText(file, { pageNumbers: [15, 16, 19] });
   assert.ok(selected.includes('PageAnchor15End') && selected.includes('PageAnchor19End'));
   assert.ok(!selected.includes('PageAnchor14End') && !selected.includes('PageAnchor20End'));

@@ -82,13 +82,13 @@ export function createMaterialService({
     },
   };
 
-  async function processMaterial(filePath, sourceName, { signal } = {}) {
+  async function processMaterial(filePath, sourceName, { signal, onProgress } = {}) {
     // PDF 章节直接识别原页图片；导入只取原有文字，避免逐图 OCR 拖住整个队列。
     const isPdf = path.extname(sourceName).toLowerCase() === '.pdf';
     signal?.throwIfAborted();
     if (isPdf)
       return {
-        extractedText: formatExtractedText(await readPdfText(filePath, { signal })),
+        extractedText: formatExtractedText(await readPdfText(filePath, { signal, onProgress })),
         previewName: null,
       };
     const ast = await parseOffice(filePath, {

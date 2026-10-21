@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 // 独立线程使解析和取消不会阻塞网站请求。
 export function extractPdfText(
   filename,
-  { signal, timeoutMs = 120000, pageNumbers, returnPages = false } = {},
+  { signal, timeoutMs = 120000, pageNumbers, returnPages = false, onProgress } = {},
 ) {
   signal?.throwIfAborted();
   if (
@@ -38,9 +38,14 @@ export function extractPdfText(
       timeoutMs,
     );
     signal?.addEventListener('abort', abort, { once: true });
-    worker.once('message', (result) =>
-      result.error ? finish(new Error(result.error)) : finish(null, result.text),
-    );
+    worker.on('message', (result) => {
+      if (settled) return;
+      if (result.type === 'progress') {
+        onProgress?.({ completed: result.completed, total: result.total });
+        return;
+      }
+      result.error ? finish(new Error(result.error)) : finish(null, result.text);
+    });
     worker.once('error', (error) => finish(error));
     worker.once('exit', (code) => {
       if (!settled) finish(new Error(`PDF 提取进程意外退出（${code}）`));
@@ -71,7 +76,9 @@ if (!isMainThread) {
       workerData.pageNumbers || Array.from({ length: document.numPages }, (_, index) => index + 1);
     if (numbers.some((number) => number > document.numPages))
       throw new Error('PDF 章节页码超出原资料范围，请重新划分章节');
-    for (const number of numbers) {
+    let reportedAt = Date.now();
+    parentPort.postMessage({ type: 'progress', completed: 0, total: numbers.length });
+    for (const [index, number] of numbers.entries()) {
       const page = await document.getPage(number);
       const content = await page.getTextContent();
       const text = content.items
@@ -79,6 +86,10 @@ if (!isMainThread) {
         .join('');
       pages.push(workerData.returnPages ? { page: number, text } : text);
       page.cleanup();
+      if (index === numbers.length - 1 || Date.now() - reportedAt >= 250) {
+        parentPort.postMessage({ type: 'progress', completed: index + 1, total: numbers.length });
+        reportedAt = Date.now();
+      }
     }
     parentPort.postMessage({ text: workerData.returnPages ? pages : pages.join('\n\n') });
   } catch (error) {

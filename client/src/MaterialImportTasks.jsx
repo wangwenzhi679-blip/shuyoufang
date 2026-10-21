@@ -44,7 +44,9 @@ export function useMaterialImports(token, onDone) {
   const send = async (job) => {
     setTransfers((current) =>
       current.map((item) =>
-        item.id === job.id ? { ...item, status: 'uploading', error_text: '' } : item,
+        item.id === job.id
+          ? { ...item, status: 'uploading', upload_percent: 0, error_text: '' }
+          : item,
       ),
     );
     try {
@@ -52,6 +54,12 @@ export function useMaterialImports(token, onDone) {
         token,
         files: job.files,
         importKey: job.id,
+        onProgress: (percent) =>
+          setTransfers((current) =>
+            current.map((item) =>
+              item.id === job.id ? { ...item, upload_percent: percent } : item,
+            ),
+          ),
       });
       setTransfers((current) => current.filter((item) => item.id !== job.id));
       await refresh().catch(() => {});
@@ -73,6 +81,7 @@ export function useMaterialImports(token, onDone) {
         course_title: title,
         files,
         status: 'uploading',
+        upload_percent: 0,
       };
       setTransfers((current) => [job, ...current]);
       void send(job);
@@ -89,11 +98,30 @@ export function useMaterialImports(token, onDone) {
   };
 }
 
+function ImportProgress({ job }) {
+  const label = job.local ? '上传' : job.status === 'done' ? '导入完成' : '处理进度';
+  const raw = job.local ? job.upload_percent : job.progress_percent;
+  const percent =
+    job.status === 'done'
+      ? 100
+      : job.local && raw == null
+        ? undefined
+        : Math.max(0, Math.min(job.local ? 100 : 99, Number(raw) || 0));
+  return (
+    <div className="material-import-progress">
+      <span>
+        {label} {percent == null ? '计算中' : `${percent}%`}
+      </span>
+      <progress aria-label={`${job.course_title}的${label}`} max="100" value={percent} />
+    </div>
+  );
+}
+
 export function MaterialImportTasks({ jobs, onAction, onOpen, onError }) {
   if (!jobs.length) return null;
   const act = (job, action) => onAction(job, action).catch((error) => onError(error.message));
   return (
-    <details className="generation-tray" open>
+    <details className="generation-tray material-import-tray" open>
       <summary>
         资料导入 · {jobs.length}
         <span>可继续浏览其他页面</span>
@@ -102,6 +130,7 @@ export function MaterialImportTasks({ jobs, onAction, onOpen, onError }) {
         <div key={job.id}>
           <div>
             <strong>{job.course_title}</strong>
+            <ImportProgress job={job} />
             <span role="status">
               {job.status === 'uploading'
                 ? '正在上传，可在站内继续浏览；上传完成前请勿刷新'

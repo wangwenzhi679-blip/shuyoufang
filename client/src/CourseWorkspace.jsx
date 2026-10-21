@@ -13,7 +13,7 @@ import WrongReview from './WrongReview';
 import { NoteTaskTray } from './NoteJobs';
 import CourseShelf from './CourseShelf.jsx';
 import CourseForm from './CourseForm.jsx';
-import { uploadFiles, api } from './student-api.mjs';
+import { api } from './student-api.mjs';
 import { Brand } from './Brand.jsx';
 import { AssistantLanding } from './StudentContent.jsx';
 import { CourseDetail } from './CourseDetail.jsx';
@@ -55,6 +55,9 @@ export function CourseWorkspace({
     await loadCourses();
     const data = await request(`courses/${courseId}`, { token });
     setActiveCourse((current) =>
+      Number(current?.course?.id) === Number(courseId) ? data : current,
+    );
+    setShelfLibrary((current) =>
       Number(current?.course?.id) === Number(courseId) ? data : current,
     );
   });
@@ -353,12 +356,7 @@ export function CourseWorkspace({
   };
 
   const uploadMaterials = async (files) => {
-    const data = await uploadFiles(`courses/${activeCourse.course.id}/materials`, { token, files });
-    setActiveCourse((current) => ({
-      ...current,
-      materials: [...(current.materials || []), ...data.materials],
-    }));
-    await loadCourses();
+    materialImports.upload(activeCourse.course.id, activeCourse.course.title, files);
   };
 
   const suggestChapters = (requirements) =>
@@ -1094,6 +1092,7 @@ export function CourseWorkspace({
           </>
         ) : activeCourse ? (
           <CourseDetail
+            materialImports={materialImports}
             token={token}
             key={`${activeCourse.course.id}-${navigationTarget?.practiceId || ''}-${navigationTarget?.attempt?.id || ''}-${navigationTarget?.chapterId || ''}-${navigationTarget?.tab || ''}`}
             onSetChapterProgress={setChapterProgress}
@@ -1254,6 +1253,7 @@ export function CourseWorkspace({
       )}
       {shelfLibrary && (
         <ShelfLibraryModal
+          materialImports={materialImports}
           token={token}
           courseData={shelfLibrary}
           onChange={setShelfLibrary}

@@ -32,6 +32,7 @@ export class MaterialImportJobs {
       id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       user_id BIGINT UNSIGNED NOT NULL, course_id BIGINT UNSIGNED NOT NULL,
       status VARCHAR(16) NOT NULL DEFAULT 'queued', progress_text VARCHAR(300) NOT NULL DEFAULT '',
+      progress_percent TINYINT UNSIGNED NOT NULL DEFAULT 0,
       files_json JSON NOT NULL, result_json JSON NULL, error_text VARCHAR(500) NULL,
       request_key VARCHAR(100) NULL,
       dismissed BOOLEAN NOT NULL DEFAULT FALSE,
@@ -42,8 +43,15 @@ export class MaterialImportJobs {
       FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
     )`);
+    const [columns] = await this.db.query(
+      "SHOW COLUMNS FROM material_import_jobs LIKE 'progress_percent'",
+    );
+    if (!columns.length)
+      await this.db.query(
+        'ALTER TABLE material_import_jobs ADD COLUMN progress_percent TINYINT UNSIGNED NOT NULL DEFAULT 0',
+      );
     await this.db.execute(
-      "UPDATE material_import_jobs SET status='queued',progress_text='等待继续导入' WHERE status='running'",
+      "UPDATE material_import_jobs SET status='queued',progress_percent=0,progress_text='等待继续导入' WHERE status='running'",
     );
     this.timer = setInterval(() => this.kick(), 1500);
     this.timer.unref();
@@ -68,7 +76,7 @@ export class MaterialImportJobs {
     );
     if (!result.affectedRows) {
       const [[existing]] = await this.db.execute(
-        'SELECT id,course_id,status,progress_text FROM material_import_jobs WHERE user_id=? AND course_id=? AND request_key=?',
+        'SELECT id,course_id,status,progress_text,progress_percent FROM material_import_jobs WHERE user_id=? AND course_id=? AND request_key=?',
         [userId, courseId, requestKey || null],
       );
       if (!existing) throw fail('课程或导入任务已失效', 409);
@@ -82,6 +90,7 @@ export class MaterialImportJobs {
       id: result.insertId,
       course_id: courseId,
       status: 'queued',
+      progress_percent: 0,
       progress_text: '等待导入资料',
     };
   }
@@ -140,6 +149,18 @@ export class MaterialImportJobs {
     }, 2000);
     watch.unref();
     let connection;
+    let progressUpdates = Promise.resolve();
+    const report = (percent, text) => {
+      // 串行保存进度，完成事务前等待写入，防止迟到的进度覆盖完成状态。
+      progressUpdates = progressUpdates
+        .then(() =>
+          this.db.execute(
+            "UPDATE material_import_jobs SET progress_percent=?,progress_text=? WHERE id=? AND status='running'",
+            [Math.min(99, Math.max(0, Math.floor(percent))), text, job.id],
+          ),
+        )
+        .catch(() => {});
+    };
     try {
       if (!(await this.getOwnedCourse(job.user_id, job.course_id)))
         throw fail('课程已删除或不可访问', 404);
@@ -148,14 +169,30 @@ export class MaterialImportJobs {
         controller.signal.throwIfAborted();
         if (path.basename(stored.filename) !== stored.filename) throw fail('资料文件名无效');
         const file = { ...stored, path: path.join(this.uploadRoot, stored.filename) };
-        await this.db.execute('UPDATE material_import_jobs SET progress_text=? WHERE id=?', [
-          `正在整理第 ${index + 1}/${files.length} 份资料`,
-          job.id,
-        ]);
+        const label = `正在整理第 ${index + 1}/${files.length} 份资料`;
+        report((index / files.length) * 99, label);
+        let previousPercent = -1;
         const { extractedText, previewName } = await this.processMaterial(
           file.path,
           file.originalname,
-          { signal: controller.signal },
+          {
+            signal: controller.signal,
+            onProgress: ({ completed, total }) => {
+              if (
+                controller.signal.aborted ||
+                !Number.isFinite(total) ||
+                total <= 0 ||
+                !Number.isFinite(completed) ||
+                completed < 0 ||
+                completed > total
+              )
+                return;
+              const percent = Math.floor(((index + completed / total) / files.length) * 99);
+              if (percent <= previousPercent) return;
+              previousPercent = percent;
+              report(percent, `${label} · 已读取 ${completed}/${total} 页`);
+            },
+          },
         );
         controller.signal.throwIfAborted();
         parsedFiles.push({
@@ -164,7 +201,10 @@ export class MaterialImportJobs {
           previewName,
           originalName: this.normalizeUploadedName(file.originalname),
         });
+        report(((index + 1) / files.length) * 99, label);
       }
+      report(99, '解析完成，正在保存资料');
+      await progressUpdates;
       connection = await this.db.getConnection();
       await connection.beginTransaction();
       // 资料写入与任务完成一起提交，避免重启重试重复导入同一批文件。
@@ -175,11 +215,12 @@ export class MaterialImportJobs {
       if (!current.length) throw fail('导入任务已失效', 409);
       const materials = await insertMaterials(connection, job.course_id, parsedFiles);
       await connection.execute(
-        "UPDATE material_import_jobs SET status='done',progress_text='资料导入完成',result_json=?,error_text=NULL WHERE id=?",
+        "UPDATE material_import_jobs SET status='done',progress_percent=100,progress_text='资料导入完成',result_json=?,error_text=NULL WHERE id=?",
         [JSON.stringify({ materials }), job.id],
       );
       await connection.commit();
     } catch (error) {
+      await progressUpdates;
       if (connection) await connection.rollback();
       // 保留上传原文件供失败任务重试，只清理本轮创建的预览。
       for (const item of parsedFiles)
@@ -211,7 +252,9 @@ export function registerMaterialImportJobs(app, { db, auth, asyncRoute, importJo
     auth,
     asyncRoute(async (req, res) => {
       const [jobs] = await db.execute(
-        `SELECT j.id,j.course_id,j.status,j.progress_text,j.error_text,j.created_at,c.title AS course_title
+        `SELECT j.id,j.course_id,j.status,j.progress_text,
+      CASE WHEN j.status='done' THEN 100 ELSE j.progress_percent END AS progress_percent,
+      j.error_text,j.created_at,c.title AS course_title
       FROM material_import_jobs j JOIN courses c ON c.id=j.course_id
       WHERE j.user_id=? AND j.dismissed=FALSE ORDER BY j.id DESC`,
         [req.user.sub],
@@ -226,7 +269,7 @@ export function registerMaterialImportJobs(app, { db, auth, asyncRoute, importJo
       const id = Number(req.params.id);
       if (!Number.isSafeInteger(id) || id < 1) throw fail('任务编号无效');
       const [result] = await db.execute(
-        "UPDATE material_import_jobs SET status='queued',error_text=NULL,progress_text='等待重新导入' WHERE id=? AND user_id=? AND status='failed'",
+        "UPDATE material_import_jobs SET status='queued',progress_percent=0,error_text=NULL,progress_text='等待重新导入' WHERE id=? AND user_id=? AND status='failed'",
         [id, req.user.sub],
       );
       if (!result.affectedRows) throw fail('任务不存在或当前无法重试', 409);

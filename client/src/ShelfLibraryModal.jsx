@@ -3,9 +3,11 @@ import { requestJson as request } from './api-client.mjs';
 import PaperDialog from './PaperDialog.jsx';
 import { formatDateTime } from './date-format.mjs';
 import { useState } from 'react';
-import { uploadFiles, api } from './student-api.mjs';
+import { api } from './student-api.mjs';
+import { MaterialImportTasks } from './MaterialImportTasks.jsx';
 
 export function ShelfLibraryModal({
+  materialImports,
   token,
   courseData,
   onChange,
@@ -21,13 +23,7 @@ export function ShelfLibraryModal({
   const [preview, setPreview] = useState(null);
   const cId = courseData.course.id;
   const upload = async (files) => {
-    const data = await uploadFiles(`courses/${cId}/materials`, { token, files });
-    onChange((current) =>
-      current
-        ? { ...current, materials: [...(current.materials || []), ...data.materials] }
-        : current,
-    );
-    await onReloadCourses();
+    materialImports.upload(cId, courseData.course.title, files);
   };
   const previewText = async (material) => {
     try {
@@ -156,10 +152,18 @@ export function ShelfLibraryModal({
                     }
                   }}
                 />
-                {uploading ? '正在解析…' : '导入资料'}
+                {uploading ? '正在提交…' : '导入资料'}
               </label>
             </div>
             {uploadError && <p className="form-error">{uploadError}</p>}
+            <MaterialImportTasks
+              jobs={
+                materialImports?.jobs.filter((job) => Number(job.course_id) === Number(cId)) || []
+              }
+              onAction={materialImports?.act}
+              onOpen={onClose}
+              onError={setUploadError}
+            />
             {courseData.materials?.length ? (
               <div className="library-files">
                 {courseData.materials.map((material) => (
