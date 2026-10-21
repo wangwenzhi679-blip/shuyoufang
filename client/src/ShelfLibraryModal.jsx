@@ -139,6 +139,8 @@ export function ShelfLibraryModal({
                   type="file"
                   accept=".pdf,.docx,.pptx"
                   multiple
+                  disabled={uploading}
+                  aria-label="导入课程资料"
                   onChange={async (event) => {
                     const files = event.target.files;
                     if (!files?.length) return;

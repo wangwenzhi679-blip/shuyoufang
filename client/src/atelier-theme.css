@@ -3602,7 +3602,32 @@ html[data-user-theme='dark'] .home-scholar-art {
 .student-top-layout .workspace .course-detail-backbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
   padding: 18px 0 12px;
+}
+
+.workspace .course-detail-backbar .course-library-button {
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid #bdd0b6;
+  border-radius: 6px;
+  background: #e8f0e2;
+  color: #3e5945;
+  font: 400 14px/1.5 var(--atelier-serif, 'SimSun', serif);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.workspace .course-detail-backbar .course-library-button:hover {
+  border-color: #9eb793;
+  background: #dce8d4;
+}
+
+.workspace .course-detail-backbar .course-library-button:focus-visible {
+  outline: 2px solid #77937a;
+  outline-offset: 3px;
 }
 
 .student-top-layout .workspace .course-detail-backbar .back-link {

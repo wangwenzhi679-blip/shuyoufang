@@ -456,6 +456,9 @@ export function CourseDetail({
         <button className="back-link" type="button" onClick={onBack}>
           ← 返回我的课程
         </button>
+        <button className="course-library-button" type="button" onClick={openMaterials}>
+          资料库 · {courseData.materials?.length || 0}
+        </button>
       </div>
       <section ref={learningRoot} className="course-learning-layout">
         <aside className="chapter-outline">
@@ -469,9 +472,6 @@ export function CourseDetail({
             </button>
           </div>
           <div className="chapter-ai-actions">
-            <button type="button" onClick={openMaterials}>
-              资料库 · {courseData.materials?.length || 0}
-            </button>
             <button
               type="button"
               disabled={!courseData.materials?.length}
@@ -965,6 +965,8 @@ export function CourseDetail({
                     type="file"
                     accept=".pdf,.docx,.pptx"
                     multiple
+                    disabled={uploading}
+                    aria-label="导入课程资料"
                     onChange={async (event) => {
                       const files = event.target.files;
                       if (!files?.length) return;

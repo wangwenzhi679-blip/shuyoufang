@@ -1,0 +1,180 @@
+/* 资料库的两个入口共用设置窗口的纸面、字体和控件，覆盖早期的蓝色样式。 */
+body .modal-backdrop .student-paper-dialog.library-dialog {
+  --dialog-width: 680px;
+}
+
+body .modal-backdrop .student-paper-dialog.material-preview {
+  --dialog-width: 740px;
+}
+
+body .modal-backdrop .library-dialog .student-dialog-header {
+  background: transparent !important;
+}
+
+body .modal-backdrop .library-dialog .library-title-row > div {
+  min-width: 0;
+}
+
+body .modal-backdrop .library-dialog .library-title-row small {
+  color: var(--muted) !important;
+  overflow-wrap: anywhere;
+}
+
+body .modal-backdrop .library-dialog .library-summary {
+  margin: 0 0 16px !important;
+  padding: 0 0 16px !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  flex-wrap: wrap;
+}
+
+body .modal-backdrop .library-dialog .library-summary strong {
+  color: var(--ink) !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+}
+
+body .modal-backdrop .library-dialog .library-summary span {
+  color: var(--muted) !important;
+}
+
+body .modal-backdrop .library-dialog .library-import {
+  position: relative;
+  min-height: 36px !important;
+  height: auto !important;
+  padding: 6px 12px !important;
+  border: 1px solid #bdd0b6 !important;
+  border-radius: 4px !important;
+  background: #e8f0e2 !important;
+  color: #3e5945 !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  cursor: pointer;
+}
+
+/* 原生文件控件保留键盘焦点，外层标签负责显示。 */
+body .modal-backdrop .library-dialog .library-import input[type='file'] {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+body .modal-backdrop .library-dialog .library-import:focus-within {
+  outline: 2px solid #77937a;
+  outline-offset: 3px;
+}
+
+body .modal-backdrop .library-dialog .library-import:has(input:disabled) {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+body .modal-backdrop .library-dialog .library-file-card {
+  min-width: 0;
+  padding: 16px !important;
+  gap: 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-info strong {
+  overflow: visible !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  color: var(--ink) !important;
+  font-weight: 500 !important;
+  line-height: 1.7 !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-info small {
+  color: var(--muted) !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions {
+  justify-content: flex-start !important;
+  gap: 8px !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions button {
+  min-height: 34px !important;
+  padding: 5px 12px !important;
+  border: 1px solid #bdc8b8 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  font: 400 13px/1.6 var(--atelier-serif, 'SimSun', serif) !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions button:hover:not(:disabled) {
+  border-color: #9eb793 !important;
+  background: var(--wash) !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions .library-read {
+  border-color: #bdd0b6 !important;
+  background: #e8f0e2 !important;
+  color: #3e5945 !important;
+}
+
+body .modal-backdrop .library-dialog .library-import:hover:not(:has(input:disabled)),
+body .modal-backdrop .library-dialog .library-file-actions .library-read:hover:not(:disabled) {
+  border-color: #9eb793 !important;
+  background: #dce8d4 !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions .library-delete {
+  border-color: #d8bcb5 !important;
+  color: #9a5044 !important;
+}
+
+body .modal-backdrop .library-dialog .library-file-actions .library-delete:hover:not(:disabled) {
+  border-color: #bd8e83 !important;
+  background: #ad4c3e08 !important;
+}
+
+body .modal-backdrop .library-dialog .library-empty-state strong {
+  color: var(--ink) !important;
+  font-weight: 500 !important;
+}
+
+body .modal-backdrop .library-dialog .library-empty-state p {
+  color: var(--muted) !important;
+}
+
+body .modal-backdrop .material-preview pre {
+  margin: 0 !important;
+  padding: 16px !important;
+  max-height: none;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--wash);
+  color: var(--ink);
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  body .modal-backdrop .library-dialog .library-file-card {
+    padding: 12px !important;
+  }
+
+  body .modal-backdrop .library-dialog .library-file-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body .modal-backdrop .library-dialog .library-file-actions button {
+    min-width: 0;
+    padding-inline: 6px !important;
+  }
+}
