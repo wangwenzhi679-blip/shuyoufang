@@ -1,4 +1,6 @@
 import { requestJson } from './api-client.mjs';
+import WrongQuestionNote from './WrongQuestionNote.jsx';
+import WrongReflections from './WrongReflections.jsx';
 import PaperDialog from './PaperDialog.jsx';
 import {
   questionTypeLabel,
@@ -111,6 +113,7 @@ function ReviewMarginNote({ onRhythm }) {
 
 export default function WrongReview({
   token,
+  userId,
   scheduleId,
   wrongQuestionId,
   onCloseSchedule,
@@ -276,6 +279,13 @@ export default function WrongReview({
           >
             复习安排
           </button>
+          <button
+            aria-pressed={panel === 'reflections'}
+            className={panel === 'reflections' ? 'active' : ''}
+            onClick={() => changePanel('reflections')}
+          >
+            学习心得
+          </button>
         </nav>
       )}
       {notice && (
@@ -296,7 +306,11 @@ export default function WrongReview({
             onClick={() => (review.schedule ? onCloseSchedule() : setReview(null))}
             disabled={busy}
           >
-            {review.schedule ? '← 返回复习安排' : '← 返回错题列表'}
+            {review.schedule
+              ? '← 返回复习安排'
+              : panel === 'reflections'
+                ? '← 返回学习心得'
+                : '← 返回错题列表'}
           </button>
           {review.schedule && (
             <p className="wr-meta">
@@ -376,6 +390,13 @@ export default function WrongReview({
               <small>答对后仍保留在错题本中，可手动标记已掌握。</small>
             </div>
           )}
+          <WrongQuestionNote
+            key={review.question_id}
+            token={token}
+            userId={userId}
+            questionId={review.question_id}
+            onSaved={load}
+          />
           <footer>
             {result ? (
               <>
@@ -398,6 +419,23 @@ export default function WrongReview({
             )}
           </footer>
         </article>
+      ) : !scheduleId && panel === 'reflections' ? (
+        <WrongReflections
+          token={token}
+          userId={userId}
+          courses={courses}
+          onOpen={async (id) => {
+            try {
+              const data = await api();
+              setItems(data.questions);
+              const item = data.questions.find((item) => Number(item.id) === Number(id));
+              if (item) start(item);
+              else setError('原题已删除，请刷新学习心得列表。');
+            } catch (reason) {
+              setError(reason.message);
+            }
+          }}
+        />
       ) : !scheduleId && panel === 'schedule' ? (
         <ReviewSchedulePanel
           token={token}

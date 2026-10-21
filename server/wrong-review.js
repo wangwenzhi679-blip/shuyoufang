@@ -1,5 +1,6 @@
 import { ensureStudyDays, recordStudyDay } from './study-activity.js';
 import { answerLetters, selectionLetters } from '../shared/question-types.mjs';
+import { ensureWrongQuestionNotes, registerWrongQuestionNotes } from './wrong-question-notes.js';
 export const parseJson = (value) => (typeof value === 'string' ? JSON.parse(value) : value);
 
 export function gradeAnswer(question, answer) {
@@ -30,6 +31,7 @@ export async function ensureWrongReview(db) {
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY(question_id) REFERENCES practice_questions(id) ON DELETE CASCADE
   )`);
+  await ensureWrongQuestionNotes(db);
 }
 
 export async function collectWrong(db, questionId, answer) {
@@ -41,6 +43,7 @@ export async function collectWrong(db, questionId, answer) {
 }
 
 export function registerWrongReview(app, db, auth, asyncRoute) {
+  registerWrongQuestionNotes(app, db, auth, asyncRoute);
   const ownedQuery = `SELECT w.*,q.question_type,q.question_text,q.options_json,q.answer_text,q.analysis_text,p.course_id,p.chapter_id,c.title AS course_title,ch.title AS chapter_title
     FROM wrong_questions w JOIN practice_questions q ON q.id=w.question_id
     JOIN chapter_practices p ON p.id=q.practice_id JOIN courses c ON c.id=p.course_id

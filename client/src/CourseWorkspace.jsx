@@ -1059,6 +1059,7 @@ export function CourseWorkspace({
           />
         ) : activeView === 'wrong-review' ? (
           <WrongReview
+            userId={user.id}
             key={reviewTarget || searchWrong || 'list'}
             wrongQuestionId={searchWrong}
             token={token}

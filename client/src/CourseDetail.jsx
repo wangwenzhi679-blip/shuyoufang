@@ -720,6 +720,7 @@ export function CourseDetail({
                       />
                     ) : practiceMode === 'answering' && activePractice ? (
                       <PracticeAnswering
+                        token={token}
                         onReadChapter={() => setActiveTab('materials')}
                         practice={activePractice}
                         userId={userId}

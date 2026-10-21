@@ -1,4 +1,5 @@
 import { requestJson as request } from './api-client.mjs';
+import WrongQuestionNote from './WrongQuestionNote.jsx';
 import PaperDialog from './PaperDialog.jsx';
 import { registerAccountGuard } from './account-state.js';
 import {
@@ -93,6 +94,7 @@ export function PracticePanel({ chapter, practices, onGenerate, onStart, onDelet
 }
 
 export function PracticeAnswering({
+  token,
   practice,
   userId,
   onBack,
@@ -237,16 +239,21 @@ export function PracticeAnswering({
       setCompleting(false);
     }
   };
+  const ensureWrongCollected = async (index) => {
+    if (addedWrong[index]) return;
+    if (!gradedAttempt?.id) throw new Error('请先交卷后再保存批注');
+    await request(
+      `courses/${practice.course_id}/practices/${practice.id}/attempts/${gradedAttempt.id}/wrong-questions/${index}`,
+      { token, method: 'POST' },
+    );
+    setAddedWrong((current) => ({ ...current, [index]: true }));
+  };
   const addWrong = async (index) => {
     if (!gradedAttempt?.id || addingWrong !== null) return;
     setAddingWrong(index);
     setWrongError('');
     try {
-      await request(
-        `courses/${practice.course_id}/practices/${practice.id}/attempts/${gradedAttempt.id}/wrong-questions/${index}`,
-        { token: localStorage.token, method: 'POST' },
-      );
-      setAddedWrong((current) => ({ ...current, [index]: true }));
+      await ensureWrongCollected(index);
     } catch (reason) {
       setWrongError(reason.message);
     } finally {
@@ -396,6 +403,15 @@ export function PracticeAnswering({
                     </button>
                   )}
                 </div>
+              )}
+              {gradedAttempt && result?.answered && !result.correct && (
+                <WrongQuestionNote
+                  key={question.id}
+                  token={token}
+                  userId={userId}
+                  questionId={question.id}
+                  ensureCollected={() => ensureWrongCollected(index)}
+                />
               )}
             </article>
           );
