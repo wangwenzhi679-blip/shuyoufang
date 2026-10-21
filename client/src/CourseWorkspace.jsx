@@ -1,3 +1,5 @@
+import { rememberCourse, recalledCourse, forgetCourse } from './course-resume.mjs';
+import { captureLearningReturn } from './learning-return.mjs';
 import { ConfirmModal, NameEditor } from './CourseDialogs.jsx';
 import { MaterialImportTasks, useMaterialImports } from './MaterialImportTasks.jsx';
 import { requestJson as request } from './api-client.mjs';
@@ -180,8 +182,19 @@ export function CourseWorkspace({
   const showView = (view, historyDetails = {}) => {
     setReviewTarget(null);
     setSearchWrong(null);
-    sessionStorage.removeItem('math-auth-active-course');
-    sessionStorage.removeItem('math-auth-active-chapter');
+    if (activeCourse) {
+      const state = window.history.state;
+      rememberCourse(sessionStorage, user.id, activeCourse.course.id, {
+        ...(state?.navigationTarget || {}),
+        chapterId:
+          state?.chapterId || Number(sessionStorage.getItem('math-auth-active-chapter')) || null,
+        returnLocation: captureLearningReturn(document.querySelector('.course-learning-layout')),
+      });
+    }
+    const resume = recalledCourse(sessionStorage, user.id);
+    if (view === 'courses' && resume)
+      sessionStorage.setItem('math-auth-active-course', String(resume.courseId));
+    else sessionStorage.removeItem('math-auth-active-course');
     setActiveCourse(null);
     setNavigationTarget(null);
     setActiveView(view);
@@ -332,19 +345,38 @@ export function CourseWorkspace({
   useEffect(() => {
     const savedCourseId = sessionStorage.getItem('math-auth-active-course');
     if (activeView !== 'courses' || activeCourse || !savedCourseId || !courses.length) return;
+    let live = true;
+    const resume = recalledCourse(sessionStorage, user.id);
     request(`courses/${savedCourseId}`, { token })
       .then((data) => {
+        if (!live) return;
+        const target =
+          Number(resume?.courseId) === Number(savedCourseId)
+            ? resume.navigationTarget
+            : window.history.state?.navigationTarget || null;
         setActiveCourse(data);
-        setNavigationTarget(window.history.state?.navigationTarget || null);
-        if (window.history.state?.mathAuthView !== 'course')
-          window.history.pushState(
-            { mathAuthView: 'course', courseId: data.course.id },
-            '',
-            window.location.href,
-          );
+        setNavigationTarget(target);
+        window.history.replaceState(
+          {
+            mathAuthView: 'course',
+            courseId: data.course.id,
+            chapterId: target?.chapterId,
+            navigationTarget: target,
+          },
+          '',
+          window.location.href,
+        );
       })
-      .catch(() => sessionStorage.removeItem('math-auth-active-course'));
-  }, [courses, activeView, activeCourse, token]);
+      .catch((reason) => {
+        if (!live) return;
+        sessionStorage.removeItem('math-auth-active-course');
+        if ([403, 404].includes(reason.status)) forgetCourse(sessionStorage, user.id);
+        setError(reason.message);
+      });
+    return () => {
+      live = false;
+    };
+  }, [courses, activeView, activeCourse, token, user.id]);
 
   const createCourse = async (values) => {
     const { files, ...courseValues } = values;
@@ -1103,11 +1135,13 @@ export function CourseWorkspace({
             onVisitChapter={visitChapter}
             onSavePracticeProgress={savePracticeProgress}
             onBack={() => {
-              if (window.history.state?.mathAuthView === 'course') window.history.back();
-              else {
-                sessionStorage.removeItem('math-auth-active-course');
-                setActiveCourse(null);
-              }
+              forgetCourse(sessionStorage, user.id);
+              sessionStorage.removeItem('math-auth-active-course');
+              sessionStorage.removeItem('math-auth-active-chapter');
+              setActiveCourse(null);
+              setNavigationTarget(null);
+              setActiveView('courses');
+              window.history.pushState({ mathAuthView: 'courses' }, '', window.location.href);
             }}
             onUpdate={() =>
               setNameEditor({
