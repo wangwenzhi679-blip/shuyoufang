@@ -150,13 +150,13 @@ export function PlanTaskTray({ data, onOpen }) {
   );
 }
 
-function Modal({ title, children, footer, onClose, busy, variant }) {
+function Modal({ title, children, footer, onClose, busy, variant, compact }) {
   const content = (
     <div className="modal-backdrop plan-modal-backdrop">
       <PaperDialog
         busy={busy}
         onDismiss={onClose}
-        className={`record-modal plan-dialog student-dialog-${variant}`}
+        className={`record-modal plan-dialog student-dialog-${variant}${compact ? ' plan-dialog-compact' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -1335,6 +1335,7 @@ export default function LearningPlanPanel({
       {modal && (
         <Modal
           busy={busy}
+          compact={modal.type !== 'delete' && modal.type !== 'generate' && !modal.job}
           variant={
             modal.type === 'delete' ? 'confirm' : modal.type === 'generate' ? 'form' : 'wide'
           }

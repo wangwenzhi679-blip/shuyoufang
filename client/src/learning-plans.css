@@ -1286,6 +1286,27 @@
     min-width: 0;
     padding: 12px;
   }
+  /* Keep manual editing and rescheduling compact without shrinking input text. */
+  body .plan-modal-backdrop .student-paper-dialog.plan-dialog-compact {
+    width: min(420px, calc(100vw - 40px)) !important;
+    max-height: min(680px, calc(100dvh - 64px)) !important;
+  }
+  body .plan-modal-backdrop .plan-dialog-compact .student-dialog-header {
+    padding: 10px 14px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog-compact .student-dialog-header h2 {
+    font-size: 18px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog-compact .student-dialog-body {
+    padding: 10px 12px;
+  }
+  body .plan-modal-backdrop .plan-dialog-compact .student-dialog-actions {
+    padding: 10px 12px !important;
+  }
+  body .plan-modal-backdrop .plan-dialog-compact .plan-preview-rows article {
+    padding: 8px;
+    margin: 8px 0;
+  }
   .workspace .learning-plans.plan-garden .plan-course-banner {
     grid-template-columns: 1fr;
     padding: 18px !important;
