@@ -32,6 +32,9 @@ export async function ensureMobileLearning(db) {
     FOREIGN KEY(question_id) REFERENCES practice_questions(id) ON DELETE SET NULL,
     INDEX mobile_answer_user(user_id,created_at)
   )`);
+  const [columns] = await db.query("SHOW COLUMNS FROM mobile_learning_answers LIKE 'request_text'");
+  if (!columns.length)
+    await db.query('ALTER TABLE mobile_learning_answers ADD COLUMN request_text TEXT NULL');
 }
 
 export function registerMobileLearning(
@@ -43,7 +46,7 @@ export function registerMobileLearning(
     auth,
     asyncRoute(async (req, res) => {
       const [items] = await db.execute(
-        'SELECT id,question_text,answer_text,analysis_text,question_id,created_at FROM mobile_learning_answers WHERE user_id=? ORDER BY created_at DESC,id DESC LIMIT 40',
+        'SELECT id,question_text,request_text,answer_text,analysis_text,question_id,created_at FROM mobile_learning_answers WHERE user_id=? ORDER BY created_at DESC,id DESC LIMIT 40',
         [req.user.sub],
       );
       res.json({ items });
@@ -84,12 +87,13 @@ export function registerMobileLearning(
       const result = data;
       const id = randomUUID();
       await db.execute(
-        'INSERT INTO mobile_learning_answers(id,user_id,question_text,answer_text,analysis_text) VALUES(?,?,?,?,?)',
-        [id, req.user.sub, result.question, result.answer, result.analysis],
+        'INSERT INTO mobile_learning_answers(id,user_id,question_text,answer_text,analysis_text,request_text) VALUES(?,?,?,?,?,?)',
+        [id, req.user.sub, result.question, result.answer, result.analysis, question],
       );
       res.json({
         id,
         question_text: result.question,
+        request_text: question,
         answer_text: result.answer,
         analysis_text: result.analysis,
         question_id: null,

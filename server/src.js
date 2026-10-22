@@ -1,5 +1,6 @@
 import { createPracticeData } from './practice-data.js';
 import { ensureMobileLearning, registerMobileLearning } from './mobile-learning.js';
+import { ensureMobileVideos, registerMobileVideos } from './mobile-videos.js';
 import { MaterialImportJobs, registerMaterialImportJobs } from './material-import-jobs.js';
 import { UserAiContext } from './user-ai-context.js';
 import { createMaterialService } from './material-service.js';
@@ -95,6 +96,7 @@ const asyncRoute = (fn) => (req, res, next) =>
   Promise.resolve()
     .then(() => userAi.run(req.user?.sub, () => fn(req, res, next)))
     .catch(next);
+registerMobileVideos(app, { db, auth, asyncRoute, secret });
 app.get('/api/platform/limits', auth, (req, res) => res.json(runtime.snapshot()));
 app.use((req, res, next) => {
   const p = req.path.toLowerCase().replace(/\/+$/, '');
@@ -408,6 +410,7 @@ registerGenerationRunner(app, {
 });
 
 app.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
   console.error(error);
   if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE')
     return res
@@ -440,6 +443,7 @@ ensurePracticeTables()
   .then(() => ensureLongContextCache(db))
   .then(() => ensureGenerationJobs(db))
   .then(() => ensureMobileLearning(db))
+  .then(() => ensureMobileVideos(db))
   .then(() => assistantSessions.init())
   .then(() => ensureStudyDays(db))
   .then(() => backfillStudyDays(db))
