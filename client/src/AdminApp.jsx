@@ -1,6 +1,6 @@
 import AdminStartup from './AdminStartup.jsx';
 import AdminUserAction from './AdminUserAction.jsx';
-import { API_ROOT } from './api-base.mjs';
+import { requestJson } from './api-client.mjs';
 import AdminDialog, { AdminDialogClose } from './AdminDialog.jsx';
 import AdminContentDetail from './AdminContentDetail.jsx';
 import AccountPanel, { AccountEntry, accountRequest } from './AccountPanel.jsx';
@@ -189,27 +189,17 @@ export default function AdminApp() {
     return () => window.removeEventListener('storage', sync);
   }, [token]);
   async function api(url, options = {}, signal) {
-    const response = await fetch(`${API_ROOT}/admin/${url}`, {
-      method: options.method || 'GET',
-      signal,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: options.body ? JSON.stringify(options.body) : undefined,
-    });
-    const text = await response.text();
-    let result;
     try {
-      result = text ? JSON.parse(text) : {};
-    } catch {
-      throw new Error('服务响应异常，请稍后重试');
+      return await requestJson(`admin/${url}`, {
+        ...options,
+        token,
+        signal,
+        errorMessage: '操作失败',
+      });
+    } catch (error) {
+      if (error.status === 401 && url !== 'login') clearSession();
+      throw error;
     }
-    if (!response.ok) {
-      if (response.status === 401 && url !== 'login') clearSession();
-      throw new Error(result.message || '操作失败');
-    }
-    return result;
   }
   useEffect(() => {
     if (!token) {

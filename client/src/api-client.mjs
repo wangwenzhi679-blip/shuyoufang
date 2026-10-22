@@ -1,6 +1,8 @@
 import { API_ROOT } from './api-base.mjs';
+import { withAdminHelp } from '../../shared/error-help.mjs';
 
-const responseError = (message, status) => Object.assign(new Error(message), { status });
+const responseError = (message, status) =>
+  Object.assign(new Error(status === 401 ? message : withAdminHelp(message)), { status });
 
 async function sendRequest(path, options) {
   const {
@@ -18,12 +20,18 @@ async function sendRequest(path, options) {
 
   let payload;
   if (body != null) payload = isForm ? body : JSON.stringify(body);
-  const response = await fetch(`${API_ROOT}/${path.replace(/^\/+/, '')}`, {
-    ...fetchOptions,
-    method,
-    headers,
-    body: payload,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_ROOT}/${path.replace(/^\/+/, '')}`, {
+      ...fetchOptions,
+      method,
+      headers,
+      body: payload,
+    });
+  } catch (error) {
+    if (error.name === 'AbortError' || fetchOptions.signal?.aborted) throw error;
+    throw responseError('网络连接失败，请检查网络后重试', 0);
+  }
   if (!response.ok) await readJson(response, errorMessage || '请求失败');
   return response;
 }
@@ -83,7 +91,7 @@ export function requestUpload(path, { token, body, onProgress, signal } = {}) {
     };
     xhr.onload = async () => {
       try {
-        if (!xhr.status) throw new Error('网络连接中断，资料上传失败，请重试');
+        if (!xhr.status) throw responseError('网络连接中断，资料上传失败，请重试', 0);
         const data = await readJson(
           new Response(xhr.responseText || null, { status: xhr.status }),
           '资料上传失败，请检查文件大小或稍后重试',
@@ -94,8 +102,8 @@ export function requestUpload(path, { token, body, onProgress, signal } = {}) {
         finish(error);
       }
     };
-    xhr.onerror = () => finish(new Error('网络连接中断，资料上传失败，请重试'));
-    xhr.ontimeout = () => finish(new Error('资料上传超时，请重试'));
+    xhr.onerror = () => finish(responseError('网络连接中断，资料上传失败，请重试', 0));
+    xhr.ontimeout = () => finish(responseError('资料上传超时，请重试', 0));
     xhr.onabort = () => finish(new DOMException('上传已取消', 'AbortError'));
     signal?.addEventListener('abort', abort, { once: true });
     xhr.send(body);

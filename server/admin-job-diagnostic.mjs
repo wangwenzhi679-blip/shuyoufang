@@ -1,3 +1,4 @@
+import { withAdminHelp } from './error-help.mjs';
 // Return only recognised diagnostic facts. Provider errors can contain prompts or secrets.
 export function jobDiagnostic(job) {
   if (job.status !== 'failed') return null;
@@ -61,6 +62,13 @@ export function jobDiagnostic(job) {
       '在设置中选择支持图片输入的模型，再重新生成；不会自动切换模型。',
     ],
     [
+      'MODEL_UNAVAILABLE',
+      '模型不可用',
+      /模型[^。\n]*(?:不可用|不存在|停用|暂停|无效)|model[_\s-]?(?:not[_\s-]?found|unavailable|unsupported)/i,
+      '模型请求',
+      '当前模型不可用，请打开设置更换可用的模型后重试。',
+    ],
+    [
       'OCR',
       '原页识读',
       /OCR|图片仍无法辨认|原页图片没有可用正文|原页没有可用文字/i,
@@ -96,7 +104,7 @@ export function jobDiagnostic(job) {
     category,
     stage,
     httpStatus: status ? Number(status[1]) : null,
-    hint: hint + ' 如仍有问题，请联系管理员。',
+    hint: withAdminHelp(hint),
     sourcePage: Number(error.match(/第\s*(\d+)\s*页/)?.[1]) || null,
   };
 }
@@ -115,14 +123,14 @@ export function jobErrorSummary(status, error = '') {
     STORAGE: '生成结果保存失败',
     CONFLICT: '资料或章节已变化，请重新生成',
     VISION_UNSUPPORTED: '当前模型不支持图片，请选择支持图片输入的模型',
+    MODEL_UNAVAILABLE: '当前模型不可用',
     OCR: '本章原页识读未通过，可改用图片识读或补充正文',
     RESPONSE: 'AI 返回内容未通过校验，请调整要求或模型后重试',
     MATERIAL: '本章资料无法使用，请检查页码范围与提取状态',
     UNKNOWN: '生成未完成，请查看任务详情后重新生成',
   };
-  return (
+  return withAdminHelp(
     (summaries[diagnostic.code] || summaries.UNKNOWN) +
-    (diagnostic.sourcePage ? `（原 PDF 第 ${diagnostic.sourcePage} 页）` : '') +
-    '。如仍有问题，请联系管理员。'
+      (diagnostic.sourcePage ? `（原 PDF 第 ${diagnostic.sourcePage} 页）` : ''),
   );
 }
