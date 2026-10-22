@@ -5,8 +5,8 @@ import path from 'node:path';
 import multer from 'multer';
 import jwt from 'jsonwebtoken';
 
-export const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
-const USER_QUOTA = 1024 * 1024 * 1024;
+export const MAX_VIDEO_BYTES = 500 * 1024 * 1024 - 1;
+const USER_QUOTA = 5 * 1024 * 1024 * 1024;
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
 export function videoSignature(bytes) {
   if (bytes.length >= 12 && bytes.toString('ascii', 4, 8) === 'ftyp') return 'video/mp4';
@@ -66,6 +66,8 @@ export function registerMobileVideos(
       upload(req, res, (error) => {
         if (error) {
           release();
+          if (error.code === 'LIMIT_FILE_SIZE')
+            return res.status(400).json({ message: '单个视频必须小于 500 MB' });
           next(error);
         } else next();
       });
@@ -100,7 +102,7 @@ export function registerMobileVideos(
             [req.user.sub],
           );
           if (Number(usage.bytes) + req.file.size > USER_QUOTA || usage.count >= 200)
-            throw fail('视频空间已满：每个账号最多 1 GB、200 个视频，请先删除不需要的视频');
+            throw fail('视频空间已满：每个账号最多 5 GB、200 个视频，请先删除不需要的视频');
           const id = randomUUID();
           await connection.execute(
             'INSERT INTO mobile_videos(id,user_id,title,stored_name,mime_type,size_bytes) VALUES(?,?,?,?,?,?)',

@@ -7,6 +7,8 @@ function routes(db, askDeepSeek = async () => '') {
   const app = {
     get: (path, ...actions) => handlers.set('GET ' + path, actions.at(-1)),
     post: (path, ...actions) => handlers.set('POST ' + path, actions.at(-1)),
+    patch: (path, ...actions) => handlers.set('PATCH ' + path, actions.at(-1)),
+    delete: (path, ...actions) => handlers.set('DELETE ' + path, actions.at(-1)),
   };
   registerMobileLearning(app, {
     db,

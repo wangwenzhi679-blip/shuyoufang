@@ -11,7 +11,7 @@ test('检查实际视频文件头，拒绝伪装的视频文件', () => {
   assert.equal(videoSignature(Buffer.from([0x1a, 0x45, 0xdf, 0xa3])), 'video/webm');
   assert.throws(() => videoSignature(Buffer.from('<html>not a video</html>')));
   assert.throws(() => videoSignature(Buffer.alloc(0)));
-  assert.equal(MAX_VIDEO_BYTES, 200 * 1024 * 1024);
+  assert.equal(MAX_VIDEO_BYTES, 500 * 1024 * 1024 - 1);
 });
 
 async function harness(db, action) {
