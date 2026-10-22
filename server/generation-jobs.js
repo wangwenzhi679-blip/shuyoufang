@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { withAdminHelp } from './error-help.mjs';
 export async function ensureGenerationJobs(db) {
   await db.query(`CREATE TABLE IF NOT EXISTS course_generation_jobs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user_id BIGINT UNSIGNED NOT NULL, course_id BIGINT UNSIGNED NOT NULL,
@@ -124,7 +125,7 @@ export function registerGenerationJobs(app, db, auth, wrap, run) {
       .catch(async (e) => {
         await db.execute(
           "UPDATE course_generation_jobs SET status='failed',active_key=NULL,error_text=? WHERE id=? AND status IN ('running','saving')",
-          [e.message || '生成失败，请重试', id],
+          [withAdminHelp(e.message || '生成失败，请重试'), id],
         );
       })
       .catch((e) => console.error('生成任务状态更新失败', e.message))

@@ -6,6 +6,93 @@ import { createChapterSummarySource } from './chapter-summary-source.js';
 import { applyChapterCorrections } from './chapter-corrections.js';
 import { sliceChapterText } from './chapter-text.mjs';
 import { selectChapterQuestions } from './material-text.mjs';
+import { createChapterImageSource } from './chapter-image-source.js';
+
+test('扫描课本OCR不通过时从本章原图识读再出题，不使用旧乱码或调用其他模型', async () => {
+  const f = fixture(),
+    rendered = [];
+  f.readChapterSummarySource = async () => {
+    throw Object.assign(new Error('OCR 识别置信度过低'), { status: 422 });
+  };
+  const readImages = createChapterImageSource({
+    uploadRoot: 'unused',
+    previewRoot: 'unused',
+    renderPage: async (_material, page) => {
+      rendered.push(page);
+      return String(page);
+    },
+    readFile: async () => Buffer.from('image'),
+  });
+  let visionCalls = 0,
+    questionCalls = 0;
+  const { questionsGenerate } = registerPracticeRoutes(
+    { post() {}, get() {}, put() {}, delete() {} },
+    {
+      ...f,
+      readChapterImageSource: readImages,
+      generationSignal: () => new AbortController().signal,
+      parseId: (_res, id) => Number(id),
+      getOwnedCourse: async () => ({ id: 1, title: '语文' }),
+      getAiModel: async () => 'selected-vision-model',
+      auth() {},
+      asyncRoute: (fn) => fn,
+      validationError() {
+        throw Error('输入无效');
+      },
+      askDeepSeek: async (messages, model) => {
+        assert.equal(model, undefined, '必须沿用当前账号模型');
+        const content = messages.at(-1).content;
+        if (Array.isArray(content)) {
+          visionCalls++;
+          const pages = content
+            .filter((part) => part.type === 'text' && part.text.startsWith('【'))
+            .map((part) => Number(part.text.match(/第 (\d+) 页/)[1]));
+          return JSON.stringify({
+            pages: pages.map((page) => ({ page, readable: true, text: '庖丁解牛选自《庄子》。' })),
+          });
+        }
+        questionCalls++;
+        assert.match(content, /庖丁解牛选自/);
+        assert.doesNotMatch(content, /错误内容/);
+        return JSON.stringify({
+          questions: [
+            {
+              type: '单选题',
+              question: '庖丁解牛出自哪里？',
+              options: ['A. 庄子', 'B. 论语', 'C. 孟子', 'D. 史记'],
+              answer: 'A',
+              analysis: '原文注明选自庄子。',
+            },
+          ],
+        });
+      },
+    },
+  );
+  const res = {
+    statusCode: 200,
+    status(code) {
+      this.statusCode = code;
+      return this;
+    },
+    json(value) {
+      this.body = value;
+      return this;
+    },
+  };
+  await questionsGenerate(
+    {
+      params: { courseId: 1 },
+      user: { sub: 9 },
+      body: { chapterId: 13, questionCounts: [{ type: '单选题', count: 1 }], persist: false },
+    },
+    res,
+  );
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.body.questions.length, 1);
+  assert.deepEqual(rendered, [15, 16, 17, 18, 19]);
+  assert.equal(visionCalls, 3);
+  assert.equal(questionCalls, 1);
+});
 
 const chapter = {
   id: 13,

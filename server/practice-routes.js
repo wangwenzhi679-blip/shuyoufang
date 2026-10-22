@@ -19,6 +19,7 @@ import { getOverview } from './overview.js';
 import { z } from 'zod';
 import { gradeAnswer } from './wrong-review.js';
 import { generateValidated } from './ai-generation.js';
+import { canReadChapterImages } from './chapter-image-source.js';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function registerPracticeRoutes(
@@ -33,6 +34,7 @@ export function registerPracticeRoutes(
     serviceSettings,
     getAiModel,
     readChapterSummarySource,
+    readChapterImageSource,
     auth,
     asyncRoute,
   },
@@ -66,9 +68,29 @@ export function registerPracticeRoutes(
       chapter.source_regions_json != null
         ? await applyChapterCorrections(db, course.id, chapter.id, [])
         : [];
-    const pageSections = readChapterSummarySource
-      ? await readChapterSummarySource(chapter, materials, signal, corrections, req.updateProgress)
-      : null;
+    let pageSections;
+    try {
+      pageSections = readChapterSummarySource
+        ? await readChapterSummarySource(
+            chapter,
+            materials,
+            signal,
+            corrections,
+            req.updateProgress,
+          )
+        : null;
+    } catch (error) {
+      if (!readChapterImageSource || !canReadChapterImages(error)) throw error;
+      await req.updateProgress?.('文字识别未通过，正在改用本章原页图片出题');
+      pageSections = await readChapterImageSource(
+        chapter,
+        materials,
+        signal,
+        corrections,
+        req.updateProgress,
+        (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
+      );
+    }
     let chapterSources =
       pageSections ??
       materials

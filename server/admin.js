@@ -1,4 +1,5 @@
 import { registerAdminUserActions } from './admin-user-actions.js';
+import { jobErrorSummary as safeJobError } from './admin-job-diagnostic.mjs';
 import { StorageAudit } from './storage-audit.mjs';
 import { registerAdminContentDetails } from './admin-content-details.js';
 import { ensureAdminTasks, registerAdminTasks } from './admin-task-actions.js';
@@ -110,17 +111,6 @@ const paging = z
 const jobsSql = `SELECT id,user_id,course_id,chapter_id,kind,status,created_at,updated_at,error_text,progress_text,'course' AS source FROM course_generation_jobs
   UNION ALL SELECT id,user_id,course_id,chapter_id,'notes',status,created_at,NULL,error_text,progress_text,'note' FROM note_ai_jobs
   UNION ALL SELECT id,user_id,course_id,NULL,'plan',status,created_at,NULL,error_text,NULL,'plan' FROM learning_plan_jobs`;
-const safeJobError = (status, error = '') => {
-  if (status === 'cancelled') return '任务已取消';
-  if (status !== 'failed') return '';
-  if (/重启/.test(error)) return '服务重启，生成中断';
-  if (/公式|资料|文字|识别/.test(error)) return '资料识别异常，请检查原文件';
-  if (/401|鉴权|api key|authentication/i.test(error)) return 'AI 服务鉴权失败';
-  if (/429|限流|rate limit/i.test(error)) return 'AI 服务请求受限';
-  if (/timeout|超时|timed out/i.test(error)) return 'AI 服务响应超时';
-  if (/版本|冲突/.test(error)) return '内容版本已变化';
-  return '生成未完成，请由学习者检查后重新生成';
-};
 function dateWhere(filter, column, params) {
   let sql = '';
   if (filter.from) {

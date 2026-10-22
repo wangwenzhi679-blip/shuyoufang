@@ -123,9 +123,15 @@ export function createPdfOcrReader({
                 hasDamagedFormula(result.text) ||
                 (result.text.trim() && Number.isFinite(result.confidence) && result.confidence < 30)
               )
-                throw Object.assign(new Error('OCR 识别置信度过低或文字无效，请检查原页清晰度'), {
-                  status: 422,
-                });
+                throw Object.assign(
+                  new Error(
+                    `原 PDF 第 ${result.page} 页 OCR 识别置信度过低或文字无效，可改用图片识读或补充本章文字`,
+                  ),
+                  {
+                    status: 422,
+                    code: 'OCR_LOW_CONFIDENCE',
+                  },
+                );
               results.set(result.page, result.text);
               const temporary = path.join(root, `${result.page}-${randomUUID()}.tmp`);
               try {

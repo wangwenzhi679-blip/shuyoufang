@@ -2,7 +2,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { extractPdfText } from './pdf-text-worker.mjs';
 
-const regionsSchema = z
+export const regionsSchema = z
   .array(
     z.object({
       materialId: z.number().int().positive(),

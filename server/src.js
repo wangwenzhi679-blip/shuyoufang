@@ -10,6 +10,7 @@ import { registerReadingAdapters } from './reading-adapters.js';
 import { registerAuthRoutes } from './auth-routes.js';
 import { registerAssistantRoutes } from './assistant-routes.js';
 import { registerPracticeRoutes } from './practice-routes.js';
+import { withAdminHelp } from './error-help.mjs';
 import { registerCourseQueryRoutes } from './course-query-routes.js';
 import { registerMaterialReadingRoutes } from './material-reading-routes.js';
 import { registerChapterGenerationRoutes } from './chapter-generation-routes.js';
@@ -134,6 +135,7 @@ const {
   buildVisionPages,
   readChapterSummarySource,
   preparePdfOutline,
+  readChapterImageSource,
 } = createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot });
 const { issue, userView, findUserByEmail, sendCode, consumeCode, recordLearningLogin } =
   createAccountService({ secret, db, serviceSettings });
@@ -306,6 +308,7 @@ const assistantSessions = new AssistantSessions(db, {
 assistantSessions.register(app, auth, asyncRoute);
 
 const { questionsGenerate, practiceCreate } = registerPracticeRoutes(app, {
+  readChapterImageSource,
   readChapterSummarySource,
   getAiModel: () => userAi.fingerprint(),
   generationSignal,
@@ -424,8 +427,11 @@ app.use((error, req, res, next) => {
       .status(400)
       .json({ message: `单次最多上传 ${req.uploadLimits?.uploadCount || 5} 个资料文件` });
   if (req.path.startsWith('/api/admin') && !error.status)
-    return res.status(500).json({ message: '管理服务暂不可用，请稍后重试' });
-  res.status(error.status || 500).json({ message: error.message || '服务器暂时无法处理请求' });
+    return res.status(500).json({ message: withAdminHelp('管理服务暂不可用，请稍后重试') });
+  const message = error.message || '服务器暂时无法处理请求';
+  res
+    .status(error.status || 500)
+    .json({ message: error.status === 401 ? message : withAdminHelp(message) });
 });
 ensurePracticeTables()
   .then(() => ensureAdmin(db))

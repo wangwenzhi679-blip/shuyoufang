@@ -73,9 +73,12 @@ test('鉴权额度限流网络错误及取消不重试，持续无效结果有�
   );
   assert.equal(
     generationError({ status: 401, message: 'AI 服务鉴权失败' }, 'fallback'),
-    'AI 服务鉴权失败',
+    'AI 服务鉴权失败。如仍有问题，请联系管理员。',
   );
-  assert.equal(generationError({ message: 'private database detail' }, 'fallback'), 'fallback');
+  assert.equal(
+    generationError({ message: 'private database detail' }, 'fallback'),
+    'fallback。如仍有问题，请联系管理员。',
+  );
 });
 test('学习计划不存在的章节、非学习日或超期必须修复后才接受', async () => {
   const config = { targetDate: today(), minutes: 30, weekdays: [0, 1, 2, 3, 4, 5, 6] };

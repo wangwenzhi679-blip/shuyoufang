@@ -1,3 +1,4 @@
+import { withAdminHelp } from './error-help.mjs';
 // Only malformed/truncated output is retryable; auth, quota, network and cancellation are not.
 export async function generateValidated({
   ask,
@@ -59,9 +60,10 @@ export async function generateValidated({
 }
 
 export function generationError(error, fallback) {
-  return (
-    [400, 401, 402, 403, 404, 409, 422, 429, 502, 503].includes(error.status)
+  return withAdminHelp(
+    ([400, 401, 402, 403, 404, 409, 422, 429, 502, 503].includes(error.status)
       ? error.message
       : fallback
-  ).slice(0, 500);
+    ).slice(0, 460),
+  );
 }
