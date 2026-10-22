@@ -1,4 +1,5 @@
 import { createPracticeData } from './practice-data.js';
+import { ensureMobileLearning, registerMobileLearning } from './mobile-learning.js';
 import { MaterialImportJobs, registerMaterialImportJobs } from './material-import-jobs.js';
 import { UserAiContext } from './user-ai-context.js';
 import { createMaterialService } from './material-service.js';
@@ -70,6 +71,7 @@ app.locals.runtime = runtime;
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
 app.post('/api/courses/:courseId/cover/upload', express.json({ limit: '4.2mb' }));
+app.post('/api/mobile/ask', express.json({ limit: '4.2mb' }));
 app.use(express.json({ limit: '1mb' }));
 
 const uploadRoot =
@@ -97,7 +99,7 @@ app.get('/api/platform/limits', auth, (req, res) => res.json(runtime.snapshot())
 app.use((req, res, next) => {
   const p = req.path.toLowerCase().replace(/\/+$/, '');
   const kind =
-    p === '/api/assistant/ask'
+    p === '/api/assistant/ask' || p === '/api/mobile/ask'
       ? 'chat'
       : req.method === 'POST' &&
           (p === '/api/generation-jobs' ||
@@ -240,6 +242,14 @@ async function askDeepSeek(messages, model, signal, options) {
     runtime.run(() => userAi.ask(messages, model, signal, options), signal),
   );
 }
+registerMobileLearning(app, {
+  db,
+  auth,
+  asyncRoute,
+  serviceSettings,
+  askDeepSeek,
+  generationSignal,
+});
 
 registerAuthRoutes(app, {
   asyncRoute,
@@ -429,6 +439,7 @@ ensurePracticeTables()
   .then(() => ensureChapterCorrections(db))
   .then(() => ensureLongContextCache(db))
   .then(() => ensureGenerationJobs(db))
+  .then(() => ensureMobileLearning(db))
   .then(() => assistantSessions.init())
   .then(() => ensureStudyDays(db))
   .then(() => backfillStudyDays(db))
