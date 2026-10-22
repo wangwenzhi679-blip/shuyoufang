@@ -41,6 +41,29 @@ const independentIds = new Set([
   'reading_positions', 'reading_bookmarks', 'note_attachments', 'chapter_question_drafts',
 ]);
 const linkedIds = new Set(['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules']);
+
+async function normalizeMigrationDates(db, entries) {
+  const [columns] = await db.query(
+    "SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE FROM information_schema.columns WHERE TABLE_SCHEMA=DATABASE() AND DATA_TYPE IN ('date','datetime','timestamp')",
+  );
+  // 原本机导出使用香港时间；ISO 日期被 JSON 转成 UTC，需要恢复 +08:00。
+  await db.query("SET time_zone = '+08:00'");
+  for (const entry of entries) {
+    const dates = columns.filter((column) => column.TABLE_NAME === entry.name);
+    for (const row of entry.rows) {
+      for (const column of dates) {
+        const value = row[column.COLUMN_NAME];
+        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(value)) continue;
+        const instant = Date.parse(value);
+        if (!Number.isFinite(instant)) throw new Error(`日期数据不正确：${entry.name}.${column.COLUMN_NAME}`);
+        const local = new Date(instant + 8 * 60 * 60 * 1000).toISOString();
+        row[column.COLUMN_NAME] = column.DATA_TYPE === 'date'
+          ? local.slice(0, 10)
+          : local.slice(0, 19).replace('T', ' ');
+      }
+    }
+  }
+}
 const command = (program, args, cwd) =>
   new Promise((resolve, reject) => {
     const task = spawn(program, args, { cwd, windowsHide: true });
@@ -220,6 +243,7 @@ async function importReview(directory) {
     if (sameAccount.length) throw new Error('云端已存在该评审账号；为防止覆盖，未导入任何数据');
     const [tables] = await db.query('SHOW TABLES');
     const existing = new Set(tables.map((row) => Object.values(row)[0]));
+    await normalizeMigrationDates(db, manifest.tables);
     for (const entry of manifest.tables) {
       if (!existing.has(entry.name)) throw new Error(`云端缺少数据表：${entry.name}`);
       if (!Array.isArray(entry.rows) || !entry.rows.length) continue;
