@@ -1,0 +1,14 @@
+.auth-inkwash-page .auth-form-card .auth-field-hint {
+  display: block;
+  margin: 2px 0 0;
+  max-width: 100%;
+  color: inherit;
+  opacity: 0.85;
+  font:
+    12px/1.6 'Microsoft YaHei',
+    sans-serif;
+  letter-spacing: normal;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}

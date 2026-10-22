@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './auth-field-hints.css';
 
 const grades = ['初一', '初二', '初三', '高一', '高二', '高三'];
 const authMeta = {
@@ -96,6 +97,7 @@ export default function AuthScreen({
           )}
           <AuthForm
             key={mode}
+            mode={mode}
             fields={fields}
             initialEmail={mode === 'register' ? '' : pendingEmail}
             button={authMeta[mode].button}
@@ -162,7 +164,7 @@ export default function AuthScreen({
     </div>
   );
 }
-function AuthForm({ fields, initialEmail, button, submit, requestLoginCode }) {
+function AuthForm({ mode, fields, initialEmail, button, submit, requestLoginCode }) {
   const [values, setValues] = useState({ email: initialEmail || '' });
   const [visiblePasswords, setVisiblePasswords] = useState({});
   const [error, setError] = useState('');
@@ -175,6 +177,19 @@ function AuthForm({ fields, initialEmail, button, submit, requestLoginCode }) {
     password: '密码',
     confirmPassword: '确认密码',
     code: '验证码',
+  };
+  const hints = {
+    account: '8—16 位字母、数字或下划线。',
+    password: '密码长度为 8—16 位，区分大小写。',
+    confirmPassword: '再次输入密码，需与上面的密码一致。',
+    nickname: '昵称长度为 2—16 个字符。',
+    email:
+      mode === 'register'
+        ? '填写可接收验证码的邮箱，注册后需完成邮箱验证。'
+        : mode === 'verify'
+          ? '填写本次注册使用的邮箱。'
+          : '填写已绑定账号并完成验证的邮箱。',
+    code: '填写邮件中的 6 位数字验证码，有效期为 10 分钟。',
   };
   const update = (key, value) => setValues((current) => ({ ...current, [key]: value }));
   useEffect(() => {
@@ -206,6 +221,8 @@ function AuthForm({ fields, initialEmail, button, submit, requestLoginCode }) {
   };
   const input = (field) => (
     <input
+      id={`auth-${field}`}
+      aria-describedby={`auth-${field}-hint`}
       required
       value={values[field] || ''}
       type={
@@ -293,6 +310,11 @@ function AuthForm({ fields, initialEmail, button, submit, requestLoginCode }) {
             </div>
           ) : (
             input(field)
+          )}
+          {hints[field] && (
+            <small id={`auth-${field}-hint`} className="auth-field-hint">
+              {hints[field]}
+            </small>
           )}
         </label>
       ))}
