@@ -43,45 +43,7 @@ AI 整理、问答和生图需要相应服务可用。普通课程管理与已�
 
 停用可以恢复；注销不可恢复，会撤销登录权限并解绑邮箱。注销后账号名称和学习记录仍保留供管理核查，并非清空该用户的全部数据。管理员账号不能通过用户管理中的注销功能处理。
 
-## 日常启动：一键方式
-
-项目文件夹统一命名为 `shuyoufang`，以下以此目录为例（请按实际存放位置调整路径）：
-
-```text
-E:\developing\shuyoufang
-```
-
-1. 确认 MySQL 服务已经启动。
-2. 打开项目目录，双击 `start-site.cmd`。
-3. 等待约 10～30 秒，启动成功后会自动打开用户端。
-
-脚本会检查并启动尚未运行的前后端，复用已经运行的服务。通过 Windows 任务计划程序在后台运行，关闭浏览器不会停止服务；重启电脑后需要再次启动。
-
-启动失败时查看窗口提示及根目录下的 `startup-logs/`。脚本不会安装依赖、初始化数据库或终止其他占用端口的程序。
-
-## 手动启动：两个 PowerShell 窗口
-
-先启动 MySQL，再分别打开两个 PowerShell 窗口。
-
-第一个窗口启动后端：
-
-```powershell
-cd "E:\developing\shuyoufang\server"
-& D:\node.exe src.js
-```
-
-第二个窗口启动前端：
-
-```powershell
-cd "E:\developing\shuyoufang\client"
-& D:\npm.cmd run dev -- --host 127.0.0.1 --port 5173 --strictPort
-```
-
-两个窗口需要保持打开。按 `Ctrl+C` 停止对应窗口启动的服务。如果提示端口已被占用，先确认是否已经通过一键方式启动。
-
-以上命令使用当前电脑的 Node.js 路径。其他电脑安装 Node.js 并配置 PATH 后，可分别使用 `node src.js` 和 `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort`。
-
-## 新环境安装与配置
+## 云服务器安装与配置
 
 已有可用环境不需要重复初始化数据库或覆盖配置。
 
@@ -105,10 +67,10 @@ MYSQL_PASSWORD=你的数据库密码
 MYSQL_DATABASE=math_path
 JWT_SECRET=替换为随机生成的长密钥
 PORT=8005
-CLIENT_ORIGIN=http://127.0.0.1:5173
+CLIENT_ORIGIN=https://shuyoufang.asia
 ```
 
-5. 按前述方式启动前后端，检查网页能否正常打开。
+5. 在云服务器部署后端和前端静态文件，通过正式域名访问。
 6. 新数据库首次使用时，在项目根目录运行以下命令，按提示设置管理员账号、昵称与密码：
 
 ```powershell
@@ -137,20 +99,6 @@ SOURCE C:/项目所在路径/shuyoufang/database/schema.sql;
 ```
 
 将路径替换为实际位置，建议使用正斜杠。脚本默认创建并使用 `math_path` 数据库；自行改名时需同时调整脚本和 `.env`，不要对重要数据执行未经核对的初始化。
-
-在新的交互式 PowerShell 中启动时，可使用通用命令：
-
-```powershell
-# 第一个窗口，在项目根目录运行
-npm --prefix server start
-```
-
-```powershell
-# 第二个窗口，在项目根目录运行
-npm --prefix client run dev -- --host 127.0.0.1 --port 5173 --strictPort
-```
-
-后端需要在 `server` 目录加载 `.env`；通过上述 npm 命令启动会自动使用正确的工作目录。Windows 一键脚本与已有实例共用端口，新环境验证应避免和原网站同时运行。
 
 ### 文档处理依赖
 
@@ -210,10 +158,9 @@ shuyoufang/
 ├─ shared/              前后端共享逻辑
 ├─ database/schema.sql  基础数据库结构
 ├─ docs/                产品规划与专项说明
-├─ startup-logs/        一键启动产生的日志
-├─ start-site.cmd       Windows 一键入口
-├─ start-site.ps1       启动检查与调度
-└─ site-service.ps1     后台服务运行脚本
+├─ startup-logs/        私密交付材料及历史日志
+├─ start-site.cmd       打开正式公网网站
+├─ start-site.ps1       打开正式公网网站
 ```
 
 前端构建：在 `client/` 中运行 `npm run build`，输出为 `client/dist/`。构建产物不包含后端、数据库或上传资料。
@@ -251,10 +198,9 @@ PDF 原页阅读需要 Poppler。后端优先使用 `PDFINFO_PATH`、`PDFTOPPM_P
 
 | 情况                     | 检查方式                                                                         |
 | ------------------------ | -------------------------------------------------------------------------------- |
-| 网页打不开               | 确认前端和后端已启动，地址为 `127.0.0.1:5173`                                    |
+| 网页打不开               | 确认网络正常，并访问 https://shuyoufang.asia                                     |
 | 页面打开但数据加载失败   | 确认后端 8005 端口及 MySQL 正常，查看后端错误提示                                |
 | 数据库提示 Access denied | 核对 `server/.env` 中的用户名、密码和 MySQL 账号权限                             |
-| 提示端口已占用           | 检查是否重复启动；一键启动和手动启动不需要同时使用                               |
 | 找不到 node 或 npm       | 本机可使用上述 `D:\node.exe`、`D:\npm.cmd`；其他电脑检查安装与 PATH              |
 | 注册或验证码失败         | 在管理端检查邮件服务配置和发送结果                                               |
 | AI 无法生成内容或图片    | 检查对应服务是否启用、连接结果、模型权限、余额和平台限额；文字与图片服务分别配置 |
