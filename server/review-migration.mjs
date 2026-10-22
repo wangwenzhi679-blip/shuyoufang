@@ -24,7 +24,17 @@ const identifier = (value) => {
   return `\`${value}\``;
 };
 const hashFile = async (file) => crypto.createHash('sha256').update(await readFile(file)).digest('hex');
-const scalar = (value) => (value && typeof value === 'object' && value.type === 'Buffer' ? Buffer.from(value.data) : value);
+const scalar = (value) =>
+  value && typeof value === 'object' && value.type === 'Buffer'
+    ? Buffer.from(value.data)
+    : value && typeof value === 'object'
+      ? JSON.stringify(value)
+      : value;
+// 旧环境中的执行任务不应在云端恢复，以免重新执行或占用任务编号。
+const transientTables = new Set([
+  'material_import_jobs', 'course_generation_jobs', 'learning_plan_jobs', 'note_ai_jobs',
+  'material_preview_repairs', 'course_cover_drafts', 'chapter_image_drafts',
+]);
 const command = (program, args, cwd) =>
   new Promise((resolve, reject) => {
     const task = spawn(program, args, { cwd, windowsHide: true });
@@ -188,6 +198,7 @@ async function importReview(directory) {
   const manifest = JSON.parse(await readFile(path.join(manifestPath, 'manifest.json'), 'utf8'));
   if (manifest.format !== 1 || manifest.kind !== 'shuyoufang-review-migration' || !Array.isArray(manifest.tables))
     throw new Error('迁移包格式不正确');
+  manifest.tables = manifest.tables.filter((entry) => !transientTables.has(entry.name));
   const userEntry = manifest.tables.find((entry) => entry.name === 'users');
   if (!userEntry || userEntry.rows.length !== 1 || userEntry.rows[0].account !== manifest.account)
     throw new Error('迁移账号数据不正确');
