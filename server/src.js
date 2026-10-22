@@ -136,6 +136,7 @@ const {
   readChapterSummarySource,
   preparePdfOutline,
   readChapterImageSource,
+  readAssistantPageSource,
 } = createMaterialService({ previewRoot, uploadRoot, runtime, db, visionRoot });
 const { issue, userView, findUserByEmail, sendCode, consumeCode, recordLearningLogin } =
   createAccountService({ secret, db, serviceSettings });
@@ -269,7 +270,21 @@ registerAuthRoutes(app, {
   auth,
 });
 
+const assistantContext = createAssistantContext({
+  db,
+  assertCourse: (...args) => contentControl.assertCourse(...args),
+  sliceChapterText,
+  selectChapterQuestions,
+  applyChapterCorrections,
+  readPreferences,
+  readChapterSummarySource,
+  readAssistantPageSource,
+  assertImageModel: async (model) =>
+    userAi.assertImages([{ content: [{ type: 'image_url' }] }], await userAi.model(model)),
+});
+
 registerAssistantRoutes(app, {
+  context: assistantContext,
   auth,
   serviceSettings,
   asyncRoute,
@@ -283,15 +298,7 @@ registerAssistantRoutes(app, {
 });
 
 const assistantSessions = new AssistantSessions(db, {
-  context: createAssistantContext({
-    db,
-    assertCourse: (...args) => contentControl.assertCourse(...args),
-    sliceChapterText,
-    selectChapterQuestions,
-    applyChapterCorrections,
-    readPreferences,
-    readChapterSummarySource,
-  }),
+  context: assistantContext,
   ask: askDeepSeek,
   stream: (messages, model, signal, onChunk) =>
     runtime.run(() => userAi.askStream(messages, model, signal, onChunk), signal),
@@ -308,6 +315,9 @@ const assistantSessions = new AssistantSessions(db, {
 assistantSessions.register(app, auth, asyncRoute);
 
 const { questionsGenerate, practiceCreate } = registerPracticeRoutes(app, {
+  readAssistantPageSource,
+  assertImageModel: async (model) =>
+    userAi.assertImages([{ content: [{ type: 'image_url' }] }], await userAi.model(model)),
   readChapterImageSource,
   readChapterSummarySource,
   getAiModel: () => userAi.fingerprint(),

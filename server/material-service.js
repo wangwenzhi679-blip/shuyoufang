@@ -10,6 +10,7 @@ import { extractPdfText } from './pdf-text-worker.mjs';
 import { createChapterSummarySource } from './chapter-summary-source.js';
 import { createPdfOcrReader } from './pdf-ocr.js';
 import { createChapterImageSource } from './chapter-image-source.js';
+import { createAssistantPageSource } from './assistant-page-source.js';
 
 // 显式注入运行依赖，导入模块本身不会启动服务或连接数据库。
 export function createMaterialService({
@@ -190,6 +191,13 @@ export function createMaterialService({
     processMaterial,
     buildVisionPages,
     preparePdfOutline,
+    readAssistantPageSource: createAssistantPageSource({
+      uploadRoot,
+      previewRoot: path.join(
+        visionRoot || previewRoot || path.resolve('storage', 'previews'),
+        'chapter-pages',
+      ),
+    }),
     readChapterImageSource: createChapterImageSource({
       uploadRoot,
       previewRoot: path.join(

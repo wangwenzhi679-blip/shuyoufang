@@ -47,6 +47,8 @@ export function createAssistantContext({
   applyChapterCorrections,
   readPreferences,
   readChapterSummarySource,
+  readAssistantPageSource,
+  assertImageModel,
 }) {
   return async (userId, courseId, chapterId, question, model, signal) => {
     signal.throwIfAborted();
@@ -66,7 +68,8 @@ export function createAssistantContext({
         name: m.original_name,
         content: m.extracted_text,
       })),
-      chapter;
+      chapter,
+      pageImages;
     if (chapterId) {
       const [chapters] = await db.execute(
         'SELECT id,title,description,source_regions_json FROM course_chapters WHERE course_id=? ORDER BY sort_order,id',
@@ -79,9 +82,18 @@ export function createAssistantContext({
         chapter.source_regions_json != null
           ? await applyChapterCorrections(db, courseId, chapterId, [])
           : [];
-      const pageSections = readChapterSummarySource
-        ? await readChapterSummarySource(chapter, materials, signal, corrections)
-        : null;
+      const pageSections =
+        readAssistantPageSource && chapter.source_regions_json != null
+          ? (pageImages = await readAssistantPageSource(
+              chapter,
+              materials,
+              signal,
+              corrections,
+              () => assertImageModel?.(model),
+            )).sections
+          : readChapterSummarySource
+            ? await readChapterSummarySource(chapter, materials, signal, corrections)
+            : null;
       sections =
         pageSections ??
         materials
@@ -99,8 +111,22 @@ export function createAssistantContext({
         }));
       sections = await applyChapterCorrections(db, courseId, chapterId, sections);
     }
+    if (!chapterId && readAssistantPageSource) {
+      const imageMaterials = materials.filter(
+        (m) =>
+          /\.pdf$/i.test(m.stored_name || '') &&
+          !String(m.extracted_text || '').replace(/\s|\ufffd/g, ''),
+      );
+      if (imageMaterials.length) {
+        pageImages = await readAssistantPageSource(null, imageMaterials, signal, [], () =>
+          assertImageModel?.(model),
+        );
+        const ids = new Set(imageMaterials.map((m) => Number(m.id)));
+        sections = sections.filter((s) => !ids.has(Number(s.materialId)));
+      }
+    }
     const passages = selectAssistantPassages(sections, question);
-    if (!passages.length)
+    if (!passages.length && !pageImages?.parts.length)
       throw fail(
         chapterId
           ? '暂未定位到这一章的资料，请调整章节或补充资料后再提问'
@@ -116,7 +142,17 @@ export function createAssistantContext({
             (s, i) =>
               `[资料${i + 1}] ${s.name}${chapter ? ' · ' + chapter.title : ''}\n${s.content}`,
           )
-          .join('\n\n'),
+          .join('\n\n') +
+        (pageImages?.sources.length
+          ? '\n\n以下原页图片是本次资料，直接看图回答；不得猜测模糊或无法辨认的内容。\n' +
+            pageImages.sources
+              .map(
+                (s, i) =>
+                  `[资料${passages.length + i + 1}] [原页${i + 1}] ${s.name} · 原 PDF 第 ${s.page} 页`,
+              )
+              .join('\n')
+          : ''),
+      parts: pageImages?.parts,
       preference:
         '回答长度偏好：' +
         ({
@@ -124,14 +160,22 @@ export function createAssistantContext({
           moderate: '适中，给出必要解释。',
           detailed: '详细，分步骤解释。',
         }[preferences.answerStyle] || '适中。'),
-      sources: passages.map((s) => ({
-        materialId: s.materialId,
-        courseId,
-        chapterId: chapterId || null,
-        name: s.name,
-        chapterTitle: chapter?.title || '',
-        excerpt: s.content.slice(0, 550),
-      })),
+      sources: [
+        ...passages.map((s) => ({
+          materialId: s.materialId,
+          courseId,
+          chapterId: chapterId || null,
+          name: s.name,
+          chapterTitle: chapter?.title || '',
+          excerpt: s.content.slice(0, 550),
+        })),
+        ...(pageImages?.sources || []).map((s) => ({
+          ...s,
+          courseId,
+          chapterId: chapterId || null,
+          chapterTitle: chapter?.title || '',
+        })),
+      ],
     };
   };
 }
