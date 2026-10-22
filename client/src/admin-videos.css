@@ -1,0 +1,71 @@
+.admin-video-panel {
+  max-width: 1100px;
+  padding: 24px;
+  background: #fbfcf8;
+  border: 1px solid #dce5dc;
+  border-radius: 18px;
+}
+.admin-video-panel form {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: #eef3ed;
+  border-radius: 14px;
+}
+.admin-video-panel h2,
+.admin-video-panel h3,
+.admin-video-panel p {
+  margin: 8px 0;
+}
+.admin-video-panel label {
+  display: grid;
+  gap: 8px;
+  max-width: 720px;
+}
+.admin-video-panel input {
+  min-width: 0;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #c9d6cb;
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.admin-video-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-video-panel button {
+  padding: 10px 18px;
+  border: 1px solid #b9c9bc;
+  border-radius: 9px;
+  background: #e2ebdf;
+  color: #253e2d;
+  cursor: pointer;
+}
+.admin-video-panel button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.admin-video-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #dce5dc;
+}
+.admin-video-list h3 {
+  overflow-wrap: anywhere;
+}
+.admin-video-error {
+  color: #9e3029;
+}
+.admin-video-notice {
+  color: #315e3c;
+}
+.admin-video-panel progress {
+  width: min(400px, 75%);
+  accent-color: #55775e;
+}

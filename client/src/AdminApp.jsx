@@ -1,4 +1,5 @@
 import AdminStartup from './AdminStartup.jsx';
+import AdminVideos from './AdminVideos.jsx';
 import AdminUserAction from './AdminUserAction.jsx';
 import { requestJson } from './api-client.mjs';
 import AdminDialog, { AdminDialogClose } from './AdminDialog.jsx';
@@ -32,6 +33,7 @@ const pages = {
   materials: '资料查询',
   jobs: 'AI 任务',
   announcements: '公告管理',
+  videos: '视频管理',
   services: '服务状态',
   limits: '运行设置',
   backups: '数据备份',
@@ -62,6 +64,8 @@ const actions = {
   image_generate: '重新生成配图',
   image_adopt: '采用章节配图',
   image_discard: '保留原配图',
+  video_publish: '发布公共视频',
+  video_withdraw: '下架公共视频',
   backup_download: '下载备份',
   backup_create: '创建备份',
   backup_verify: '验证恢复',
@@ -382,7 +386,7 @@ export default function AdminApp() {
                 onClick={() => navigate({ view: key, ...emptyFilters, page: 1 })}
               >
                 <span className="atelier-nav-index">
-                  {['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾'][index]}
+                  {['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾', '拾壹'][index]}
                 </span>
                 <span>{name}</span>
               </button>
@@ -414,6 +418,7 @@ export default function AdminApp() {
                   materials: '整理资料记录，关注内容与文件状态。',
                   jobs: '查看生成进展，及时处理异常任务。',
                   announcements: '发布平台消息，让重要信息清晰传达。',
+                  videos: '上传与发布公共视频，让学习资源随时可看。',
                   services: '连接智能服务，让研习顺畅发生。',
                   limits: '按平台需要，调整运行与使用额度。',
                   backups: '妥善保存数据，为持续研习留一份保障。',
@@ -589,6 +594,13 @@ export default function AdminApp() {
                     setNotice(message);
                     setRevision((value) => value + 1);
                   }}
+                />
+              )}
+              {nav.view === 'videos' && (
+                <AdminVideos
+                  token={token}
+                  data={data}
+                  onChanged={() => setRevision((value) => value + 1)}
                 />
               )}
               {nav.view === 'announcements' && (
