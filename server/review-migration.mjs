@@ -35,6 +35,12 @@ const transientTables = new Set([
   'material_import_jobs', 'course_generation_jobs', 'learning_plan_jobs', 'note_ai_jobs',
   'material_preview_repairs', 'course_cover_drafts', 'chapter_image_drafts',
 ]);
+// 这些记录的主键没有被其他迁移记录引用，可直接使用云端自增编号。
+const independentIds = new Set([
+  'chapter_summaries', 'course_chapter_drafts', 'study_records',
+  'reading_positions', 'reading_bookmarks', 'note_attachments', 'chapter_question_drafts',
+]);
+const linkedIds = new Set(['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules']);
 const command = (program, args, cwd) =>
   new Promise((resolve, reject) => {
     const task = spawn(program, args, { cwd, windowsHide: true });
@@ -217,7 +223,7 @@ async function importReview(directory) {
     for (const entry of manifest.tables) {
       if (!existing.has(entry.name)) throw new Error(`云端缺少数据表：${entry.name}`);
       if (!Array.isArray(entry.rows) || !entry.rows.length) continue;
-      if ('id' in entry.rows[0] && !['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules'].includes(entry.name)) {
+      if ('id' in entry.rows[0] && !linkedIds.has(entry.name) && !independentIds.has(entry.name)) {
         const ids = entry.rows.map((row) => row.id);
         const [conflict] = await db.query(
           `SELECT id FROM ${identifier(entry.name)} WHERE id IN (${ids.map(() => '?').join(',')}) LIMIT 1`,
@@ -255,8 +261,9 @@ async function importReview(directory) {
     await db.beginTransaction();
     try {
       for (const value of entries) {
-        if (['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules'].includes(value.name)) continue;
-        await insertRows(db, value.name, value.rows);
+        if (linkedIds.has(value.name)) continue;
+        if (independentIds.has(value.name)) await insertRowsWithNewIds(db, value.name, value.rows);
+        else await insertRows(db, value.name, value.rows);
       }
       const questionIds = await insertRowsWithNewIds(db, 'practice_questions', entry('practice_questions'));
       await insertRowsWithNewIds(db, 'practice_attempts', entry('practice_attempts'));
