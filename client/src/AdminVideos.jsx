@@ -15,8 +15,8 @@ export default function AdminVideos({ token, data, onChanged }) {
   const upload = async (event) => {
     event.preventDefault();
     if (!file || busy) return;
-    if (!/\.(mp4|webm)$/i.test(file.name) || file.size >= 500 * 1024 * 1024) {
-      setError('请选择小于 500 MB 的 MP4 或 WebM 视频');
+    if (!/\.(mp4|webm|mkv)$/i.test(file.name) || file.size >= 500 * 1024 * 1024) {
+      setError('请选择小于 500 MB 的 MP4、WebM 或 MKV 视频');
       return;
     }
     setBusy(true);
@@ -73,13 +73,16 @@ export default function AdminVideos({ token, data, onChanged }) {
     <section className="admin-video-panel">
       <form onSubmit={upload}>
         <h2>发布学习视频</h2>
-        <p>发布后所有登录用户可见。请上传有权分享的 MP4 或 WebM 视频，单个小于 500 MB。</p>
+        <p>
+          发布后所有登录用户可见。支持 MP4、WebM、MKV，单个小于 500
+          MB。自动优化播放并取开头第一帧作封面。
+        </p>
         <label>
           选择视频
           <input
             ref={picker}
             type="file"
-            accept="video/mp4,video/webm"
+            accept="video/mp4,video/webm,video/x-matroska,.mkv"
             disabled={busy}
             onChange={(event) => {
               const chosen = event.target.files?.[0];
@@ -113,7 +116,7 @@ export default function AdminVideos({ token, data, onChanged }) {
         {busy && progress !== null && (
           <div role="status">
             <progress max="100" value={progress ?? 0} />{' '}
-            {progress === 99 ? '上传完成，正在保存…' : `${progress ?? 0}%`}
+            {progress === 99 ? '正在优化播放并生成开头封面，请稍等…' : `${progress ?? 0}%`}
           </div>
         )}
       </form>

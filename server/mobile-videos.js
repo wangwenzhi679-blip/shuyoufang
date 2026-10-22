@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
-import { statfs, unlink, open } from 'node:fs/promises';
+import { statfs, unlink, open, rename } from 'node:fs/promises';
 import path from 'node:path';
 import multer from 'multer';
 import jwt from 'jsonwebtoken';
+import { createVideoProcessor } from './video-processing.js';
 
 export const MAX_VIDEO_BYTES = 500 * 1024 * 1024 - 1;
 const USER_QUOTA = 5 * 1024 * 1024 * 1024;
@@ -12,7 +13,7 @@ export function videoSignature(bytes) {
   if (bytes.length >= 12 && bytes.toString('ascii', 4, 8) === 'ftyp') return 'video/mp4';
   if (bytes.length >= 4 && bytes.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3])))
     return 'video/webm';
-  throw fail('请选择有效的 MP4 或 WebM 视频');
+  throw fail('请选择有效的 MP4、WebM 或 MKV 视频');
 }
 export async function ensureMobileVideos(db) {
   await db.query(`CREATE TABLE IF NOT EXISTS mobile_videos (
@@ -27,7 +28,14 @@ export async function ensureMobileVideos(db) {
 }
 export function registerMobileVideos(
   app,
-  { db, auth, asyncRoute, secret, root = path.resolve('storage/mobile-videos') },
+  {
+    db,
+    auth,
+    asyncRoute,
+    secret,
+    root = path.resolve('storage/mobile-videos'),
+    processVideo = createVideoProcessor(),
+  },
 ) {
   fs.mkdirSync(root, { recursive: true });
   const owners = new Set();
@@ -74,7 +82,13 @@ export function registerMobileVideos(
   };
   const saveVideo = asyncRoute(async (req, res) => {
     if (!req.file) throw fail('请选择视频文件');
-    let saved = false;
+    let saved = false,
+      processed;
+    const controller = new AbortController();
+    const disconnected = () => {
+      if (!res.writableEnded) controller.abort();
+    };
+    res.once('close', disconnected);
     try {
       const file = await open(req.file.path, 'r');
       let mime;
@@ -86,8 +100,13 @@ export function registerMobileVideos(
         await file.close();
       }
       const disk = await statfs(root);
-      if (Number(disk.bavail) * Number(disk.bsize) < 512 * 1024 * 1024)
+      if (Number(disk.bavail) * Number(disk.bsize) < req.file.size + 512 * 1024 * 1024)
         throw fail('服务器可用空间不足，请稍后上传', 507);
+      processed = await processVideo(req.file.path, { signal: controller.signal });
+      await rename(processed.video, req.file.path);
+      await rename(processed.poster, req.file.path + '.jpg');
+      mime = processed.mime;
+      req.file.size = processed.size;
       const title = String(req.body.title || req.file.originalname)
         .replace(/[\u0000-\u001f]/g, '')
         .trim()
@@ -121,6 +140,7 @@ export function registerMobileVideos(
             "INSERT INTO admin_action_logs(actor_id,actor_account,actor_role,action,target_id,result,detail) VALUES(?,?,'admin','video_publish',?,'success',?)",
             [req.user.sub, req.user.account || '管理员', id, title],
           );
+        controller.signal.throwIfAborted();
         await connection.commit();
         saved = true;
         res.status(201).json({ id, title, size_bytes: req.file.size, mime_type: mime });
@@ -131,7 +151,12 @@ export function registerMobileVideos(
         connection.release();
       }
     } finally {
-      if (!saved) await unlink(req.file.path).catch(() => {});
+      res.removeListener('close', disconnected);
+      if (!saved) {
+        await unlink(req.file.path).catch(() => {});
+        await unlink(req.file.path + '.jpg').catch(() => {});
+      }
+      await processed?.cleanup();
     }
   });
   const admin = (req, res, next) =>
@@ -219,6 +244,7 @@ export function registerMobileVideos(
       );
       res.json({
         url: `/api/mobile/videos/${video.id}/content?ticket=${encodeURIComponent(ticket)}`,
+        poster: `/api/mobile/videos/${video.id}/content?poster=1&ticket=${encodeURIComponent(ticket)}`,
       });
     }),
   );
@@ -243,15 +269,29 @@ export function registerMobileVideos(
         throw fail('视频不存在或登录状态已变化', 403);
       if (!/^[a-f0-9-]+\.video$/.test(video.stored_name)) throw fail('视频存储状态异常', 500);
       res.set({
-        'Content-Type': video.mime_type,
-        'Cache-Control': 'private, no-store',
+        'Content-Type': req.query.poster === '1' ? 'image/jpeg' : video.mime_type,
+        'Cache-Control': 'private, no-cache',
+        'X-Accel-Buffering': 'no',
         'Referrer-Policy': 'no-referrer',
         'X-Content-Type-Options': 'nosniff',
       });
       // sendFile supports byte-range requests for seeking without buffering the whole video.
       await new Promise((resolve, reject) =>
-        res.sendFile(path.join(root, video.stored_name), (error) =>
-          error ? reject(error) : resolve(),
+        res.sendFile(
+          path.join(root, video.stored_name) + (req.query.poster === '1' ? '.jpg' : ''),
+          (error) =>
+            error
+              ? reject(
+                  error.code === 'ENOENT'
+                    ? fail(
+                        req.query.poster === '1'
+                          ? '视频封面尚未生成，请先优化该视频'
+                          : '视频文件不存在',
+                        404,
+                      )
+                    : error,
+                )
+              : resolve(),
         ),
       );
     }),
@@ -270,7 +310,8 @@ export function registerMobileVideos(
         [req.params.id, req.user.sub],
       );
       if (deleted.affectedRows && /^[a-f0-9-]+\.video$/.test(video.stored_name))
-        await unlink(path.join(root, video.stored_name)).catch(() => {});
+        for (const suffix of ['', '.jpg'])
+          await unlink(path.join(root, video.stored_name) + suffix).catch(() => {});
       res.json({ success: true });
     }),
   );
