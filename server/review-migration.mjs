@@ -165,6 +165,24 @@ async function insertRows(db, table, rows) {
   }
 }
 
+// 练习题、答卷、错题和复习安排的编号在不同环境中都可能被占用。
+// 这四类记录改由云端重新分配编号，并在导入中更新它们之间的引用。
+async function insertRowsWithNewIds(db, table, rows, transform = (row) => row) {
+  const mapped = new Map();
+  for (const original of rows) {
+    const row = transform({ ...original });
+    const oldId = row.id;
+    delete row.id;
+    const columns = Object.keys(row);
+    const [result] = await db.query(
+      `INSERT INTO ${identifier(table)} (${columns.map(identifier).join(',')}) VALUES (${columns.map(() => '?').join(',')})`,
+      columns.map((column) => scalar(row[column])),
+    );
+    mapped.set(oldId, result.insertId);
+  }
+  return mapped;
+}
+
 async function importReview(directory) {
   const manifestPath = path.resolve(directory || '');
   const manifest = JSON.parse(await readFile(path.join(manifestPath, 'manifest.json'), 'utf8'));
@@ -188,7 +206,7 @@ async function importReview(directory) {
     for (const entry of manifest.tables) {
       if (!existing.has(entry.name)) throw new Error(`云端缺少数据表：${entry.name}`);
       if (!Array.isArray(entry.rows) || !entry.rows.length) continue;
-      if ('id' in entry.rows[0]) {
+      if ('id' in entry.rows[0] && !['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules'].includes(entry.name)) {
         const ids = entry.rows.map((row) => row.id);
         const [conflict] = await db.query(
           `SELECT id FROM ${identifier(entry.name)} WHERE id IN (${ids.map(() => '?').join(',')}) LIMIT 1`,
@@ -210,9 +228,36 @@ async function importReview(directory) {
       await mkdir(path.dirname(target), { recursive: true });
       await copyFile(path.join(manifestPath, file.relative), target);
     }
+    const order = [
+      'users', 'learner_profiles', 'user_preferences', 'study_days', 'study_records', 'courses',
+      'course_chapters', 'course_materials', 'course_chapter_drafts', 'course_context_cache',
+      'chapter_context_cache', 'chapter_source_corrections', 'chapter_summaries', 'chapter_question_drafts',
+      'chapter_practices', 'practice_questions', 'practice_attempts', 'practice_in_progress',
+      'wrong_questions', 'review_schedules', 'learning_plans', 'learning_plan_jobs', 'learning_progress',
+      'course_covers', 'course_cover_drafts', 'course_generation_jobs', 'material_import_jobs',
+      'material_preview_repairs', 'chapter_images', 'chapter_image_drafts', 'chapter_notes',
+      'note_attachments', 'note_ai_jobs', 'reading_bookmarks', 'reading_positions',
+      'assistant_threads', 'assistant_messages', 'assistant_practice_drafts',
+    ];
+    const entries = [...manifest.tables].sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    const entry = (name) => entries.find((value) => value.name === name)?.rows || [];
     await db.beginTransaction();
     try {
-      for (const entry of manifest.tables) await insertRows(db, entry.name, entry.rows);
+      for (const value of entries) {
+        if (['practice_questions', 'practice_attempts', 'wrong_questions', 'review_schedules'].includes(value.name)) continue;
+        await insertRows(db, value.name, value.rows);
+      }
+      const questionIds = await insertRowsWithNewIds(db, 'practice_questions', entry('practice_questions'));
+      await insertRowsWithNewIds(db, 'practice_attempts', entry('practice_attempts'));
+      const wrongIds = await insertRowsWithNewIds(db, 'wrong_questions', entry('wrong_questions'), (row) => ({
+        ...row,
+        question_id: questionIds.get(row.question_id) ?? row.question_id,
+      }));
+      await insertRowsWithNewIds(db, 'review_schedules', entry('review_schedules'), (row) => ({
+        ...row,
+        source_id: wrongIds.get(row.source_id) ?? row.source_id,
+        wrong_question_id: wrongIds.get(row.wrong_question_id) ?? row.wrong_question_id,
+      }));
       await db.commit();
     } catch (error) {
       await db.rollback();
