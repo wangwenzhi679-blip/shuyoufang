@@ -10,6 +10,7 @@ import { prepareLongContext } from './long-context.js';
 import { z } from 'zod';
 import { createHash } from 'node:crypto';
 import { pdfChapterSchema, validatePdfChapterSources } from './pdf-chapter-sources.js';
+import { canReadChapterImages } from './chapter-image-source.js';
 
 // 只纳入会影响生成结果的资料字段；预览文件可在阅读时创建，不应使任务失效。
 const materialVersion = (materials) =>
@@ -42,6 +43,7 @@ export function registerChapterGenerationRoutes(
     buildVisionPages,
     preparePdfOutline,
     readChapterSummarySource,
+    readChapterImageSource,
     validationError,
   },
 ) {
@@ -74,9 +76,24 @@ export function registerChapterGenerationRoutes(
       chapter.source_regions_json != null
         ? await applyChapterCorrections(db, course.id, chapter.id, [])
         : [];
-    const pageSections = readChapterSummarySource
-      ? await readChapterSummarySource(chapter, materials, signal, corrections, req.updateProgress)
-      : null;
+    let pageSections = null;
+    try {
+      pageSections = readChapterSummarySource
+        ? await readChapterSummarySource(chapter, materials, signal, corrections, req.updateProgress)
+        : null;
+    } catch (error) {
+      // OCR failed for the whole chapter: fall back to reading page images with the vision model.
+      if (!readChapterImageSource || !canReadChapterImages(error)) throw error;
+      await req.updateProgress?.('文字识别未通过，正在改用本章原页图片识读');
+      pageSections = await readChapterImageSource(
+        chapter,
+        materials,
+        signal,
+        corrections,
+        req.updateProgress,
+        (messages, partSignal, options) => askDeepSeek(messages, undefined, partSignal, options),
+      );
+    }
     let sections =
       pageSections ??
       materials

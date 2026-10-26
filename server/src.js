@@ -367,6 +367,7 @@ const { summaryGenerate, chaptersSuggest } = registerChapterGenerationRoutes(app
   asyncRoute,
   buildVisionPages,
   readChapterSummarySource,
+  readChapterImageSource,
   validationError,
 });
 

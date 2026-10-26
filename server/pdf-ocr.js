@@ -60,9 +60,12 @@ export function createPdfOcrReader({
       if (currentStat.mtimeMs !== originalStat.mtimeMs || currentStat.size !== originalStat.size)
         throw Object.assign(new Error('原 PDF 已变化，请重新生成'), { status: 409 });
       const hash = createHash('sha256').update(bytes).digest('hex');
-      const root = path.join(cacheRoot, `tesseract7-chi-sim-220dpi-v3-${hash}`);
+      const root = path.join(cacheRoot, `tesseract7-chi-sim-300dpi-v4-${hash}`);
       await fs.mkdir(root, { recursive: true });
       const results = new Map(native.map((item) => [item.page, item.text]));
+      const nativeText = new Map(native.map((item) => [item.page, item.text]));
+      // Pages whose OCR result was unusable (e.g. covers, blank or image-only pages).
+      const skipped = [];
       const missing = [];
       for (const item of native) {
         signal?.throwIfAborted();
@@ -94,7 +97,7 @@ export function createPdfOcrReader({
         createPdfPageImages({
           uploadRoot: snapshotDirectory,
           previewRoot: path.join(root, 'images'),
-          dpi: 220,
+          dpi: 300,
         });
       let completed = 0;
       for (let offset = 0; offset < missing.length; offset += 4) {
@@ -116,22 +119,25 @@ export function createPdfOcrReader({
             signal,
             onPage: async (result) => {
               signal?.throwIfAborted();
-              if (
-                !missing.includes(result.page) ||
-                results.has(result.page) ||
-                typeof result.text !== 'string' ||
-                hasDamagedFormula(result.text) ||
-                (result.text.trim() && Number.isFinite(result.confidence) && result.confidence < 30)
-              )
-                throw Object.assign(
-                  new Error(
-                    `原 PDF 第 ${result.page} 页 OCR 识别置信度过低或文字无效，可改用图片识读或补充本章文字`,
-                  ),
-                  {
-                    status: 422,
-                    code: 'OCR_LOW_CONFIDENCE',
-                  },
+              if (!missing.includes(result.page) || results.has(result.page))
+                throw new Error('OCR 返回了意外页面，请重试');
+              const damaged = typeof result.text === 'string' && hasDamagedFormula(result.text);
+              const lowConfidence =
+                typeof result.text === 'string' &&
+                result.text.trim() &&
+                Number.isFinite(result.confidence) &&
+                result.confidence < 30;
+              if (typeof result.text !== 'string' || damaged || lowConfidence) {
+                // A single bad page (cover, blank, image-only) must not fail the whole chapter.
+                console.warn(
+                  `[pdf-ocr] skip page ${result.page}: confidence=${result.confidence}, damagedFormula=${damaged}`,
                 );
+                skipped.push(result.page);
+                const fallback = nativeText.get(result.page) || '';
+                results.set(result.page, hasDamagedFormula(fallback) ? '' : fallback);
+                await onProgress?.(`本章文字识别 ${++completed}/${missing.length} 页`);
+                return;
+              }
               results.set(result.page, result.text);
               const temporary = path.join(root, `${result.page}-${randomUUID()}.tmp`);
               try {
@@ -151,7 +157,7 @@ export function createPdfOcrReader({
       const finalStat = await fs.stat(filename);
       if (finalStat.mtimeMs !== originalStat.mtimeMs || finalStat.size !== originalStat.size)
         throw Object.assign(new Error('原 PDF 已变化，请重新生成'), { status: 409 });
-      return native
+      const text = native
         .map((item) =>
           results.get(item.page)?.trim()
             ? `【原 PDF 第 ${item.page} 页】\n${results.get(item.page)}`
@@ -159,6 +165,14 @@ export function createPdfOcrReader({
         )
         .filter(Boolean)
         .join('\n\n');
+      if (!text && skipped.length)
+        throw Object.assign(
+          new Error(
+            `原 PDF 第 ${skipped.join('、')} 页 OCR 识别置信度过低或文字无效，可改用图片识读或补充本章文字`,
+          ),
+          { status: 422, code: 'OCR_LOW_CONFIDENCE' },
+        );
+      return text;
     } finally {
       try {
         if (
